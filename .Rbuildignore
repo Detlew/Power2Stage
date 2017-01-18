@@ -1,0 +1,4 @@
+.project
+stuff
+^.*\.Rproj$
+^\.Rproj\.user$

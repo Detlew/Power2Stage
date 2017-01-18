@@ -1,0 +1,26 @@
+# Export all names except those beginning with .
+# exportPattern("^[^\\.]")
+
+# Export explicitly by name, good practice
+export(
+      power.2stage
+    , power.2stage.KM
+    , power.2stage.fC
+    , power.2stage.GS
+    , power.2stage.p
+    , power.2stage.pAF
+    , power.2stage.ssr
+)         
+
+# Import all packages listed as Imports or Depends
+import(
+  PowerTOST, stats
+)
+# good practice would be importFrom
+#importFrom(PowerTOST, CV2se, CV2mse, OwensQ)
+#importFrom(stats, pt, qt, pnorm, qnorm, rnorm, rchisq, quantile)
+importFrom(mvtnorm, pmvt, pmvnorm, GenzBretz)
+
+# Define S3 methods for the return value class "pwrtsd" 
+# of the power.2stage.xyz() functions
+S3method(print, pwrtsd)
