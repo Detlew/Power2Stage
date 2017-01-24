@@ -1,8 +1,8 @@
 Package: Power2Stage
 Type: Package
 Title: Power and Sample-Size Distribution of 2-Stage Bioequivalence Studies
-Version: 0.4-5
-Date: 2017-01-18
+Version: 0.4.5.9000
+Date: 2017-01-24
 Authors@R: c(person("Detlew", "Labes", role = c("aut","cre"), email =
                     "DetlewLabes@gmx.de"),
              person("Helmut", "Schuetz", role = c("ctb"), email =
@@ -12,6 +12,7 @@ Description: Contains functions to obtain the operational characteristics of
 Imports: PowerTOST, stats, mvtnorm
 Suggests: graphics
 ByteCompile: yes
+
 License: GPL (>=2)
 LazyLoad: yes
 LazyData: yes
