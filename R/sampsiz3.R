@@ -8,7 +8,7 @@
 # author D. Labes Jan 2015
 # 
 # Modified by BL, Jun 2017
-# - TO DO: add modifications
+# (vectorize wrt alpha)
 # -------------------------------------------------------------------------
 # library(PowerTOST)
 # source("./R/sampsiz_n0.R")
@@ -21,6 +21,26 @@
   # se and ltheta0/diffm must have the same length to vectorize propperly!
   if (length(mse)==1)     mse <- rep(mse, times=length(ltheta0))
   if (length(ltheta0)==1) ltheta0 <- rep(ltheta0, times=length(mse))
+  
+  # Allow alpha to be scalar or a matrix. If matrix, the interpretation is
+  # - Require 2 columns
+  # - Column 1 = alpha value for left hypothesis
+  # - Column 2 = alpha value for right hypothesis
+  # - Convention: If multiple rows require diffm & sem to be of the same length 
+  #   and evaluate power element-wise for each combination (alpha, diffm, sem)
+  if (is.atomic(alpha) && !is.matrix(alpha)) {
+    # We enforce matrix structure -> recycling will not work, so do it manually
+    if (length(alpha) != max(length(ltheta0), length(mse))) {
+      alpha <- rep.int(alpha, max(length(ltheta0), length(mse)))
+    }
+    alpha <- matrix(alpha, ncol = 1)
+  } else { 
+    if (nrow(alpha) != length(ltheta0) || length(ltheta0) != length(mse))
+      stop("number of rows of alpha must match length of diffm and sem.")
+  }
+  dl <- ncol(alpha)
+  if (dl > 2)
+    stop("Number of columns of alpha should be 1 or 2.")
   
   # return 'Inf' if ltheta0 not between or very near to ltheta1, ltheta2
   ns <- ifelse((ltheta0-ltheta1)<1.25e-5 | (ltheta2-ltheta0)<1.25e-5, Inf, 0)
@@ -35,7 +55,8 @@
   # start value from large sample approx. (hidden func.)
   # Jan 2015 changed to modified Zhang's formula
   # gives at least for 2x2 the best estimate (max diff to n: +-4)
-  n <- .sampleN0_3(mean(alpha), targetpower, ltheta1, ltheta2, diffm, se, steps, bk)
+  n <- .sampleN0_3(do.call(pmin, as.data.frame(alpha)),
+                   targetpower, ltheta1, ltheta2,  diffm, se, steps, bk)
   n <- ifelse(n<nmin, nmin, n)
   
   # method=="ls" is not used yet, in power.2stage.ssr() the 'original' ls approx
@@ -44,54 +65,34 @@
   
   # degrees of freedom as expression
   # n-2 for 2x2 crossover and 2-group parallel design
-  dfe <- parse(text="n-2", srcfile=NULL)
+  ##dfe <- parse(text="n-2", srcfile=NULL)  # is that needed?
   # or should that read n-3? see Kieser/Rauch
   #dfe <- parse(text="n-3", srcfile=NULL)
   
-  df   <- eval(dfe)
-  # NOTE:
-  #  - Only .calc.power version on GitHub allows alpha being 2-dimensional
-  #     => must be installed via devtools::install_github("Detlew/PowerTOST")
-  #  - Still, without the PowerTOST::: the next call does not work
-  pow  <- PowerTOST:::.calc.power(alpha, ltheta1, ltheta2, diffm, sem=se*sqrt(bk/n), df, method)
-  iter <- rep(0, times=length(se)) 
-  imax <- 50
-  # imax =max. iter >50 is emergency brake
-  # this is eventually not necessary, depends on quality of sampleN0
-  # in experimentation I have seen max. of 2-3 steps
-  # reformulation with only one loop does not shorten the code considerable
-  # --- loop until power <= target power, step-down
-#  down <- FALSE; up <- FALSE
-  index <- pow>targetpower & n>nmin
+  #df   <- eval(dfe)
+  pow  <- .calc.power(alpha, ltheta1, ltheta2, diffm, sem=se*sqrt(bk/n), df=n-2, 
+                      method)
+  #iter <- rep(0, times=length(se)) 
+  #imax <- 50
+  index <- (pow > targetpower) & (n > nmin)
   while (any(index)) {
-#    down <- TRUE
-    n[index]    <- n[index]-steps     # step down if start power is to high
-    iter[index] <- iter[index]+1
-    df <- eval(dfe)
-    pow[index]  <- PowerTOST:::.calc.power(alpha, ltheta1, ltheta2, diffm[index], 
-                               sem=se[index]*sqrt(bk/n[index]), df[index],
-                               method)
-    index <- pow>targetpower & n>nmin & iter<=imax
-    # loop results in n with power too low
-    # must step one up again. is done in the next loop
+    n[index] <- n[index] - steps
+    pow_tmp <- .calc.power(alpha[index, , drop=FALSE], ltheta1, ltheta2, 
+                           diffm[index], sem=se[index]*sqrt(bk/n[index]), 
+                           df=n[index]-2, method)
+    pow[index] <- pow_tmp
+    index <- (pow > targetpower) & (n > nmin)
   }
-
-  # --- loop until power >= target power
-  index <- pow<targetpower
+  index <- (pow < targetpower)
   while (any(index)) {
-#    up   <- TRUE; down <- FALSE
-    n[index] <- n[index]+steps
-    iter[index] <- iter[index]+1
-    df <- eval(dfe)
-    pow[index]  <- PowerTOST:::.calc.power(alpha, ltheta1, ltheta2, diffm[index], 
-                               sem=se[index]*sqrt(bk/n[index]), df[index], 
-                               method)
-    index <- pow<targetpower & iter<=imax
+    n[index] <- n[index] + steps
+    pow_tmp <- .calc.power(alpha[index, , drop=FALSE], ltheta1, ltheta2, 
+                           diffm[index], sem=se[index]*sqrt(bk/n[index]), 
+                           df=n[index]-2, method)
+    pow[index] <- pow_tmp
+    index <- (pow < targetpower)
   }
-#   nlast <- n
-#   if ((up & pow<targetpower) | (down & pow>targetpower) ) {
-#     n <- NA
-#   }
+  
   # combine the Inf and n
   ns[ns==0] <- n
   n <- ns

@@ -1,13 +1,15 @@
-power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8, 
-                           min.n2 = 4, theta0, theta1, theta2, GMR, 
-                           #usePE = FALSE, 
-                           weight = 0.5, max.comb.test = FALSE, 
-                           fCrit = NULL, fClower, fCupper, Nmax, 
-                           pmethod = c("nct", "exact", "shifted"), 
-                           npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, 
-                           details = FALSE) {
+power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8, 
+                            power.threshold = targetpower, min.n2 = 4, 
+                            theta0, theta1, theta2, GMR, #usePE = FALSE,
+                            weight = 0.5, max.comb.test = FALSE, 
+                            ssr.conditional = TRUE,
+                            fCrit = NULL, fClower, fCupper, Nmax, 
+                            pmethod = c("nct", "exact", "shifted"), 
+                            npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, 
+                            details = FALSE) {
   # Computes Power or Type I Error rate for the two-stage design scheme
-  # from Maurer et al
+  # based on the inverse normal method. Several design schemes are possible:
+  # main scheme is according to Maurer et al
   #
   # Args:
   #   alpha: One-sided significance level
@@ -15,6 +17,9 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   #   CV: Coefficient of variation (use e.g. 0.3 for 30%)
   #   targetpower: Desired target power for end of the trial and power
   #                threshold used for futility check after stage 1
+  #   power.threshold: Threshold for power monitoring step to decide on
+  #                    futility for cases with not BE after stage 1
+  #                    (set to 1 to deactivate this futility rule)
   #   min.n2: Minimum sample size for stage 2
   #   theta0: Assumed ratio of geometric means for simulations
   #   theta1: Lower (bio-)equivalence limits
@@ -23,6 +28,8 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   #   usePE: ...
   #   weight: weight(s) to be used for standard or maximum combination test
   #   max.comb.test: Logical; if TRUE, maximum combination test will be used
+  #   ssr.conditional: Logical; if TRUE, the sample size re-estimation step
+  #                    uses conditional error rates and conditional power
   #   fCrit: Futility criterion to use: PE, CI or Nmax or a combination thereof
   #   fClower: Lower futility limit for PE or CI of stage 1
   #   fCupper: Upper futility limit for PE or CI of stage 1
@@ -40,6 +47,7 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   #  - implement argument usePE
   #  - implement argument max.comb.test
   #  - implement argument details
+  #  - implement argument ssr.conditional
   
   ### Error handling and default value set-up ----------------------------------
   alpha <- alpha[1L]
@@ -50,6 +58,8 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   if (CV <= 0)      stop("CV must be >0!")
   if (targetpower < 0 || targetpower > 1) 
     stop("targetpower must be within [0, 1]")
+  if (power.threshold < 0 || power.threshold > 1) 
+    stop("power_threshold must be within [0, 1]")
   if (min.n2 < 4) 
     stop("min.n2 has to be at least 4.")
   if (min.n2 %% 2 != 0) {  # make it even
@@ -123,9 +133,9 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   ### Calculate adjusted significance level ------------------------------------
   # TO DO:
   #  - to be adapted when weight is more than length 1 
-  #  - allow exact Pocock boundaries, not only Pocock type
-  bnds <- ldbounds::bounds(t = c(weight, 1), iuse = 2, alpha = alpha)
-  alpha_adj <- 1 - pnorm(bnds$upper.bounds)
+  #bnds <- ldbounds::bounds(t = c(weight, 1), iuse = 2, alpha = alpha)
+  #alpha_adj <- 1 - pnorm(bnds$upper.bounds)
+  cvals <- critical.value.2stage(alpha, weight)
   
   ### Stage 1 ------------------------------------------------------------------
   stage <- rep.int(1, nsims)
@@ -150,18 +160,18 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   rm(t1, t2)
   
   ## Evaluation of stage 1
-  BE <- (p11 < alpha_adj[1] & p12 < alpha_adj[1])
+  BE <- (p11 < cvals$siglev & p12 < cvals$siglev)
   
   # Cases with BE == TRUE are clear: early stop due to BE
   # Cases with BE == FALSE are not yet clear:
   # - calculate power for stage 1
-  pwr_s1 <- PowerTOST:::.calc.power(alpha = alpha_adj[1], ltheta1 = ltheta1, 
+  pwr_s1 <- .calc.power(alpha = cvals$siglev, ltheta1 = ltheta1, 
                         ltheta2 = ltheta2, diffm = lGMR, 
                         sem = se.fac * sqrt(mses), df = df, method = pmethod)
   # - if result is FALSE and power for stage 1 is 'sufficiently high', then
   #   the result will be considered a fail (ie leave FALSE)
   #   otherwise we leave it open (ie set to NA)
-  BE[BE == FALSE & pwr_s1 < targetpower] <- NA
+  BE[BE == FALSE & pwr_s1 < power.threshold] <- NA
   
   # From those NAs may still consider some of them as failure due to futility:
   # Futility check - here only regarding PE or CI (Nmax comes later)
@@ -202,32 +212,36 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
     BE2 <- rep.int(NA, length(pes_tmp))
     s2 <- rep.int(2, length(pes_tmp))
     
-    # Calculate conditional power
-    # pwr_cond may be negative, if so, set to zero
-    pwr_cond <- pmax(((1 - pwr_s1) - (1 - targetpower)) / (1 - pwr_s1), 0)
-    
-    # Set sign of lGMR to the sign of estimated point estimate
-    sgn_pes_tmp <- ifelse(pes_tmp >= 0, 1, -1)
-    lGMR_mod <- lGMR * sgn_pes_tmp * if (lGMR >= 0) 1 else -1
-    
-    # Derive conditional error rates
-    Z11 <- qnorm(1 - p11)
+    # Derive components for z-statistics
+    Z11 <- qnorm(1 - p11) 
     Z12 <- qnorm(1 - p12)
-    # TO DO: 
-    #  - adapt alpha_c in case of max.comb.test == TRUE
-    alpha_c <- 1 - pnorm((bnds$upper.bounds[2] - sqrt(weight)*cbind(Z11, Z12)) / 
-                           sqrt(1 - weight))
+    
+    if (ssr.conditional) {
+      # Calculate conditional power (may be negative, if so, set to zero)
+      pwr_ssr <- pmax(((1 - pwr_s1) - (1 - targetpower)) / (1 - pwr_s1), 0)
+    
+      # Derive conditional error rates
+      # TO DO: 
+      #  - adapt alpha_c in case of max.comb.test == TRUE
+      alpha_ssr <- 1 - pnorm((cvals$cval - sqrt(weight)*cbind(Z11, Z12)) / 
+                             sqrt(1 - weight))
+    
+      # Set sign of lGMR to the sign of estimated point estimate
+      # (Maurer et al call this 'adaptive planning step')
+      sgn_pes_tmp <- ifelse(pes_tmp >= 0, 1, -1)
+      lGMR_ssr <- lGMR * sgn_pes_tmp * if (lGMR >= 0) 1 else -1
+    } else {
+      alpha_ssr <- cvals$siglev  # alpha_adj[2]
+      pwr_ssr <- targetpower
+      lGMR_ssr <- lGMR  # here we do not need to switch the sign (?!)
+    }
     
     # Sample size for stage 2
-    # TO DO:
-    #  - strive for faster implementation of calculating n2 (modify .sampleN3)
-    n2 <- vector("integer", length(pwr_cond))
-    for (i in seq_along(pwr_cond)) {
-      n2[i] <- .sampleN3(alpha = alpha_c[i, ], targetpower = pwr_cond[i], 
-                         ltheta0 = lGMR_mod[i], mse = mses_tmp[i], 
-                         ltheta1 = ltheta1, ltheta2 = ltheta2, 
-                         method = pmethod)
-    }
+    n2 <- .sampleN3(alpha = alpha_ssr, targetpower = pwr_ssr, 
+                    ltheta0 = lGMR_ssr, mse = mses_tmp, 
+                    ltheta1 = ltheta1, ltheta2 = ltheta2, method = pmethod)
+    if (!ssr.conditional)
+      n2 <- n2 - n1
     n2 <- pmax(n2, min.n2)
     
     # Futility check regarding maximum overall sample size
@@ -250,7 +264,7 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
     Z12 <- Z12[is.na(BE2)]
     n2  <- n2[is.na(BE2)]
     
-    rm(BE2, s2, sgn_pes_tmp, alpha_c, pes_tmp, mses_tmp, pwr_s1)
+    rm(BE2, s2, alpha_ssr, pes_tmp, mses_tmp, pwr_ssr, lGMR_ssr, pwr_s1)
     
     ### Stage 2 ----------------------------------------------------------------
     ## Simulation of stage 2 data
@@ -274,7 +288,7 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
     rm(pes_s2, mses_s2, t1, t2)
    
     ## Combined evaluation via inverse normal approach
-    # Derive test statistics 
+    # Derive further components for z-statistics 
     Z21 <- qnorm(1 - p21)
     Z22 <- qnorm(1 - p22)
     # For H01, test statistic at the end of second stage:
@@ -283,7 +297,8 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
     Z02 <- sqrt(weight) * Z12 + sqrt(1 - weight) * Z22
     
     # Fill the remaining NAs with either TRUE or FALSE
-    BE[is.na(BE)] <- (Z01 > bnds$upper.bounds[2] & Z02 > bnds$upper.bounds[2])
+    # TO DO: max.comb.test boundary
+    BE[is.na(BE)] <- (Z01 > cvals$cval & Z02 > cvals$cval)
     
     rm(Z11, Z21, Z12, Z22, Z01, Z02)
   }  # end if length(pes_tmp) > 0
@@ -291,7 +306,7 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   ### Define final output ------------------------------------------------------
   res <- list(
     # Information
-    design = "2x2 crossover", alpha = alpha_adj, n1 = n1, CV = CV, GMR = GMR, 
+    design = "2x2 crossover", alpha = cvals$siglev, n1 = n1, CV = CV, GMR = GMR, 
     targetpower = targetpower, min.n2 = min.n2, theta0 = theta0, 
     theta1 = theta1, theta2 = theta2, weight = weight, 
     max.comb.test = max.comb.test, fCrit = fCrit, fCrange = c(fClower, fCupper),
@@ -309,7 +324,6 @@ power.2stage.m <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   #  - include pct_stop_s1 in order to get stopping rates as in Maurer et al
   #  - output of futility criterion to be adapted
   #  - output of n(s1, s2) to be adapted
-  #    (e.g. include pct_stop_s1 in order to get stopping rates as in Maurer et al,
   #class(res) <- c("pwrtsd", "list")
   res
-}  # end function power.2stage.m
+}  # end function power.2stage.in
