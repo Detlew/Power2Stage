@@ -1,8 +1,8 @@
-power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8, 
-                            power.threshold = targetpower, min.n2 = 4, 
+# alpha.nom einführen
+power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV, 
+                            targetpower = 0.8, power.threshold = targetpower, 
                             theta0, theta1, theta2, GMR, #usePE = FALSE,
-                            weight = 0.5, max.comb.test = FALSE, 
-                            ssr.conditional = TRUE,
+                            min.n2 = 4, ssr.conditional = TRUE,
                             fCrit = NULL, fClower, fCupper, Nmax, 
                             pmethod = c("nct", "exact", "shifted"), 
                             npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, 
@@ -12,7 +12,11 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   # main scheme is according to Maurer et al
   #
   # Args:
-  #   alpha: One-sided significance level
+  #   alpha: Overall one-sided significance level, if of length 1
+  #          Adjusted one-sided alpha levels for stage 1 and 2, if of length 2
+  #   weight: Required if alpha is of length 1: weight of first stage
+  #           Of length 1 in case of max.comb.test = FALSE, length 2 otherwise
+  #   max.comb.test: Logical; if TRUE, maximum combination test will be used
   #   n1: Total sample size for stage 1
   #   CV: Coefficient of variation (use e.g. 0.3 for 30%)
   #   targetpower: Desired target power for end of the trial and power
@@ -20,22 +24,19 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   #   power.threshold: Threshold for power monitoring step to decide on
   #                    futility for cases with not BE after stage 1
   #                    (set to 1 to deactivate this futility rule)
-  #   min.n2: Minimum sample size for stage 2
   #   theta0: Assumed ratio of geometric means for simulations
   #   theta1: Lower (bio-)equivalence limits
   #   theta2: Upper (bio-)equivalence limits
   #   GMR: Assumed ratio of geometric means to be used in sample size re-est.
-  #   usePE: ...
-  #   weight: weight(s) to be used for standard or maximum combination test
-  #   max.comb.test: Logical; if TRUE, maximum combination test will be used
+  #   min.n2: Minimum sample size for stage 2
   #   ssr.conditional: Logical; if TRUE, the sample size re-estimation step
   #                    uses conditional error rates and conditional power
   #   fCrit: Futility criterion to use: PE, CI or Nmax or a combination thereof
   #   fClower: Lower futility limit for PE or CI of stage 1
   #   fCupper: Upper futility limit for PE or CI of stage 1
-  #   Nmax: Maximum allowed total sample size (futility criterion)
-  #   pmethod: Power calculation method, to be used in sample size re-est.
-  #   npct: Percentiles for the distribution of overall total sample size
+  #   Nmax: Maximum allowed overall sample size (futility criterion)
+  #   pmethod: Power calculation method to be used in sample size re-est.
+  #   npct: Percentiles for the distribution of overall (total) sample size
   #   nsims: Number of studies to simulate
   #   setseed: Logical; if TRUE, a seed of 1234567 will be set for the sims 
   #   details: logical; if TRUE, print results of time measurements of sims
@@ -45,13 +46,34 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   
   # TO DO:
   #  - implement argument usePE
-  #  - implement argument max.comb.test
   #  - implement argument details
-  #  - implement argument ssr.conditional
   
   ### Error handling and default value set-up ----------------------------------
-  alpha <- alpha[1L]
-  if (alpha < 0 || alpha > 1) stop("alpha must be within [0, 1]")
+  if (missing(alpha)) 
+    alpha <- 0.05
+  if (length(alpha) > 2) 
+    stop("Length of alpha must be <= 2.")
+  if (!missing(weight) && length(weight) > 2)
+    stop("Length of weight must be <= 2.")
+  if (length(alpha) == 1 && missing(weight))
+    weight <- if (max.comb.test) c(0.5, 0.25) else 0.5
+  if (length(alpha) == 2)
+    message(paste0("It is assumed that the specified alpha values are in line", 
+                   "with the specified max.comb.test argument"))
+  if (length(alpha) == 2 && !missing(weight))
+    message("Adjusted alpha values are specified, weight(s) will be ignored.")
+  lw <- length(weight)
+  if (max.comb.test) {
+    if (length(alpha) != 2 && lw != 2)
+      stop("Two weights, w and w*, are required for maximum combination test.")
+  } else {
+    if (length(alpha) == 1 && lw != 1)
+      stop("One weight, w, is required for standard combination test.")
+  }
+  if (any(weight <= 0) || any(weight >= 1))
+    stop("Weight(s) not properly specified, must be > 0 and < 1.")
+  if (any(alpha <= 0) || any(alpha >= 1))
+    stop("Alpha(s) not properly specified, must be > 0 and < 1.")
   if (missing(n1))  stop("Number of subjects in stage 1 must be given!")
   if (n1 <= 0)      stop("Number of subjects in stage 1 must be >0!")
   if (missing(CV))  stop("CV must be given!")
@@ -73,10 +95,6 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   if (missing(theta1) && !missing(theta2)) theta1 <- 1/theta2
   if (GMR <= theta1 || GMR >= theta2) 
     stop("GMR must be within acceptance range!")
-  
-  # TO DO:
-  #  - add check for argument weight
-  #  - extend it for weight being of length 2 (for max.comb.test == TRUE)
   
   # Check futility criterion
   if (!is.null(fCrit)) {
@@ -131,11 +149,10 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   ntot    <- rep.int(n1, nsims)  # initialize overall sample size
   
   ### Calculate adjusted significance level ------------------------------------
-  # TO DO:
-  #  - to be adapted when weight is more than length 1 
-  #bnds <- ldbounds::bounds(t = c(weight, 1), iuse = 2, alpha = alpha)
-  #alpha_adj <- 1 - pnorm(bnds$upper.bounds)
-  cvals <- critical.value.2stage(alpha, weight)
+  # length(alpha)=1 => if length(weight)=2, max.comb.test=TRUE is assumed here
+  cl <- if (length(alpha) == 1) critical.value.2stage(alpha, weight) else
+    # if two alphas, ignore possibly given weights and only use those alphas
+    list(cval = qnorm(1 - alpha), siglev = alpha)
   
   ### Stage 1 ------------------------------------------------------------------
   stage <- rep.int(1, nsims)
@@ -160,12 +177,12 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   rm(t1, t2)
   
   ## Evaluation of stage 1
-  BE <- (p11 < cvals$siglev & p12 < cvals$siglev)
+  BE <- (p11 < cl$siglev[1] & p12 < cl$siglev[1])
   
   # Cases with BE == TRUE are clear: early stop due to BE
   # Cases with BE == FALSE are not yet clear:
   # - calculate power for stage 1
-  pwr_s1 <- .calc.power(alpha = cvals$siglev, ltheta1 = ltheta1, 
+  pwr_s1 <- .calc.power(alpha = cl$siglev[1], ltheta1 = ltheta1, 
                         ltheta2 = ltheta2, diffm = lGMR, 
                         sem = se.fac * sqrt(mses), df = df, method = pmethod)
   # - if result is FALSE and power for stage 1 is 'sufficiently high', then
@@ -218,22 +235,29 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
     
     if (ssr.conditional) {
       # Calculate conditional power (may be negative, if so, set to zero)
-      pwr_ssr <- pmax(((1 - pwr_s1) - (1 - targetpower)) / (1 - pwr_s1), 0)
+      pwr_ssr <- pmax.int(((1 - pwr_s1) - (1 - targetpower)) / (1 - pwr_s1), 0)
     
       # Derive conditional error rates
-      # TO DO: 
-      #  - adapt alpha_c in case of max.comb.test == TRUE
-      alpha_ssr <- 1 - pnorm((cvals$cval - sqrt(weight)*cbind(Z11, Z12)) / 
-                             sqrt(1 - weight))
+      alpha_ssr <- 1 - pnorm(pmin(
+        (cl$cval[2] - sqrt(weight[1])*cbind(Z11, Z12)) / sqrt(1 - weight[1]),
+        (cl$cval[2] - sqrt(weight[lw])*cbind(Z11, Z12)) / sqrt(1 - weight[lw])
+      ))
     
       # Set sign of lGMR to the sign of estimated point estimate
       # (Maurer et al call this 'adaptive planning step')
+      # TO DO: Which is correct?
+      #  Fig 6.2 implies
+      #  lGMR_ssr <- lGMR * ifelse(pes_tmp >= 0, -1, 1)
+      #  but Fig. 6.5 implies this:
       sgn_pes_tmp <- ifelse(pes_tmp >= 0, 1, -1)
       lGMR_ssr <- lGMR * sgn_pes_tmp * if (lGMR >= 0) 1 else -1
+      # TO DO: Should this always be done in case of ssr.conditional = TRUE,
+      #        i.e. for standard and maximum combination test,
+      #        or only for maximum combination test?
     } else {
-      alpha_ssr <- cvals$siglev  # alpha_adj[2]
+      alpha_ssr <- cl$siglev[2]
       pwr_ssr <- targetpower
-      lGMR_ssr <- lGMR  # here we do not need to switch the sign (?!)
+      lGMR_ssr <- lGMR  # TO DO: here we do not need to switch the sign?
     }
     
     # Sample size for stage 2
@@ -241,8 +265,8 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
                     ltheta0 = lGMR_ssr, mse = mses_tmp, 
                     ltheta1 = ltheta1, ltheta2 = ltheta2, method = pmethod)
     if (!ssr.conditional)
-      n2 <- n2 - n1
-    n2 <- pmax(n2, min.n2)
+      n2 <- pmax.int(n2 - n1, 0)
+    n2 <- pmax.int(n2, min.n2)
     
     # Futility check regarding maximum overall sample size
     # - if n2 is infinite, then we consider this as fail too
@@ -254,15 +278,16 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
     
     # Carry over results from BE2 and s2 to BE, stage and ntot
     stage[is.na(BE)] <- s2
-    ntot[is.na(BE)] <- n1 + n2
     BE[is.na(BE)] <- BE2
+    n2 <- n2[is.na(BE2)]
+    # TO DO: ntot is not correct, why?
+    ntot[stage == 2] <- n1 + n2
     
     # Reduce relevant characteristics to the ones where stage 2 will be done
     p11 <- p11[is.na(BE2)]
     p12 <- p12[is.na(BE2)]
     Z11 <- Z11[is.na(BE2)]
     Z12 <- Z12[is.na(BE2)]
-    n2  <- n2[is.na(BE2)]
     
     rm(BE2, s2, alpha_ssr, pes_tmp, mses_tmp, pwr_ssr, lGMR_ssr, pwr_s1)
     
@@ -285,20 +310,25 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
     p21 <- pt(t1, df = df, lower.tail = FALSE)
     p22 <- pt(t2, df = df, lower.tail = TRUE)
     
-    rm(pes_s2, mses_s2, t1, t2)
+    rm(se.fac, df, n2, pes_s2, mses_s2, t1, t2)
    
     ## Combined evaluation via inverse normal approach
     # Derive further components for z-statistics 
     Z21 <- qnorm(1 - p21)
     Z22 <- qnorm(1 - p22)
     # For H01, test statistic at the end of second stage:
-    Z01 <- sqrt(weight) * Z11 + sqrt(1 - weight) * Z21
+    Z01 <- pmax.int(
+      sqrt(weight[1]) * Z11 + sqrt(1 - weight[1]) * Z21,
+      sqrt(weight[lw]) * Z11 + sqrt(1 - weight[lw]) * Z21
+    )
     # For H02, test statistic at the end of second stage:
-    Z02 <- sqrt(weight) * Z12 + sqrt(1 - weight) * Z22
+    Z02 <- pmax.int(
+      sqrt(weight[1]) * Z12 + sqrt(1 - weight[1]) * Z22,
+      sqrt(weight[lw]) * Z12 + sqrt(1 - weight[lw]) * Z22
+    )
     
     # Fill the remaining NAs with either TRUE or FALSE
-    # TO DO: max.comb.test boundary
-    BE[is.na(BE)] <- (Z01 > cvals$cval & Z02 > cvals$cval)
+    BE[is.na(BE)] <- (Z01 > cl$cval[2] & Z02 > cl$cval[2])
     
     rm(Z11, Z21, Z12, Z22, Z01, Z02)
   }  # end if length(pes_tmp) > 0
@@ -306,7 +336,7 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
   ### Define final output ------------------------------------------------------
   res <- list(
     # Information
-    design = "2x2 crossover", alpha = cvals$siglev, n1 = n1, CV = CV, GMR = GMR, 
+    design = "2x2 crossover", alpha = cl$siglev, n1 = n1, CV = CV, GMR = GMR, 
     targetpower = targetpower, min.n2 = min.n2, theta0 = theta0, 
     theta1 = theta1, theta2 = theta2, weight = weight, 
     max.comb.test = max.comb.test, fCrit = fCrit, fCrange = c(fClower, fCupper),
@@ -315,6 +345,7 @@ power.2stage.in <- function(alpha = 0.05, n1, CV, targetpower = 0.8,
     pBE = sum(BE) / nsims,
     pBE_s1 = sum(BE[ntot == n1]) / nsims,
     pct_s2 = 100 * sum(ntot > n1) / nsims,
+    # TO DO: Is the following correct, ie does it reflect the "stopping rate"?
     pct_stop_s1 = 100 * sum(ntot == n1) / nsims,
     nmean = mean(ntot),
     nrange = range(ntot),
