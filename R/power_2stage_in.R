@@ -1,9 +1,13 @@
-# alpha.nom einführen
+################################################################################
+# Author: Benjamin Lang
+# Code based on power.2stage() and power.2stage.fC by Detlew Labes
+################################################################################
+
 power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV, 
                             targetpower = 0.8, power.threshold = targetpower, 
-                            theta0, theta1, theta2, GMR, #usePE = FALSE,
-                            min.n2 = 4, ssr.conditional = TRUE,
-                            fCrit = NULL, fClower, fCupper, Nmax, 
+                            theta0, theta1, theta2, GMR, usePE = FALSE,
+                            min.n2 = 4, max.n = Inf, ssr.conditional = TRUE,
+                            fCrit = NULL, fClower, fCupper, fCNmax, 
                             pmethod = c("nct", "exact", "shifted"), 
                             npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, 
                             details = FALSE) {
@@ -19,8 +23,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   #   max.comb.test: Logical; if TRUE, maximum combination test will be used
   #   n1: Total sample size for stage 1
   #   CV: Coefficient of variation (use e.g. 0.3 for 30%)
-  #   targetpower: Desired target power for end of the trial and power
-  #                threshold used for futility check after stage 1
+  #   targetpower: Desired target power for end of the trial 
   #   power.threshold: Threshold for power monitoring step to decide on
   #                    futility for cases with not BE after stage 1
   #                    (set to 1 to deactivate this futility rule)
@@ -29,12 +32,15 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   #   theta2: Upper (bio-)equivalence limits
   #   GMR: Assumed ratio of geometric means to be used in sample size re-est.
   #   min.n2: Minimum sample size for stage 2
+  #   max.n: Maximum overall sample size (stage 1 + stage 2) to go to 2nd stage
   #   ssr.conditional: Logical; if TRUE, the sample size re-estimation step
   #                    uses conditional error rates and conditional power
-  #   fCrit: Futility criterion to use: PE, CI or Nmax or a combination thereof
+  #   fCrit: Futility criterion to use: PE, CI or fCNmax or a combination thereof
   #   fClower: Lower futility limit for PE or CI of stage 1
   #   fCupper: Upper futility limit for PE or CI of stage 1
-  #   Nmax: Maximum allowed overall sample size (futility criterion)
+  #   fCNmax: If re-estimated sample size n2 is such that n1+n2 > fCNmax,
+  #           the study will not continue to stage 2 and will be considered
+  #           an overall failure (no BE)
   #   pmethod: Power calculation method to be used in sample size re-est.
   #   npct: Percentiles for the distribution of overall (total) sample size
   #   nsims: Number of studies to simulate
@@ -43,10 +49,6 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   #
   # Returns:
   #   Type I Error or Power
-  
-  # TO DO:
-  #  - implement argument usePE
-  #  - implement argument details
   
   ### Error handling and default value set-up ----------------------------------
   if (missing(alpha)) 
@@ -88,6 +90,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     min.n2 <- min.n2 + min.n2 %% 2
     message("min.n2 rounded up to next even integer", min.n2)
   }
+  if (n1 >= max.n) stop("max.n must be greater than n1.")
   if (missing(GMR)) GMR <- 0.95
   if (missing(theta0)) theta0 <- GMR
   if (missing(theta1) && missing(theta2))  theta1 <- 0.8
@@ -118,20 +121,20 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
       if (!missing(fClower) && missing(fCupper)) fCupper <- 1/fClower
     }
     if (nms_match[3]) {  # Nmax
-      if (missing(Nmax)) Nmax <- 4*n1
-      if (!missing(Nmax) && (Nmax < n1 + min.n2))
-        stop("Nmax must be greater than n1 + min.n2.")
+      if (missing(fCNmax)) fCNmax <- 4*n1
+      if (!missing(fCNmax) && (fCNmax < n1 + min.n2))
+        stop("fCNmax must be greater than n1 + min.n2.")
       if (sum(nms_match[1:2]) == 0) {
         fClower <- 0
         fCupper <- Inf
       }
     } else {
-      Nmax <- Inf
+      fCNmax <- Inf
     }
   } else {
     fClower <- 0
     fCupper <- Inf
-    Nmax <- Inf
+    fCNmax <- Inf
   }
   
   # Check if power calculation method is nct, exact or shifted
@@ -148,13 +151,18 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   bk      <- 2  # 2x2x2 crossover design const
   ntot    <- rep.int(n1, nsims)  # initialize overall sample size
   
-  ### Calculate adjusted significance level ------------------------------------
+  ### Calculate adjusted critical levels ---------------------------------------
   # length(alpha)=1 => if length(weight)=2, max.comb.test=TRUE is assumed here
   cl <- if (length(alpha) == 1) critical.value.2stage(alpha, weight) else
     # if two alphas, ignore possibly given weights and only use those alphas
     list(cval = qnorm(1 - alpha), siglev = alpha)
   
   ### Stage 1 ------------------------------------------------------------------
+  if (details)
+    cat(nsims,"sims. Stage 1")
+  # Start timer
+  ptm  <- proc.time()
+  
   stage <- rep.int(1, nsims)
   
   ## Simulation of stage 1 data
@@ -182,6 +190,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   # Cases with BE == TRUE are clear: early stop due to BE
   # Cases with BE == FALSE are not yet clear:
   # - calculate power for stage 1
+  # TO DO: usePE to be applied here as well?
   pwr_s1 <- .calc.power(alpha = cl$siglev[1], ltheta1 = ltheta1, 
                         ltheta2 = ltheta2, diffm = lGMR, 
                         sem = se.fac * sqrt(mses), df = df, method = pmethod)
@@ -191,7 +200,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   BE[BE == FALSE & pwr_s1 < power.threshold] <- NA
   
   # From those NAs may still consider some of them as failure due to futility:
-  # Futility check - here only regarding PE or CI (Nmax comes later)
+  # Futility check - here only regarding PE or CI (fCNmax comes later)
   if (!is.null(fCrit) && sum(nms_match[1:2]) > 0) {
     lfClower <- log(fClower)
     lfCupper <- log(fCupper)
@@ -211,6 +220,12 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     rm(outside)
   }
   
+  # Time for stage 1
+  if (details) {
+    cat(" - Time consumed (secs):\n")
+    print(round((proc.time()-ptm), 1))
+  }
+  
   ### Sample size re-estimation ------------------------------------------------
   # Only consider scenarios where stage 2 is necessary
   pes_tmp  <- pes[is.na(BE)]
@@ -221,8 +236,14 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   
   # Do it only if stage 2 is required for at least one scenario
   if (length(pes_tmp) > 0) {
+    if (details) {
+      cat("Keep calm. Sample sizes for stage 2 (", length(pes_tmp),
+          " studies)\n", sep="")
+      cat("will be estimated. May need some time.\n")
+    }
+    
     # Set stage variable to 2 for the relevant scenarios
-    # (NB: some may be changed to 1 again after all -> Nmax criterion)
+    # (NB: some may be changed to 1 again after all -> fCNmax criterion)
     stage[is.na(BE)] <- 2
     
     # Define temporary variables for BE and stage for the second stage
@@ -248,39 +269,47 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
       # TO DO: Which is correct?
       #  Fig 6.2 implies
       #  lGMR_ssr <- lGMR * ifelse(pes_tmp >= 0, -1, 1)
-      #  but Fig. 6.5 implies this:
-      sgn_pes_tmp <- ifelse(pes_tmp >= 0, 1, -1)
-      lGMR_ssr <- lGMR * sgn_pes_tmp * if (lGMR >= 0) 1 else -1
-      # TO DO: Should this always be done in case of ssr.conditional = TRUE,
-      #        i.e. for standard and maximum combination test,
-      #        or only for maximum combination test?
+      #  but Fig. 6.5 implies this (see case !usePE)
+      if (usePE) {
+        lGMR_ssr <- pes_tmp
+      } else {
+        # TO DO: Should the sign only be adapted for maximum combination test
+        #        or also for standard combination test? 
+        sgn_pes_tmp <- ifelse(pes_tmp >= 0, 1, -1)
+        lGMR_ssr <- lGMR * sgn_pes_tmp * if (lGMR >= 0) 1 else -1
+      }
     } else {
       alpha_ssr <- cl$siglev[2]
       pwr_ssr <- targetpower
-      lGMR_ssr <- lGMR  # TO DO: here we do not need to switch the sign?
+      lGMR_ssr <- if (usePE) pes_tmp else lGMR  # TO DO: here we do not need to switch the sign?
     }
     
     # Sample size for stage 2
+    ptms <- proc.time()
     n2 <- .sampleN3(alpha = alpha_ssr, targetpower = pwr_ssr, 
                     ltheta0 = lGMR_ssr, mse = mses_tmp, 
                     ltheta1 = ltheta1, ltheta2 = ltheta2, method = pmethod)
     if (!ssr.conditional)
-      n2 <- pmax.int(n2 - n1, 0)
-    n2 <- pmax.int(n2, min.n2)
+      n2 <- n2 - n1
+    n2 <- pmax.int(pmin.int(n2, max.n - n1), min.n2)
+    
+    if (details) {
+      cat("Time consumed (secs):\n")
+      print(round((proc.time()-ptms), 1))
+    }
     
     # Futility check regarding maximum overall sample size
     # - if n2 is infinite, then we consider this as fail too
     BE2[is.infinite(n2)] <- FALSE
-    # - Otherwise check if n1+n2 is greater than Nmax (if so, set to fail)
+    # - Otherwise check if n1+n2 is greater than fCNmax (if so, set to fail)
     if (!is.null(fCrit) && nms_match[3])
-      BE2[n1 + n2 > Nmax] <- FALSE
+      BE2[n1 + n2 > fCNmax] <- FALSE
     s2[BE2 == FALSE] <- 1  # such a case is considered to be gone up to stage 1
     
     # Carry over results from BE2 and s2 to BE, stage and ntot
     stage[is.na(BE)] <- s2
     BE[is.na(BE)] <- BE2
     n2 <- n2[is.na(BE2)]
-    # TO DO: ntot is not correct, why?
     ntot[stage == 2] <- n1 + n2
     
     # Reduce relevant characteristics to the ones where stage 2 will be done
@@ -336,25 +365,29 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   ### Define final output ------------------------------------------------------
   res <- list(
     # Information
-    design = "2x2 crossover", alpha = cl$siglev, n1 = n1, CV = CV, GMR = GMR, 
-    targetpower = targetpower, min.n2 = min.n2, theta0 = theta0, 
-    theta1 = theta1, theta2 = theta2, weight = weight, 
-    max.comb.test = max.comb.test, fCrit = fCrit, fCrange = c(fClower, fCupper),
-    Nmax = Nmax, pmethod = pmethod, nsims = nsims,
+    design = "2x2 crossover", method = "IN", alpha = cl$siglev, weight = weight,
+    n1 = n1, CV = CV, GMR = GMR, usePE = usePE, targetpower = targetpower, 
+    power.threshold = power.threshold, min.n2 = min.n2, max.n = max.n, 
+    ssr.conditional = ssr.conditional, theta0 = theta0, theta1 = theta1, 
+    theta2 = theta2, weight = weight, max.comb.test = max.comb.test, 
+    fCrit = fCrit, fCrange = c(fClower, fCupper), fCNmax = fCNmax, 
+    pmethod = pmethod, nsims = nsims,
     # Results
     pBE = sum(BE) / nsims,
     pBE_s1 = sum(BE[ntot == n1]) / nsims,
     pct_s2 = 100 * sum(ntot > n1) / nsims,
-    # TO DO: Is the following correct, ie does it reflect the "stopping rate"?
     pct_stop_s1 = 100 * sum(ntot == n1) / nsims,
     nmean = mean(ntot),
     nrange = range(ntot),
     nperc = quantile(ntot, probs = npct)
   )
-  # TO DO: implement class attributes properly:
-  #  - include pct_stop_s1 in order to get stopping rates as in Maurer et al
-  #  - output of futility criterion to be adapted
-  #  - output of n(s1, s2) to be adapted
-  #class(res) <- c("pwrtsd", "list")
+  
+  if (details) {
+    cat("Total time consumed (secs):\n")
+    print(round((proc.time()-ptm), 1))
+    cat("\n")
+  }
+  
+  class(res) <- c("pwrtsd", "list")
   res
 }  # end function power.2stage.in

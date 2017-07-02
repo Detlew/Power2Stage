@@ -51,7 +51,62 @@ print.pwrtsd <- function(x, ...)
     
     return(invisible(x))
     
-  } 
+  }
+  
+  # power.2stage.in() has method="IN" in return
+  if(tolower(x$method)=="in"){
+    cat("Inverse Normal approach\n")
+    if (x$max.comb.test) cat(" - maximum") else cat(" - standard") 
+    cat(" combination test (")
+    if (x$max.comb.test) cat("weights = ", x$weight[1], " ", x$weight[2], ")\n",
+                             sep="")
+      else cat("weight = ", weight, ")\n", sep="")
+    cat(" - alpha (s1/s2) =", x$alpha[1], x$alpha[2], "\n")
+    if (x$ssr.conditional) cat(" - with ") else cat(" - without ")
+    cat("conditional error rates and conditional power\n")
+    cat("Overall target power = ", x$targetpower, sep="")
+    cat("\nThreshold in power monitoring step for futility =", 
+        x$power.threshold, "\n")
+    .print_pmethod(x$pmethod)
+    
+    if (x$usePE) 
+      cat("CV1 and PE1 in sample size est. used\n") 
+    else
+      cat("CV1 and GMR =", x$GMR, "in sample size est. used\n")
+    
+    # futility criterion w.r.t. PE or CI or Nmax
+    if(!is.null(x$fCrit)){
+      if(is.finite(x$fCNmax)) {
+        cat("Futility criterion Nmax = ",x$fCNmax,"\n", sep="")
+      } else {
+        cat("No futility criterion regarding Nmax\n")
+      }
+      if(x$fCrange[1L] >0 & is.finite(x$fCrange[2L])){
+        fCrit <- x$fCrit
+        fCrit <- if("ci" %in% fCrit) "90% CI" else if ("pe" %in% fCrit) "PE"
+        cat("Futility criterion ", toupper(fCrit)," outside ", x$fCrange[1L], " ... ",
+            x$fCrange[2L], "\n", sep="")
+      } else {
+        cat("No futility criterion regarding PE or CI\n")
+      }
+    }
+    if(is.finite(x$min.n2)){
+      if(x$min.n2>0) cat("Minimum sample size in stage 2 =", x$min.n2, "\n")
+    }
+    if(is.finite(x$max.n)){
+      cat("Maximum overall sample size max.n = ", x$max.n,"\n", sep="")
+    }
+    # --- BE acceptance range
+    cat("BE acceptance range = ", x$theta1," ... ", x$theta2,"\n\n", sep="")
+    
+    # ---CV, n1 and GMR (GMR only if usePE=F)
+    cat("CV = ", x$CV, sep="")
+    cat("; n(stage 1) = ", x$n1, sep="")
+    cat("; GMR = ", x$GMR, "\n", sep="")
+    
+    .print_results(x)
+    return(invisible(x))
+  }
   
   #all other functions
   cat("Method ", x$method,":", sep="")
