@@ -59,11 +59,14 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     stop("Length of weight must be <= 2.")
   if (length(alpha) == 1 && missing(weight))
     weight <- if (max.comb.test) c(0.5, 0.25) else 0.5
-  if (length(alpha) == 2)
-    message(paste0("It is assumed that the specified alpha values are in line", 
-                   "with the specified max.comb.test argument"))
+  if (length(alpha) == 2) {
+    if (missing(weight))
+      stop("weight must be specified.")
+    message(paste0("Note: It is assumed that the specified alpha values are in", 
+                   " line with the specified max.comb.test argument."))
+  }
   if (length(alpha) == 2 && !missing(weight))
-    message("Adjusted alpha values are specified, weight(s) will be ignored.")
+    message("Note: Adjusted alpha values are specified, weight(s) will be ignored.")
   lw <- length(weight)
   if (max.comb.test) {
     if (length(alpha) != 2 && lw != 2)
@@ -91,6 +94,10 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     message("min.n2 rounded up to next even integer", min.n2)
   }
   if (n1 >= max.n) stop("max.n must be greater than n1.")
+  if (is.finite(max.n) && (max.n %% 2 != 0)) {
+    max.n <- max.n + max.n %% 2
+    message("max.n rounded up to next even integer", min.n2)
+  }
   if (missing(GMR)) GMR <- 0.95
   if (missing(theta0)) theta0 <- GMR
   if (missing(theta1) && missing(theta2))  theta1 <- 0.8
@@ -158,10 +165,11 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     list(cval = qnorm(1 - alpha), siglev = alpha)
   
   ### Stage 1 ------------------------------------------------------------------
-  if (details)
+  if (details) {
     cat(nsims,"sims. Stage 1")
-  # Start timer
-  ptm  <- proc.time()
+    # Start timer
+    ptm  <- proc.time()
+  }
   
   stage <- rep.int(1, nsims)
   
@@ -190,7 +198,6 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   # Cases with BE == TRUE are clear: early stop due to BE
   # Cases with BE == FALSE are not yet clear:
   # - calculate power for stage 1
-  # TO DO: usePE to be applied here as well?
   pwr_s1 <- .calc.power(alpha = cl$siglev[1], ltheta1 = ltheta1, 
                         ltheta2 = ltheta2, diffm = lGMR, 
                         sem = se.fac * sqrt(mses), df = df, method = pmethod)
@@ -208,13 +215,15 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
       outside <- ((pes - lfClower) < 1.25e-5 | (lfCupper - pes) < 1.25e-5)
     }
     if (nms_match[2]) {
-      tval <- qt(1 - 0.05, df)  # use 90% CI for this check
+      tval <- qt(1 - cl$siglev[1], df)  # use adjusted CI for this check
       hw <- tval * se.fac * sqrt(mses)
       lower <- pes - hw
       upper <- pes + hw
       outside <- (lower > lfCupper) | (upper < lfClower)
       rm(tval, hw, lower, upper)
     }
+    pct_stop_s1_2 <- sum(outside) / nsims
+    pct_stop_s1_3 <- sum(is.na(BE) & outside) / nsims
     # Set the ones identified as futile to a failure
     BE[is.na(BE) & outside] <- FALSE
     rm(outside)
@@ -223,7 +232,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   # Time for stage 1
   if (details) {
     cat(" - Time consumed (secs):\n")
-    print(round((proc.time()-ptm), 1))
+    print(round((proc.time() - ptm), 1))
   }
   
   ### Sample size re-estimation ------------------------------------------------
@@ -238,7 +247,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   if (length(pes_tmp) > 0) {
     if (details) {
       cat("Keep calm. Sample sizes for stage 2 (", length(pes_tmp),
-          " studies)\n", sep="")
+          " studies)\n", sep = "")
       cat("will be estimated. May need some time.\n")
     }
     
@@ -264,15 +273,11 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
         (cl$cval[2] - sqrt(weight[lw])*cbind(Z11, Z12)) / sqrt(1 - weight[lw])
       ))
     
-      # Set sign of lGMR to the sign of estimated point estimate
-      # (Maurer et al call this 'adaptive planning step')
-      # TO DO: Which is correct?
-      #  Fig 6.2 implies
-      #  lGMR_ssr <- lGMR * ifelse(pes_tmp >= 0, -1, 1)
-      #  but Fig. 6.5 implies this (see case !usePE)
       if (usePE) {
         lGMR_ssr <- pes_tmp
       } else {
+        # Set sign of lGMR to the sign of estimated point estimate
+        # (Maurer et al call this 'adaptive planning step')
         # TO DO: Should the sign only be adapted for maximum combination test
         #        or also for standard combination test? 
         sgn_pes_tmp <- ifelse(pes_tmp >= 0, 1, -1)
@@ -281,7 +286,8 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     } else {
       alpha_ssr <- cl$siglev[2]
       pwr_ssr <- targetpower
-      lGMR_ssr <- if (usePE) pes_tmp else lGMR  # TO DO: here we do not need to switch the sign?
+      # TO DO: Do we need to adapt the sign here as well?
+      lGMR_ssr <- if (usePE) pes_tmp else lGMR
     }
     
     # Sample size for stage 2
@@ -295,7 +301,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     
     if (details) {
       cat("Time consumed (secs):\n")
-      print(round((proc.time()-ptms), 1))
+      print(round((proc.time() - ptms), 1))
     }
     
     # Futility check regarding maximum overall sample size
@@ -377,6 +383,8 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     pBE_s1 = sum(BE[ntot == n1]) / nsims,
     pct_s2 = 100 * sum(ntot > n1) / nsims,
     pct_stop_s1 = 100 * sum(ntot == n1) / nsims,
+    pct_stop_s1_2 = 100 * pct_stop_s1_2,
+    pct_stop_s1_3 = 100 * pct_stop_s1_3,
     nmean = mean(ntot),
     nrange = range(ntot),
     nperc = quantile(ntot, probs = npct)
@@ -384,7 +392,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   
   if (details) {
     cat("Total time consumed (secs):\n")
-    print(round((proc.time()-ptm), 1))
+    print(round((proc.time() - ptm), 1))
     cat("\n")
   }
   

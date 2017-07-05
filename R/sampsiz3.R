@@ -21,6 +21,7 @@
   # se and ltheta0/diffm must have the same length to vectorize propperly!
   if (length(mse)==1)     mse <- rep(mse, times=length(ltheta0))
   if (length(ltheta0)==1) ltheta0 <- rep(ltheta0, times=length(mse))
+  if (length(targetpower)==1) targetpower <- rep(targetpower, times=length(mse))
   
   # Allow alpha to be scalar or a matrix. If matrix, the interpretation is
   # - Require 2 columns
@@ -36,7 +37,7 @@
     alpha <- matrix(alpha, ncol = 1)
   } else { 
     if (nrow(alpha) != length(ltheta0) || length(ltheta0) != length(mse))
-      stop("number of rows of alpha must match length of diffm and sem.")
+      stop("Number of rows of alpha must match length of diffm and sem.")
   }
   dl <- ncol(alpha)
   if (dl > 2)
@@ -51,46 +52,56 @@
   
   se    <- sqrt(mse[is.finite(ns)])
   diffm <- ltheta0[is.finite(ns)]
+  a <- alpha[is.finite(ns), , drop = FALSE]
+  tp <- targetpower[is.finite(ns)]
   
   # start value from large sample approx. (hidden func.)
   # Jan 2015 changed to modified Zhang's formula
   # gives at least for 2x2 the best estimate (max diff to n: +-4)
-  n <- .sampleN0_3(do.call(pmin, as.data.frame(alpha)),
-                   targetpower, ltheta1, ltheta2,  diffm, se, steps, bk)
+  n <- .sampleN0_3(do.call(pmin, as.data.frame(a)), tp, ltheta1, ltheta2, 
+                   diffm, se, steps, bk)
   n <- ifelse(n<nmin, nmin, n)
+  
+  # n may again contain some infinite values
+  ns[ns == 0] <- ifelse(is.infinite(n), Inf, 0)
+  n <- n[is.finite(n)]
+  se    <- sqrt(mse[is.finite(ns)])
+  diffm <- ltheta0[is.finite(ns)]
+  a <- alpha[is.finite(ns), , drop = FALSE]
+  tp <- targetpower[is.finite(ns)]
   
   # method=="ls" is not used yet, in power.2stage.ssr() the 'original' ls approx
   # is used exactly as given in the paper of Golkowski et al.
-  if(method=="ls") return(n)
+  #if(method=="ls") return(n)
   
   # degrees of freedom as expression
   # n-2 for 2x2 crossover and 2-group parallel design
   ##dfe <- parse(text="n-2", srcfile=NULL)  # is that needed?
   # or should that read n-3? see Kieser/Rauch
   #dfe <- parse(text="n-3", srcfile=NULL)
-  
   #df   <- eval(dfe)
-  pow  <- .calc.power(alpha, ltheta1, ltheta2, diffm, sem=se*sqrt(bk/n), df=n-2, 
+  
+  pow  <- .calc.power(a, ltheta1, ltheta2, diffm, sem=se*sqrt(bk/n), df=n-2, 
                       method)
   #iter <- rep(0, times=length(se)) 
   #imax <- 50
-  index <- (pow > targetpower) & (n > nmin)
+  index <- (pow > tp) & (n > nmin)
   while (any(index)) {
     n[index] <- n[index] - steps
-    pow_tmp <- .calc.power(alpha[index, , drop=FALSE], ltheta1, ltheta2, 
+    pow_tmp <- .calc.power(a[index, , drop=FALSE], ltheta1, ltheta2, 
                            diffm[index], sem=se[index]*sqrt(bk/n[index]), 
                            df=n[index]-2, method)
     pow[index] <- pow_tmp
-    index <- (pow > targetpower) & (n > nmin)
+    index <- (pow > tp) & (n > nmin)
   }
-  index <- (pow < targetpower)
+  index <- (pow < tp)
   while (any(index)) {
     n[index] <- n[index] + steps
-    pow_tmp <- .calc.power(alpha[index, , drop=FALSE], ltheta1, ltheta2, 
+    pow_tmp <- .calc.power(a[index, , drop=FALSE], ltheta1, ltheta2, 
                            diffm[index], sem=se[index]*sqrt(bk/n[index]), 
                            df=n[index]-2, method)
     pow[index] <- pow_tmp
-    index <- (pow < targetpower)
+    index <- (pow < tp)
   }
   
   # combine the Inf and n

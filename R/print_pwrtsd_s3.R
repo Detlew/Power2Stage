@@ -83,8 +83,8 @@ print.pwrtsd <- function(x, ...)
       }
       if(x$fCrange[1L] >0 & is.finite(x$fCrange[2L])){
         fCrit <- x$fCrit
-        fCrit <- if("ci" %in% fCrit) "90% CI" else if ("pe" %in% fCrit) "PE"
-        cat("Futility criterion ", toupper(fCrit)," outside ", x$fCrange[1L], " ... ",
+        fCrit <- if("ci" %in% fCrit) "(1 - 2*alpha_s1) CI" else if ("pe" %in% fCrit) "PE"
+        cat("Futility criterion ", fCrit," outside ", x$fCrange[1L], " ... ",
             x$fCrange[2L], "\n", sep="")
       } else {
         cat("No futility criterion regarding PE or CI\n")

@@ -42,7 +42,7 @@
     alpha <- matrix(alpha, ncol = 1)
   } else { 
     if (nrow(alpha) != length(diffm) || length(diffm) != length(sem))
-      stop("number of rows of alpha must match length of diffm and sem.")
+      stop("Number of rows of alpha must match length of diffm and sem.")
   }
   dl <- ncol(alpha)
   if (dl > 2)
@@ -136,7 +136,7 @@
     alpha <- matrix(alpha, ncol = 1)
   } else { 
     if (nrow(alpha) != length(diffm) || length(diffm) != length(sem))
-      stop("number of rows of alpha must match length of diffm and sem.")
+      stop("Number of rows of alpha must match length of diffm and sem.")
   }
   dl <- ncol(alpha)
   if (dl > 2)
@@ -185,7 +185,7 @@
     alpha <- matrix(alpha, ncol = 1)
   } else { 
     if (nrow(alpha) != length(diffm) || length(diffm) != length(sem))
-      stop("number of rows of alpha must match length of diffm and sem.")
+      stop("Number of rows of alpha must match length of diffm and sem.")
   }
   dl <- ncol(alpha)
   if (dl > 2)
