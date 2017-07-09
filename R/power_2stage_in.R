@@ -2,7 +2,6 @@
 # Author: Benjamin Lang
 # Code based on power.2stage() and power.2stage.fC by Detlew Labes
 ################################################################################
-
 power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV, 
                             targetpower = 0.8, power.threshold = targetpower, 
                             theta0, theta1, theta2, GMR, usePE = FALSE,
@@ -25,14 +24,14 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   #   CV: Coefficient of variation (use e.g. 0.3 for 30%)
   #   targetpower: Desired target power for end of the trial 
   #   power.threshold: Threshold for power monitoring step to decide on
-  #                    futility for cases with not BE after stage 1
+  #                    futility for cases 'not BE' after stage 1
   #                    (set to 1 to deactivate this futility rule)
   #   theta0: Assumed ratio of geometric means for simulations
   #   theta1: Lower (bio-)equivalence limits
   #   theta2: Upper (bio-)equivalence limits
   #   GMR: Assumed ratio of geometric means to be used in sample size re-est.
   #   min.n2: Minimum sample size for stage 2
-  #   max.n: Maximum overall sample size (stage 1 + stage 2) to go to 2nd stage
+  #   max.n: Maximum overall sample size (stage 1 + stage 2) 
   #   ssr.conditional: Logical; if TRUE, the sample size re-estimation step
   #                    uses conditional error rates and conditional power
   #   fCrit: Futility criterion to use: PE, CI or fCNmax or a combination thereof
@@ -204,6 +203,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   # - if result is FALSE and power for stage 1 is 'sufficiently high', then
   #   the result will be considered a fail (ie leave FALSE)
   #   otherwise we leave it open (ie set to NA)
+  fut <- sum(BE == FALSE & pwr_s1 >= power.threshold)
   BE[BE == FALSE & pwr_s1 < power.threshold] <- NA
   
   # From those NAs may still consider some of them as failure due to futility:
@@ -215,6 +215,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
       outside <- ((pes - lfClower) < 1.25e-5 | (lfCupper - pes) < 1.25e-5)
     }
     if (nms_match[2]) {
+      # TO DO: Which CI level to use?
       tval <- qt(1 - cl$siglev[1], df)  # use adjusted CI for this check
       hw <- tval * se.fac * sqrt(mses)
       lower <- pes - hw
@@ -222,8 +223,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
       outside <- (lower > lfCupper) | (upper < lfClower)
       rm(tval, hw, lower, upper)
     }
-    pct_stop_s1_2 <- sum(outside) / nsims
-    pct_stop_s1_3 <- sum(is.na(BE) & outside) / nsims
+    fut <- fut + sum(is.na(BE) & outside)
     # Set the ones identified as futile to a failure
     BE[is.na(BE) & outside] <- FALSE
     rm(outside)
@@ -264,8 +264,11 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     Z12 <- qnorm(1 - p12)
     
     if (ssr.conditional) {
-      # Calculate conditional power (may be negative, if so, set to zero)
-      pwr_ssr <- pmax.int(((1 - pwr_s1) - (1 - targetpower)) / (1 - pwr_s1), 0)
+      # Calculate conditional power
+      # (May be negative, if so, set to zero. For numerical reasons, set to a
+      #  value very near to zero)
+      pwr_ssr <- pmax.int(((1 - pwr_s1) - (1 - targetpower)) / (1 - pwr_s1), 
+                          0.001)
     
       # Derive conditional error rates
       alpha_ssr <- 1 - pnorm(pmin(
@@ -311,6 +314,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     if (!is.null(fCrit) && nms_match[3])
       BE2[n1 + n2 > fCNmax] <- FALSE
     s2[BE2 == FALSE] <- 1  # such a case is considered to be gone up to stage 1
+    fut <- fut + if (all(is.na(BE2))) 0 else sum(BE2 == FALSE)
     
     # Carry over results from BE2 and s2 to BE, stage and ntot
     stage[is.na(BE)] <- s2
@@ -381,10 +385,9 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     # Results
     pBE = sum(BE) / nsims,
     pBE_s1 = sum(BE[ntot == n1]) / nsims,
-    pct_s2 = 100 * sum(ntot > n1) / nsims,
     pct_stop_s1 = 100 * sum(ntot == n1) / nsims,
-    pct_stop_s1_2 = 100 * pct_stop_s1_2,
-    pct_stop_s1_3 = 100 * pct_stop_s1_3,
+    pct_stop_fut = 100 * fut / nsims,
+    pct_s2 = 100 * sum(ntot > n1) / nsims,
     nmean = mean(ntot),
     nrange = range(ntot),
     nperc = quantile(ntot, probs = npct)
