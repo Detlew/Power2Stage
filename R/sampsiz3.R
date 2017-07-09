@@ -44,7 +44,9 @@
     stop("Number of columns of alpha should be 1 or 2.")
   
   # return 'Inf' if ltheta0 not between or very near to ltheta1, ltheta2
-  ns <- ifelse((ltheta0-ltheta1)<1.25e-5 | (ltheta2-ltheta0)<1.25e-5, Inf, 0)
+  #ns <- ifelse((ltheta0-ltheta1)<1.25e-5 | (ltheta2-ltheta0)<1.25e-5, Inf, 0)
+  # For run-time reasons we use 10^(-3) as threshold
+  ns <- ifelse((ltheta0-ltheta1)<1e-03 | (ltheta2-ltheta0)<1e-03, Inf, 0)
 
   # design characteristics for 2-group parallel and 2x2 crossover design
   steps <- 2     # stepsize for sample size search
@@ -62,10 +64,11 @@
                    diffm, se, steps, bk)
   n <- ifelse(n<nmin, nmin, n)
   
-  # n may again contain some infinite values
-  ns[ns == 0] <- ifelse(is.infinite(n), Inf, 0)
-  n <- n[is.finite(n)]
-  se    <- sqrt(mse[is.finite(ns)])
+  # n may contain very large sample sizes which would result in very long
+  # run time from loop below. Set all n's to Inf which are > 10^5
+  ns[ns == 0] <- ifelse(n > 1e+06, Inf, 0)
+  n <- n[n <= 1e+06]
+  se <- sqrt(mse[is.finite(ns)])
   diffm <- ltheta0[is.finite(ns)]
   a <- alpha[is.finite(ns), , drop = FALSE]
   tp <- targetpower[is.finite(ns)]

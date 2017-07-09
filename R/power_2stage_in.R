@@ -82,8 +82,8 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   if (n1 <= 0)      stop("Number of subjects in stage 1 must be >0!")
   if (missing(CV))  stop("CV must be given!")
   if (CV <= 0)      stop("CV must be >0!")
-  if (targetpower < 0 || targetpower > 1) 
-    stop("targetpower must be within [0, 1]")
+  if (targetpower <= 0 || targetpower >= 1) 
+    stop("targetpower must be within (0, 1)")
   if (power.threshold < 0 || power.threshold > 1) 
     stop("power_threshold must be within [0, 1]")
   if (min.n2 < 4) 
@@ -267,8 +267,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
       # Calculate conditional power
       # (May be negative, if so, set to zero. For numerical reasons, set to a
       #  value very near to zero)
-      pwr_ssr <- pmax.int(((1 - pwr_s1) - (1 - targetpower)) / (1 - pwr_s1), 
-                          0.001)
+      pwr_ssr <- pmax.int(1 - (1 - targetpower) / (1 - pwr_s1), 0.001)
     
       # Derive conditional error rates
       alpha_ssr <- 1 - pnorm(pmin(
