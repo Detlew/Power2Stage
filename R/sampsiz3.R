@@ -65,7 +65,7 @@
   n <- ifelse(n<nmin, nmin, n)
   
   # n may contain very large sample sizes which would result in very long
-  # run time from loop below. Set all n's to Inf which are > 10^5
+  # run time from loop below. Set all n's to Inf which are > 10^6
   ns[ns == 0] <- ifelse(n > 1e+06, Inf, 0)
   n <- n[n <= 1e+06]
   se <- sqrt(mse[is.finite(ns)])
