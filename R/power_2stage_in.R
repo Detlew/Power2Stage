@@ -1,6 +1,6 @@
 ################################################################################
 # Author: Benjamin Lang
-# Code based on power.2stage() and power.2stage.fC by Detlew Labes
+# Code based on power.2stage() and power.2stage.fC() by Detlew Labes
 ################################################################################
 power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV, 
                             targetpower = 0.8, power.threshold = targetpower, 
@@ -20,7 +20,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   #   weight: Required if alpha is of length 1: weight of first stage
   #           Of length 1 in case of max.comb.test = FALSE, length 2 otherwise
   #   max.comb.test: Logical; if TRUE, maximum combination test will be used
-  #   n1: Total sample size for stage 1
+  #   n1: Sample size for stage 1
   #   CV: Coefficient of variation (use e.g. 0.3 for 30%)
   #   targetpower: Desired target power for end of the trial 
   #   power.threshold: Threshold for power monitoring step to decide on
@@ -34,7 +34,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   #   max.n: Maximum overall sample size (stage 1 + stage 2) 
   #   ssr.conditional: Logical; if TRUE, the sample size re-estimation step
   #                    uses conditional error rates and conditional power
-  #   fCrit: Futility criterion to use: PE, CI or fCNmax or a combination thereof
+  #   fCrit: Futility criterion to use: PE, CI or Nmax or a combination thereof
   #   fClower: Lower futility limit for PE or CI of stage 1
   #   fCupper: Upper futility limit for PE or CI of stage 1
   #   fCNmax: If re-estimated sample size n2 is such that n1+n2 > fCNmax,
@@ -85,7 +85,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   if (targetpower <= 0 || targetpower >= 1) 
     stop("targetpower must be within (0, 1)")
   if (power.threshold < 0 || power.threshold > 1) 
-    stop("power_threshold must be within [0, 1]")
+    stop("power.threshold must be within [0, 1]")
   if (min.n2 < 4) 
     stop("min.n2 has to be at least 4.")
   if (min.n2 %% 2 != 0) {  # make it even
@@ -367,6 +367,11 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     
     # Fill the remaining NAs with either TRUE or FALSE
     BE[is.na(BE)] <- (Z01 > cl$cval[2] & Z02 > cl$cval[2])
+    # Could also do
+    # BE[is.na(BE)] <- (p21 < alpha_ssr[, 1] & p22 < alpha_ssr[, 2])
+    # i.e. test statistics are not really needed to be calculated.
+    # Caution: p21 and p22 should however not be confused with the overall
+    #          p-value resulting from this two-stage setting
     
     rm(Z11, Z21, Z12, Z22, Z01, Z02)
   }  # end if length(pes_tmp) > 0
