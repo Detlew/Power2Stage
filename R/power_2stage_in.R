@@ -30,6 +30,8 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   #   theta1: Lower (bio-)equivalence limits
   #   theta2: Upper (bio-)equivalence limits
   #   GMR: Assumed ratio of geometric means to be used in sample size re-est.
+  #   usePE: Logical; if TRUE, ssr is done with observed point estimate from
+  #          stage 1
   #   min.n2: Minimum sample size for stage 2
   #   max.n: Maximum overall sample size (stage 1 + stage 2) 
   #   ssr.conditional: Logical; if TRUE, the sample size re-estimation step
@@ -89,12 +91,12 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   if (min.n2 < 4) 
     stop("min.n2 has to be at least 4.")
   if (min.n2 %% 2 != 0) {  # make it even
-    min.n2 <- min.n2 + min.n2 %% 2
+    min.n2 <- 2 * floor(min.n2 / 2) + 2
     message("min.n2 rounded up to next even integer", min.n2)
   }
   if (n1 >= max.n) stop("max.n must be greater than n1.")
   if (is.finite(max.n) && (max.n %% 2 != 0)) {
-    max.n <- max.n + max.n %% 2
+    max.n <- 2 * floor(max.n / 2) + 2
     message("max.n rounded up to next even integer", min.n2)
   }
   if (missing(GMR)) GMR <- 0.95
@@ -202,7 +204,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
                         sem = se.fac * sqrt(mses), df = df, method = pmethod)
   # - if result is FALSE and power for stage 1 is 'sufficiently high', then
   #   the result will be considered a fail (ie leave FALSE)
-  #   otherwise we leave it open (ie set to NA)
+  #   otherwise (power not high) we leave it open (ie set to NA)
   fut <- sum(BE == FALSE & pwr_s1 >= power.threshold)
   BE[BE == FALSE & pwr_s1 < power.threshold] <- NA
   
@@ -215,7 +217,6 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
       outside <- ((pes - lfClower) < 1.25e-5 | (lfCupper - pes) < 1.25e-5)
     }
     if (nms_match[2]) {
-      # TO DO: Which CI level to use?
       tval <- qt(1 - cl$siglev[1], df)  # use adjusted CI for this check
       hw <- tval * se.fac * sqrt(mses)
       lower <- pes - hw
@@ -380,10 +381,10 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   res <- list(
     # Information
     design = "2x2 crossover", method = "IN", alpha = cl$siglev, weight = weight,
-    n1 = n1, CV = CV, GMR = GMR, usePE = usePE, targetpower = targetpower, 
-    power.threshold = power.threshold, min.n2 = min.n2, max.n = max.n, 
-    ssr.conditional = ssr.conditional, theta0 = theta0, theta1 = theta1, 
-    theta2 = theta2, weight = weight, max.comb.test = max.comb.test, 
+    cval = cl$cval, max.comb.test = max.comb.test, n1 = n1, CV = CV, GMR = GMR, 
+    usePE = usePE, targetpower = targetpower, power.threshold = power.threshold, 
+    min.n2 = min.n2, max.n = max.n, ssr.conditional = ssr.conditional, 
+    theta0 = theta0, theta1 = theta1, theta2 = theta2, 
     fCrit = fCrit, fCrange = c(fClower, fCupper), fCNmax = fCNmax, 
     pmethod = pmethod, nsims = nsims,
     # Results

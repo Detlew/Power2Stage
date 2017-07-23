@@ -3,7 +3,7 @@
 \alias{power.2stage.in}
 \title{
 Power calculation of adaptive 2-stage BE studies with 2x2 crossover design,
-based on Inverse-Normal method
+based on the Inverse-Normal method
 }
 \description{
 The function calculates the empirical power of 2-stage BE studies based
@@ -45,7 +45,7 @@ Sample size for stage 1.
 }
   \item{CV}{
 Coefficient of variation of the intra-subject variability (use e.g. 0.3 for
-30%).
+30\%).
 }
   \item{targetpower}{
 Desired target power to declare BE at the end of the trial.
@@ -54,7 +54,8 @@ Desired target power to declare BE at the end of the trial.
 Threshold for power monitoring step to decide on futility for cases where
 BE has not been achieved after stage 1: If BE has not been achieved after
 stage 1 and power for stage 1 is greater than \code{power.threshold}, then the 
-study will be considered a failure; set to 1 to deactivate this futility rule.
+study will be considered a failure.\cr
+NB: Set value to 1 in order to deactivate this futility rule.
 }
   \item{theta0}{
 Assumed ratio of geometric means (T/R) for simulations.\cr
@@ -154,9 +155,8 @@ of the simulation steps. Default is \code{FALSE}.
 }
 }
 \details{
-The calculations follow in principle the steps as described in Maurer et al.\cr
 The underlying subject data are assumed to be evaluated after log-transformation.
-But instead of simulating subject data the statistics pe1, mse1 and pe2, mse2 
+But instead of simulating subject data, the statistics pe1, mse1 and pe2, mse2 
 are simulated via their associated distributions (normal and chi-squared 
 distributions).
 }
@@ -170,7 +170,7 @@ The results are in the components:
 \item{pct_stop_s1}{Percentage of studies stopped after stage 1 (due to BE or
 due to futility).}
 \item{pct_stop_fut}{Percentage of studies stopped after stage 1 due to
-futility}
+futility.}
 \item{pct_s2}{Percentage of studies continuing to stage 2.}
 \item{nmean}{Mean of n(total).}
 \item{nrange}{Range (min, max) of n(total).}
@@ -199,7 +199,7 @@ B. Lang
 power.2stage.in(n1 = 12, CV = 0.2)
 
 # This setting resembles values in Table 6.8 and 6.10 in Patterson and Jones. 
-# Note however that actual replication would require the following additional 
+# Note that actual replication would require the following additional 
 # arguments (long run-time)
 \dontrun{
 power.2stage.in(n1 = 12, CV = 0.2, max.n = 4000, pmethod = "exact", nsims = 1E6)}
