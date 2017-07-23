@@ -82,6 +82,10 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     stop("Alpha(s) not properly specified, must be > 0 and < 1.")
   if (missing(n1))  stop("Number of subjects in stage 1 must be given!")
   if (n1 <= 0)      stop("Number of subjects in stage 1 must be >0!")
+  if (n1 %% 2 != 0) {  # make it even
+    n1 <- 2 * floor(n1 / 2) + 2
+    message("n1 rounded up to next even integer", n1)
+  }
   if (missing(CV))  stop("CV must be given!")
   if (CV <= 0)      stop("CV must be >0!")
   if (targetpower <= 0 || targetpower >= 1) 
@@ -97,7 +101,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   if (n1 >= max.n) stop("max.n must be greater than n1.")
   if (is.finite(max.n) && (max.n %% 2 != 0)) {
     max.n <- 2 * floor(max.n / 2) + 2
-    message("max.n rounded up to next even integer", min.n2)
+    message("max.n rounded up to next even integer", max.n)
   }
   if (missing(GMR)) GMR <- 0.95
   if (missing(theta0)) theta0 <- GMR
