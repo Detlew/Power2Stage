@@ -61,7 +61,9 @@ print.pwrtsd <- function(x, ...)
     if (x$max.comb.test) cat("weights = ", x$weight[1], " ", x$weight[2], ")\n",
                              sep="")
       else cat("weight = ", x$weight, ")\n", sep="")
-    cat(" - alpha (s1/s2) =", x$alpha[1], x$alpha[2], "\n")
+    cat(" - alpha (s1/s2) =", round(x$alpha[1], 5), round(x$alpha[2], 5), "\n")
+    cat(" - critical value (s1/s2) =", round(x$cval[1], 5), round(x$cval[2], 5),
+        "\n")
     if (x$ssr.conditional) cat(" - with ") else cat(" - without ")
     cat("conditional error rates and conditional power\n")
     cat("Overall target power = ", x$targetpower, sep="")
