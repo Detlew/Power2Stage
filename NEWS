@@ -1,3 +1,7 @@
+2017-07-20 on GitHub
+   - Function power.2stage.in() to calculate the operational characteristics of
+     TSD's evaluated via p-value combination using the inverse normal approach.
+     Contributed by Benjamin Lang.
    - GitHub URL and bug reports URL added
 Version 0.4-5
 2017-01-18
