@@ -33,7 +33,7 @@ Weight(s) of stage 1 (information fraction). This argument will be ignored if
 \code{alpha} is of length 2. Otherwise, \code{weight} must either be of
 length 1 (in case of \code{max.comb.test = FALSE}) or of length 2 (in case of
 \code{max.comb.test = TRUE}).\cr
-If missing, the default is 0.5 for \code{max.comb.test = FALSE} or 
+If missing, the default is 0.5 for \code{max.comb.test = FALSE} and 
 \code{c(0.5, 0.25)} for \code{max.comb.test = TRUE}.
 }
   \item{max.comb.test}{
@@ -53,9 +53,9 @@ Desired target power to declare BE at the end of the trial.
   \item{power.threshold}{
 Threshold for power monitoring step to decide on futility for cases where
 BE has not been achieved after stage 1: If BE has not been achieved after
-stage 1 and power for stage 1 is greater than \code{power.threshold}, then the 
-study will be considered a failure.\cr
-NB: Set value to 1 in order to deactivate this futility rule.
+stage 1 and power for stage 1 is greater than or equal to \code{power.threshold},
+then the study will be considered a failure.\cr\cr
+See 'Details' for more information on the choice of \code{power.threshold}.
 }
   \item{theta0}{
 Assumed ratio of geometric means (T/R) for simulations.\cr
@@ -92,11 +92,14 @@ Defaults to Inf, i.e. no constraint on the re-estimated sample size.
   \item{ssr.conditional}{
 Logical; if \code{TRUE}, the sample size re-estimation step uses conditional
 error rates and conditional power.\cr
-Defaults to \code{TRUE}.
+Defaults to \code{TRUE}.\cr
+See also 'Details'.
 }
   \item{fCrit}{
-Futility criterion to use: \code{"PE"}, \code{"CI"} or \code{"Nmax"}; 
-or a combination thereof (concatenate abbreviations).
+Futility criterion to use: \code{"PE"} (observed point estimate of the geometric
+mean ratio from stage 1), \code{"CI"} (90\% CI of the geometric mean ratio from
+stage 1) or \code{"Nmax"} (overall maximum sample size); or a combination 
+thereof (concatenate abbreviations, see 'Examples').
 }
   \item{fClower}{
 Lower futility limit for the PE or CI of stage 1.\cr
@@ -158,7 +161,26 @@ of the simulation steps. Default is \code{FALSE}.
 The underlying subject data are assumed to be evaluated after log-transformation.
 But instead of simulating subject data, the statistics pe1, mse1 and pe2, mse2 
 are simulated via their associated distributions (normal and chi-squared 
-distributions).
+distributions).\cr\cr
+
+If \code{ssr.conditional = TRUE}, the design scheme generally calculates the 
+conditional power of the second stage and uses this value as desired target 
+power in the sample size re-estimation process. There are two links between 
+the conditional power and the argument \code{power.threshold}:
+\itemize{
+\item If \code{power.threshold} > \code{targetpower}, then the conditional power
+may actually be negative. This seems not to be sensible. Therefore, for such
+cases the desired target power for sample size re-calculation will be set to 
+\code{targetpower}.
+\item The futility criterion \eqn{power for stage 1 \ge } \code{power.threshold}
+for cases with not yet BE after stage 1 may equivalently be expressed in terms of
+the conditional power of the second stage: The criterion 
+\deqn{conditional power \le x} is equivalent to 
+\deqn{power for stage 1 \ge 1 - beta/(1 - x),} where 
+\eqn{beta = 1 - }\code{targetpower} and \eqn{x in [0, 1)}. 
+Therefore, \code{power.threshold} may be chosen such that futility is based 
+on the conditional power being less than some value \eqn{x}.
+}
 }
 \value{
 Returns an object of class "pwrtsd" with all the input arguments and results 

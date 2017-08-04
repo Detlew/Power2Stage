@@ -25,7 +25,6 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   #   targetpower: Desired target power for end of the trial 
   #   power.threshold: Threshold for power monitoring step to decide on
   #                    futility for cases 'not BE' after stage 1
-  #                    (set to 1 to deactivate this futility rule)
   #   theta0: Assumed ratio of geometric means for simulations
   #   theta1: Lower (bio-)equivalence limits
   #   theta2: Upper (bio-)equivalence limits
@@ -221,7 +220,8 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
       outside <- ((pes - lfClower) < 1.25e-5 | (lfCupper - pes) < 1.25e-5)
     }
     if (nms_match[2]) {
-      tval <- qt(1 - cl$siglev[1], df)  # use adjusted CI for this check
+      tval <- qt(1 - 0.05, df)  # use 90% CI
+      #tval <- qt(1 - cl$siglev[1], df)  # use adjusted CI for this check
       hw <- tval * se.fac * sqrt(mses)
       lower <- pes - hw
       upper <- pes + hw
@@ -269,10 +269,15 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     Z12 <- qnorm(1 - p12)
     
     if (ssr.conditional) {
-      # Calculate conditional power
-      # (May be negative, if so, set to zero. For numerical reasons, set to a
-      #  value very near to zero)
-      pwr_ssr <- pmax.int(1 - (1 - targetpower) / (1 - pwr_s1), 0.001)
+      if (power.threshold > targetpower) {
+        # If power.threshold > targetpower, conditional power may be negative.
+        # This is not sensible. We then use the overall targetpower as desired
+        # target power for re-calculation
+        pwr_ssr <- targetpower
+      } else {
+        # Calculate conditional power
+        pwr_ssr <- 1 - (1 - targetpower) / (1 - pwr_s1)
+      }
     
       # Derive conditional error rates
       alpha_ssr <- 1 - pnorm(pmin(
@@ -285,15 +290,12 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
       } else {
         # Set sign of lGMR to the sign of estimated point estimate
         # (Maurer et al call this 'adaptive planning step')
-        # TO DO: Should the sign only be adapted for maximum combination test
-        #        or also for standard combination test? 
         sgn_pes_tmp <- ifelse(pes_tmp >= 0, 1, -1)
         lGMR_ssr <- lGMR * sgn_pes_tmp * if (lGMR >= 0) 1 else -1
       }
     } else {
       alpha_ssr <- cl$siglev[2]
       pwr_ssr <- targetpower
-      # TO DO: Do we need to adapt the sign here as well?
       lGMR_ssr <- if (usePE) pes_tmp else lGMR
     }
     

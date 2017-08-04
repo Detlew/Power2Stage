@@ -65,7 +65,10 @@ print.pwrtsd <- function(x, ...)
     cat(" - critical value (s1/s2) =", round(x$cval[1], 5), round(x$cval[2], 5),
         "\n")
     if (x$ssr.conditional) cat(" - with ") else cat(" - without ")
-    cat("conditional error rates and conditional power\n")
+    if (x$power.threshold > x$targetpower)
+      cat("conditional error rates\n")
+    else
+      cat("conditional error rates and conditional power\n")
     cat("Overall target power = ", x$targetpower, sep="")
     cat("\nThreshold in power monitoring step for futility =", 
         x$power.threshold, "\n")
@@ -85,7 +88,8 @@ print.pwrtsd <- function(x, ...)
       }
       if(x$fCrange[1L] >0 & is.finite(x$fCrange[2L])){
         fCrit <- x$fCrit
-        fCrit <- if("ci" %in% fCrit) "(1 - 2*alpha_s1) CI" else if ("pe" %in% fCrit) "PE"
+        #fCrit <- if ("ci" %in% fCrit) "(1 - 2*alpha_s1) CI" else if ("pe" %in% fCrit) "PE"
+        fCrit <- if ("ci" %in% fCrit) "90% CI" else if ("pe" %in% fCrit) "PE"
         cat("Futility criterion ", fCrit," outside ", x$fCrange[1L], " ... ",
             x$fCrange[2L], "\n", sep="")
       } else {
