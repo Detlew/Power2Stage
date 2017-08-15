@@ -184,8 +184,10 @@ on the conditional power being less than some value \eqn{x}.
 }
 \value{
 Returns an object of class "pwrtsd" with all the input arguments and results 
-as components.\cr
-The class "pwrtsd" has an S3 print method.\cr
+as components. As part of the input arguments a component \code{cval} is also
+presented, containing the critical values for stage 1 and 2 according to the 
+input based on \code{alpha}, \code{weight} and \code{max.comb.test}.\cr
+The class "pwrtsd" has an S3 print method.\cr\cr
 The results are in the components:
 \item{pBE}{Contains the ratio of studies found BE.}
 \item{pBE_s1}{Ratio of studies found BE in stage 1.}

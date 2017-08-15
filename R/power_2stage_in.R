@@ -66,7 +66,8 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
                    " line with the specified max.comb.test argument."))
   }
   if (length(alpha) == 2 && !missing(weight))
-    message("Note: Adjusted alpha values are specified, weight(s) will be ignored.")
+    message(paste0("Note: Adjusted alphas are specified, it is assumed that the",
+                   " specified weight(s) are in line with the alpha values."))
   lw <- length(weight)
   if (max.comb.test) {
     if (length(alpha) != 2 && lw != 2)
@@ -247,6 +248,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   pwr_s1   <- pwr_s1[is.na(BE)]
   p11      <- p11[is.na(BE)]
   p12      <- p12[is.na(BE)]
+  rm(pes, mses)
   
   # Do it only if stage 2 is required for at least one scenario
   if (length(pes_tmp) > 0) {
