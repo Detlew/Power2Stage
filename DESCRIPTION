@@ -14,8 +14,8 @@ Description: Contains functions to obtain the operational characteristics of
 Imports: PowerTOST, stats, mvtnorm
 Suggests: graphics
 ByteCompile: yes
-URL:        <https://github.com/Detlew/Power2Stage>
-BugReports: <https://github.com/Detlew/Power2Stage/issues>
+URL:        https://github.com/Detlew/Power2Stage
+BugReports: https://github.com/Detlew/Power2Stage/issues
 License: GPL (>=2)
 LazyLoad: yes
 LazyData: yes
