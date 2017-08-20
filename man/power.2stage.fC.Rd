@@ -111,10 +111,8 @@ Lower bioequivalence limit. Defaults to 0.8.
 Upper bioequivalence limit. Defaults to 1.25.
 }
   \item{npct}{
-p-values to be used for the percentiles of the distribution of n(total)=n1+n2.\cr
-Defaults to \code{c(0.05, 0.5, 0.95)} to obtain the 5\% and 95\% percentiles
-and the median.
-}
+Percentiles to be used for the presentation of the distribution of n(total)=n1+n2.\cr
+Defaults to c(0.05, 0.5, 0.95) to obtain the 5\% and 95\% percentiles and the median.}
   \item{nsims}{
 Number of studies to simulate.\cr 
 If missing \code{nsims} is set to 1E+05 = 100 000 or to 1E+06 = 1 Mio if you are 

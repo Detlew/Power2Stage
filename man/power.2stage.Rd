@@ -86,7 +86,7 @@ Lower bioequivalence limit. Defaults to 0.8.
 Upper bioequivalence limit. Defaults to 1.25.
 }
   \item{npct}{
-p-values to be used for the percentiles of the distribution of n(total)=n1+n2.\cr
+Percentiles to be used for the presentation of the distribution of n(total)=n1+n2.\cr
 Defaults to \code{c(0.05, 0.5, 0.95)} to obtain the 5\% and 95\% percentiles
 and the median.
 }
