@@ -155,10 +155,8 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
     ptms <- proc.time()
     # use mse1 & pe1 as described in Karalis/Macheras
     # sample size function returns Inf if pe1 is outside acceptance range
-#     nt <- mapply(FUN=.sampleN, mse=mses_tmp, ltheta0=pes_tmp, 
-#                  MoreArgs=list(alpha=alpha[2], targetpower=targetpower, 
-#                                ltheta1=ltheta1, ltheta2=ltheta2, 
-#                                method=pmethod, bk=bk))
+    # Aug. 2017: .sampleN2() now uses N-3 as df for ssr
+    # TODO: check if this was used in Karalis/Macheras
     nt <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=pes_tmp,
                     mse=mses_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
                     method=pmethod, bk=bk)

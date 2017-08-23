@@ -8,7 +8,6 @@
 #
 # author D.L.
 # --------------------------------------------------------------------------
-# require(PowerTOST)
 
 power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294), 
                              n1, GMR, CV, targetpower=0.8, 
@@ -228,19 +227,11 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
     if (usePE){
       # use mse1 & pe1 like in the paper of Karalis/Macheras
       # sample size function returns Inf if pe1 is outside acceptance range
-#       nts <- mapply(FUN=.sampleN, mse=Vpooled_tmp, ltheta0=pes_tmp, 
-#                     MoreArgs=list(alpha=alpha[2], targetpower=targetpower, 
-#                                   ltheta1=ltheta1, ltheta2=ltheta2,
-#                                   method=pmethod, bk=4))
       nts <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=pes_tmp,
                        mse=Vpooled_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
                        method=pmethod, bk=4)
     } else {
       # use mse1 & plan GMR to calculate sample size (original Potvin)
-#       nts <- mapply(FUN=.sampleN, mse=Vpooled_tmp, 
-#                     MoreArgs=list(alpha=alpha[2], targetpower=targetpower, 
-#                                   ltheta0=lGMR, ltheta1=ltheta1, ltheta2=ltheta2,
-#                                   method=pmethod, bk=4))
       nts <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR,
                        mse=Vpooled_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
                        method=pmethod, bk=4)

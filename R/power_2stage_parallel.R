@@ -5,10 +5,6 @@
 #
 # author D.L.
 # -----------------------------------------------------------------------------
-# require(PowerTOST)
-# source("./R/sampsiz2.R")
-# source("./R/sampsiz_n0.R")
-# source("./R/power.R")
 
 power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294), 
                            n1, GMR, CV, targetpower=0.8, 
@@ -261,6 +257,7 @@ power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294
     if (usePE){
       # use mse1 & pe1 in sse like in the paper of Karalis/Macheras
       # sample size function returns Inf if pe1 is outside acceptance range
+      # Aug. 2017: .sampleN2() uses now N-3 as df. was before N-2
       nts <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=pes_tmp,
                        mse=Vpooled_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
                        method=pmethod, bk=4)
