@@ -10,8 +10,6 @@
 # Modified by BL, Jun 2017
 # (vectorize wrt alpha)
 # -------------------------------------------------------------------------
-# library(PowerTOST)
-# source("./R/sampsiz_n0.R")
 # is also used for parallel groups with bk=4
 
 .sampleN3 <- function(alpha=0.05, targetpower=0.8, ltheta0, ltheta1=log(0.8), 
