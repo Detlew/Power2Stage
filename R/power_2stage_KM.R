@@ -155,8 +155,12 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
     ptms <- proc.time()
     # use mse1 & pe1 as described in Karalis/Macheras
     # sample size function returns Inf if pe1 is outside acceptance range
+    
     # Aug. 2017: .sampleN2() now uses N-3 as df for ssr
-    # TODO: check if this was used in Karalis/Macheras
+    # Although it is not specifically mentioned in Karalis/Macheras 2013
+    # "An Insight into the Properties of a Two-Stage Design in Bioequivalence Studies"
+    # it is mentioned explicitely in Karalis/Macheras 2014
+    # "On the statistical model of the two-stage designs in bioequivalence assessment"
     nt <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=pes_tmp,
                     mse=mses_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
                     method=pmethod, bk=bk)

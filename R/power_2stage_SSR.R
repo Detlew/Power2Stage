@@ -142,6 +142,9 @@ power.2stage.ssr <- function(alpha=0.05, n1, GMR, CV, targetpower=0.8,
                      steps=2, diffmthreshold=0.0)
   } else {
     # exact or approx. via t-distri
+    # Aug. 2017: .sampleN2() now uses N-3 as df in SSR due to extra term 'stage'
+    # TODO: Check df for sample size re-estimation
+    # I think N-2 is here appropriate, but Golkowski only uses pmethod=="ls" 
     nt <- .sampleN2(alpha=alpha, targetpower=targetpower, ltheta0=lpes,
                     mse=mse_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
                     method=pmethod, bk=2)

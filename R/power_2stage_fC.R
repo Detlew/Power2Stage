@@ -215,6 +215,7 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
     #------ sample size for stage 2 ---------------------------------------
     ptms <- proc.time()
     # total sample size
+    # Aug. 2017: .sampleN2() now uses N-3 as df in SSR
     if (usePE){
       # use mse1 & pe1 like in the paper of Karalis/Macheras
       # sample size function returns Inf if pe1 is outside acceptance range
