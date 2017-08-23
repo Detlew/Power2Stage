@@ -6,15 +6,16 @@
 # Version with vectorize sample size w.r.t mse and/or ltheta0
 #
 # author D. Labes Jan 2015
-# Aug 2017: df changed to n-3
+# this is the version which uses n-2 as df
 # -------------------------------------------------------------------------
 # library(PowerTOST)
 # source("./R/sampsiz_n0.R")
 # is also used for parallel groups with bk=4
 
-.sampleN2 <- function(alpha=0.05, targetpower=0.8, ltheta0, ltheta1=log(0.8), 
+.sampleN2.0 <- function(alpha=0.05, targetpower=0.8, ltheta0, ltheta1=log(0.8), 
                       ltheta2=log(1.25), mse, method="nct", bk=2)
 {
+
   # se and ltheta0/diffm must have the same length to vectorize propperly!
   if (length(mse)==1)     mse <- rep(mse, times=length(ltheta0))
   if (length(ltheta0)==1) ltheta0 <- rep(ltheta0, times=length(mse))
@@ -41,10 +42,9 @@
   
   # degrees of freedom as expression
   # n-2 for 2x2 crossover and 2-group parallel design
-  # dfe <- parse(text="n-2", srcfile=NULL)
+  dfe <- parse(text="n-2", srcfile=NULL)
   # or should that read n-3? see Kieser/Rauch
-  # the jury has decided so
-  dfe <- parse(text="n-3", srcfile=NULL)
+  #dfe <- parse(text="n-3", srcfile=NULL)
   
   df   <- eval(dfe)
   pow  <- .calc.power(alpha, ltheta1, ltheta2, diffm, sem=se*sqrt(bk/n), df, method)
