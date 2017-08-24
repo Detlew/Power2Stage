@@ -225,7 +225,7 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
     #------ sample size for stage 2 ---------------------------------------
     ptms <- proc.time()
     # degrees of freedom
-    if (test="anova") dfc="n-3" else df="n-2"
+    if (test=="anova") dfc="n-3" else df="n-2"
     
     if (usePE){
       # use mse1 & pe1 like in the paper of Karalis/Macheras
