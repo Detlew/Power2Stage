@@ -15,7 +15,7 @@ Power calculation of adaptive 2-stage BE studies in a 2x2 crossover design
 power.2stage(method = c("B", "C", "B0"), alpha0 = 0.05,
              alpha = c(0.0294, 0.0294), n1, GMR, CV, targetpower = 0.8,
              pmethod = c("nct", "exact", "shifted"),
-             usePE = FALSE, Nmax = Inf, min.n2=0, theta0, theta1, theta2,
+             usePE = FALSE, Nmax = Inf, min.n2 = 0, theta0, theta1, theta2,
              npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, details = FALSE)
 }
 \arguments{
