@@ -253,7 +253,7 @@ power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294
     ptms <- proc.time()
     # sse always balanced
     # one correction step with Welch power in case of Welch's
-    if (test="anova") dfc="n-3" else df="n-2"
+    if (test=="anova") dfc="n-3" else df="n-2"
     if (usePE){
       # use mse1 & pe1 in sse like in the paper of Karalis/Macheras
       # sample size function returns Inf if pe1 is outside acceptance range
