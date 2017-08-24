@@ -1,4 +1,4 @@
-# --------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 # power (or alpha) of 2-stage studies with a 2-group parallel desig according 
 # to Potvin et. al. # methods "B" and "C", modified to include a futility 
 # criterion Nmax and modified to use PE of stage 1 in sample size estimation
@@ -7,7 +7,7 @@
 # formulas according to the fuglsang 2014 paper
 #
 # author D.L.
-# --------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 
 power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294), 
                              n1, GMR, CV, targetpower=0.8, 
@@ -224,17 +224,20 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
     s2       <- rep.int( 2, times=length(Vpooled_tmp))
     #------ sample size for stage 2 ---------------------------------------
     ptms <- proc.time()
+    # degrees of freedom
+    if (test="anova") dfc="n-3" else df="n-2"
+    
     if (usePE){
       # use mse1 & pe1 like in the paper of Karalis/Macheras
       # sample size function returns Inf if pe1 is outside acceptance range
       nts <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=pes_tmp,
                        mse=Vpooled_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
-                       method=pmethod, bk=4)
+                       method=pmethod, bk=4, dfc=dfc)
     } else {
       # use mse1 & plan GMR to calculate sample size (original Potvin)
       nts <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR,
                        mse=Vpooled_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
-                       method=pmethod, bk=4)
+                       method=pmethod, bk=4, dfc=dfc)
     }
     
     n2  <- ifelse(nts>n1, nts - n1, 0)
@@ -325,7 +328,7 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
                       Vpooled)
         dfs     <- ifelse(n2R+n2T>0, dfs-1, dfs)
       }
-      hw    <- qt(1-alpha[2],dfs)*sqrt(bk*Vpooled/(nT+nR))
+      hw <- qt(1-alpha[2],dfs)*sqrt(bk*Vpooled/(nT+nR))
       rm(Vpooled, dfs)
     } else {
       # Welch's t-test

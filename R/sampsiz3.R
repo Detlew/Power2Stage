@@ -75,13 +75,9 @@
   # is used exactly as given in the paper of Golkowski et al.
   #if(method=="ls") return(n)
   
-  # degrees of freedom as expression
-  # n-2 for 2x2 crossover and 2-group parallel design
-  ##dfe <- parse(text="n-2", srcfile=NULL)  # is that needed?
-  # or should that read n-3? see Kieser/Rauch
-  #dfe <- parse(text="n-3", srcfile=NULL)
-  #df   <- eval(dfe)
-  
+  # degrees of freedom n-2 for 2x2 crossover and 2-group parallel design 
+  # since we have no stage term
+
   pow  <- .calc.power(a, ltheta1, ltheta2, diffm, sem=se*sqrt(bk/n), df=n-2, 
                       method)
   #iter <- rep(0, times=length(se)) 

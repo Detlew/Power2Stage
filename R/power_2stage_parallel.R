@@ -252,15 +252,15 @@ power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294
     #------ sample size for stage 2 ---------------------------------------
     ptms <- proc.time()
     # sse always balanced
-    # and always via pooled t-test (otherwise we had a major rework of sampsiz)
     # one correction step with Welch power in case of Welch's
+    if (test="anova") dfc="n-3" else df="n-2"
     if (usePE){
       # use mse1 & pe1 in sse like in the paper of Karalis/Macheras
       # sample size function returns Inf if pe1 is outside acceptance range
       # Aug. 2017: .sampleN2() uses now N-3 as df. was before N-2
       nts <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=pes_tmp,
                        mse=Vpooled_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
-                       method=pmethod, bk=4)
+                       method=pmethod, bk=4, dfc=dfc)
       # in case of Welch's test the sample size may be too low
       # (se & sqrt(Vpooled)*se.fact are same if balanced, but df != dfs)
       # thus we raise them if necessary
@@ -284,7 +284,7 @@ power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294
       # use mse1 & plan GMR to calculate sample size (original Potvin)
       nts <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR,
                        mse=Vpooled_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
-                       method=pmethod, bk=4)
+                       method=pmethod, bk=4, dfc=dfc)
       # in case of Welch's test the sample size may be too low
       # thus we raise them if necessary
       if (test=="welch"){
