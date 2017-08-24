@@ -1,4 +1,6 @@
-2017-07-20 on GitHub
+2017-08-24 on GitHub
+   - df for sample size re-estimation changed to n-3 for Potvin like TSD schemes
+     (pooled evaluation with additionally stage term)
    - Function power.2stage.in() to calculate the operational characteristics of
      TSD's evaluated via p-value combination using the inverse normal approach.
      Contributed by Benjamin Lang.

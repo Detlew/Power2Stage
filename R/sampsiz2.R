@@ -6,14 +6,13 @@
 # Version with vectorize sample size w.r.t mse and/or ltheta0
 #
 # author D. Labes Jan 2015
-# Aug 2017: df changed to n-3
+# Aug 2017: df changed to n-3 via new argument dfc (df as character string)
+#           but only for Potvin like TSD's
 # -------------------------------------------------------------------------
-# library(PowerTOST)
-# source("./R/sampsiz_n0.R")
 # is also used for parallel groups with bk=4
 
 .sampleN2 <- function(alpha=0.05, targetpower=0.8, ltheta0, ltheta1=log(0.8), 
-                      ltheta2=log(1.25), mse, method="nct", bk=2)
+                      ltheta2=log(1.25), mse, method="nct", bk=2, dfc="n-3")
 {
   # se and ltheta0/diffm must have the same length to vectorize propperly!
   if (length(mse)==1)     mse <- rep(mse, times=length(ltheta0))
@@ -23,7 +22,7 @@
   ns <- ifelse((ltheta0-ltheta1)<1.25e-5 | (ltheta2-ltheta0)<1.25e-5, Inf, 0)
 
   # design characteristics for 2-group parallel and 2x2 crossover design
-  steps <- 2     # stepsize for sample size search
+  steps <- 2     # stepsize for sample size search (balanced designs)
   nmin  <- 4     # minimum n
   
   se    <- sqrt(mse[is.finite(ns)])
@@ -40,11 +39,11 @@
   if(method=="ls") return(n)
   
   # degrees of freedom as expression
-  # n-2 for 2x2 crossover and 2-group parallel design
+  # usual n-2 for 2x2 crossover and 2-group parallel design
   # dfe <- parse(text="n-2", srcfile=NULL)
-  # or should that read n-3? see Kieser/Rauch
+  # or should that read n-3? see Kieser/Rauch for inclusion of a stage term
   # the jury has decided so
-  dfe <- parse(text="n-3", srcfile=NULL)
+  dfe <- parse(text=dfc, srcfile=NULL)
   
   df   <- eval(dfe)
   pow  <- .calc.power(alpha, ltheta1, ltheta2, diffm, sem=se*sqrt(bk/n), df, method)
@@ -55,10 +54,8 @@
   # in experimentation I have seen max. of 2-3 steps
   # reformulation with only one loop does not shorten the code considerable
   # --- loop until power <= target power, step-down
-#  down <- FALSE; up <- FALSE
   index <- pow>targetpower & n>nmin
   while (any(index)) {
-#    down <- TRUE
     n[index]    <- n[index]-steps     # step down if start power is to high
     iter[index] <- iter[index]+1
     df <- eval(dfe)
@@ -73,7 +70,6 @@
   # --- loop until power >= target power
   index <- pow<targetpower
   while (any(index)) {
-#    up   <- TRUE; down <- FALSE
     n[index] <- n[index]+steps
     iter[index] <- iter[index]+1
     df <- eval(dfe)

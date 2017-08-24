@@ -147,9 +147,8 @@ power.2stage.ssr <- function(alpha=0.05, n1, GMR, CV, targetpower=0.8,
     # I think N-2 is here appropriate, but Golkowski only uses pmethod=="ls" 
     nt <- .sampleN2(alpha=alpha, targetpower=targetpower, ltheta0=lpes,
                     mse=mse_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
-                    method=pmethod, bk=2)
+                    method=pmethod, bk=2, dfc="n-2")
   }
-  #browser()
   # maybe we have enough power in all cases and thus no re-estimated sample size
   if(length(nt)>0) ntot[pwr<targetpower] <- nt
   # take care of memory
