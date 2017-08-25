@@ -225,7 +225,7 @@ Patterson SD, Jones B. \emph{Bioequivalence and Statistics in Clinical Pharmacol
 Boca Raton: CRC Press; 2\ifelse{html}{\out{<sup>nd</sup>}}{\eqn{^{nd}}} edition 2016.
 
 Maurer W, Jones B, Chen Y. \emph{Controlling the type 1 error rate in two-stage
-sequential designs when testing for average bioequivalence}\cr
+sequential designs when testing for average bioequivalence.}\cr
 Stat Med. (to be submitted).
 
 Kieser M, Rauch G. \emph{Two-stage designs for cross-over bioequivalence trials.}\cr

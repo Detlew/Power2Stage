@@ -52,8 +52,8 @@ power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
     \verb{c(0.01, 0.04)}: Zheng \emph{et al.} \sQuote{MSDBE} \verb{(method="B0", fCrit="CI", fCupper=Inf)}\cr
     \verb{c(0.0249, 0.0357)}: Xu \emph{et al.} \sQuote{Method E} for CV 10--30\% \verb{(fCrit="CI", fClower=0.9374, max.n=42)}\cr
     \verb{c(0.0254, 0.0363)}: Xu \emph{et al.} \sQuote{Method E} for CV 30--55\% \verb{(fCrit="CI", fClower=0.9305, max.n=42)}\cr
-    \verb{c(0.0248, 0.0364)}: Xu \emph{et al.} \sQuote{Method F} for CV 10--30\% \verb{(method="C", , fCrit="CI", fClower=0.9492, max.n=180)}\cr
-    \verb{c(0.0259, 0.0349)}: Xu \emph{et al.} \sQuote{Method F} for CV 30--55\% \verb{(method="C", , fCrit="CI", fClower=0.9305, max.n=180)}
+    \verb{c(0.0248, 0.0364)}: Xu \emph{et al.} \sQuote{Method F} for CV 10--30\% \verb{(method="C", fCrit="CI", fClower=0.9492, max.n=180)}\cr
+    \verb{c(0.0259, 0.0349)}: Xu \emph{et al.} \sQuote{Method F} for CV 30--55\% \verb{(method="C", fCrit="CI", fClower=0.9305, max.n=180)}
   }
   \item{n1}{
     Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}. For Xu\enc{’}{'}s
