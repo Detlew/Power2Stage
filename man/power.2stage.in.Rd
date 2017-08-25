@@ -19,8 +19,7 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
                 power.threshold = targetpower, theta0, theta1, theta2, GMR,
                 usePE = FALSE, min.n2 = 4, max.n = Inf, ssr.conditional = TRUE,
                 fCrit = NULL, fClower, fCupper, fCNmax,
-                pmethod = c("nct", "exact", "shifted"),
-                npct = c(0.05, 0.5, 0.95),
+                pmethod = c("nct", "exact", "shifted"), npct = c(0.05, 0.5, 0.95),
                 nsims, setseed = TRUE, details = FALSE)
 }
 \arguments{
@@ -136,10 +135,10 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     for \ifelse{html}{\out{stage&nbsp;2}}{stage~2} (\verb{n2}), is such that
     \verb{n1 + n2 > fCNmax}, the study will not continue to
     \ifelse{html}{\out{stage&nbsp;2}}{stage~2} and stopped due to futility (not
-    \acronmy{BE}).\cr
+    \acronym{BE}).\cr
     If \verb{Nmax} is specified within \verb{fCrit} and argument \verb{fCNmax}
     is missing, the value will be set to \verb{fCNmax = 4*n1}. If \verb{Nmax} is
-    not specified within \verbe{fCrit}, then there will be no futility constraint
+    not specified within \verb{fCrit}, then there will be no futility constraint
     regarding maximum sample size (regardless of any specification of \verb{fCNmax}).
   }
   \item{pmethod}{
