@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------
-# power (or alpha) of 2-stage studies according to Potvin et. al. 
+# power (or alpha) of 2-stage studies according to Potvin et. al.
 # methods "B" and "C", modified to include a futility criterion Nmax,
-# modified to use PE and mse of stage 1 in power calculation steps as well 
+# modified to use PE and mse of stage 1 in power calculation steps as well
 # as in sample size estimation, Karalis/Macheras modifications
 #
 # author D.L.
@@ -10,40 +10,42 @@
 
 power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.0294),
                             n1, CV, targetpower=0.8, pmethod=c("nct","exact"),
-                            Nmax=150, theta0, theta1, theta2, 
-                            npct=c(0.05, 0.5, 0.95), nsims, setseed=TRUE, 
+                            Nmax=150, theta0, theta1, theta2,
+                            npct=c(0.05, 0.5, 0.95), nsims, setseed=TRUE,
                             details=FALSE)
 {
   if (missing(CV)) stop("CV must be given!")
   if (CV<=0)       stop("CV must be >0!")
-  
+
   if (missing(n1)) stop("Number of subjects in stage 1 must be given!")
   if (n1<=0)       stop("Number of subjects in stage 1 must be >0!")
-  
+
+  if (length(alpha) != 2) stop("alpha must have two elements")
+
   if (missing(theta1) & missing(theta2))  theta1 <- 0.8
   if (!missing(theta1) & missing(theta2)) theta2 <- 1/theta1
   if (missing(theta1) & !missing(theta2)) theta1 <- 1/theta2
-  
+
   if (missing(theta0)) theta0 <- 0.95
-  
+
   if (n1>Nmax) stop("n1>Nmax doestn't make sense!")
-  
+
   if(missing(nsims)){
     nsims <- 1E5
     if(theta0<=theta1 | theta0>=theta2) nsims <- 1E6
   }
-  
+
   # check if Potvin B or C
   method  <- match.arg(method)
   # check if power calculation method is nct or exact
   pmethod <- match.arg(pmethod)
-  
+
   if(details){
     cat(nsims,"sims. Stage 1")
   }
   # start timer
   ptm  <- proc.time()
-  
+
   if (setseed) set.seed(1234567)
 
   ltheta1 <- log(theta1)
@@ -51,7 +53,7 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
   mlog    <- log(theta0)
   mse     <- CV2mse(CV)
   bk      <- 2   # 2x2x2 crossover design const
-  
+
   # reserve memory
   BE    <- rep.int(NA, times=nsims)
 # ----- stage 1 ----------------------------------------------------------
@@ -63,7 +65,7 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
   pes   <- rnorm(n=nsims, mean=mlog, sd=sdm)
   # simulate mse via chi-squared distribution
   mses  <- mse*rchisq(n=nsims, df=df)/df
-  
+
   # K&M have the test pe in BE range first
   # may speed up somewhat
   # next construction defines some zone at the BE acceptance limits
@@ -71,7 +73,7 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
   outside <- ((pes-ltheta1)<1.25e-5 | (ltheta2-pes)<1.25e-5)
   BE      <- !outside  # =FALSE for outside -> FAIL
   BE[BE==TRUE] <- NA   # not outside, not yet decided
-  
+
   if(method=="C"){
     mses_tmp <- mses[is.na(BE)]
     pes_tmp  <- pes[is.na(BE)]
@@ -86,7 +88,7 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
     # fail or pass
     BE0    <- lower>=ltheta1 & upper<=ltheta2
     # if power>0.8 then calculate CI for alpha=0.05
-    # i.e. if power<0.8 then 
+    # i.e. if power<0.8 then
     BE0[pwr<targetpower] <- NA # not yet decided
     # combine these with the previous
     BE[is.na(BE)] <- BE0
@@ -108,15 +110,15 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
     #if BE met -> PASS stop
     #if not BE -> goto sample size estimation i.e flag BE1 as NA
     BE1[!BE1] <- NA
-  } else { 
+  } else {
     # method B
     # evaluate power at alpha[1] using PE and mse of stage 1
-    pwr <- mapply(.calc.power, diffm = pes_tmp, sem = sqrt(bk*mses_tmp/n1), 
-                  MoreArgs = list(alpha = alpha[1], ltheta1 = ltheta1, 
+    pwr <- mapply(.calc.power, diffm = pes_tmp, sem = sqrt(bk*mses_tmp/n1),
+                  MoreArgs = list(alpha = alpha[1], ltheta1 = ltheta1,
                                   ltheta2 = ltheta2, df = df, method = pmethod))
     # if BE met then decide BE regardless of power
     # if not BE and power<0.8 then goto stage 2
-    BE1[ !BE1 & pwr<targetpower ] <- NA 
+    BE1[ !BE1 & pwr<targetpower ] <- NA
     # take care of memory
     rm(pwr)
   }
@@ -124,7 +126,7 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
   BE[is.na(BE)] <- BE1
   # take care of memory, done with stage 1
   rm(BE1)
-  
+
   if(details){
     cat(" - Time consumed (secs):\n")
     print(round((proc.time()-ptm),1))
@@ -135,7 +137,7 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
   stage    <- rep(1, times=nsims)
   # filter out those were stage 2 is necessary
   pes_tmp  <- pes[is.na(BE)]
-  
+
   # Maybe we are already done with stage 1
   if(length(pes_tmp)>0){
     if(details){
@@ -144,7 +146,7 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
       cat("will be estimated. May need some time.\n")
     }
     # preliminary setting stage=2 for those not yet decided BE
-    # may be altered for those with nt>Nmax or nt=Inf 
+    # may be altered for those with nt>Nmax or nt=Inf
     # from sample size est. if pe outside acceptance range
     # see below
     stage[is.na(BE)] <- 2
@@ -155,17 +157,17 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
     ptms <- proc.time()
     # use mse1 & pe1 as described in Karalis/Macheras
     # sample size function returns Inf if pe1 is outside acceptance range
-    
+
     # Aug. 2017: .sampleN2() now uses N-3 as df for ssr
     # Although it is not specifically mentioned in Karalis/Macheras 2013
     # "An Insight into the Properties of a Two-Stage Design in Bioequivalence Studies"
     # it is mentioned explicitely in Karalis/Macheras 2014
     # "On the statistical model of the two-stage designs in bioequivalence assessment"
     nt <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=pes_tmp,
-                    mse=mses_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
+                    mse=mses_tmp, ltheta1=ltheta1, ltheta2=ltheta2,
                     method=pmethod, bk=bk)
     n2  <- ifelse(nt>n1, nt - n1, 0)
-    
+
     if(details){
       if(nsims<=1E5 & pmethod!="exact"){
         cat("Time consumed (secs):\n")
@@ -185,7 +187,7 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
       s2[BE2==FALSE]  <- 1
       # debug print
       # cat(sum(!BE2, na.rm=T)," cases with nt>Nmax or nt=Inf\n")
-      # save 
+      # save
       stage[is.na(BE)] <- s2
       # save the FALSE and NA in BE
       BE[is.na(BE)]    <- BE2
@@ -204,7 +206,7 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
     m2    <- ifelse(n2>0, rnorm(n=nsim2, mean=mlog, sd=sqrt(mse*bk/n2)), 0)
     SS2   <- ifelse(n2>2, (n2-2)*mse*rchisq(n=nsim2, df=n2-2)/(n2-2), 0)
     # reset options
-    options(ow) 
+    options(ow)
     SSmean <- ifelse(n2>0, (m1-m2)^2/(2/n1+2/n2), 0)
     nt     <- n1+n2
     df2    <- ifelse(n2>0, nt-3, n1-2)
@@ -228,13 +230,13 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
   rm(pes_tmp, mses_tmp)
   # the return list
   res <- list(design="2x2 crossover", method=method, modified="KM",
-              alpha0=ifelse(method=="C",alpha0,NA), alpha=alpha, 
-              CV=CV, n1=n1, targetpower=targetpower, pmethod=pmethod, 
-              theta0=exp(mlog), theta1=theta1, theta2=theta2, Nmax=Nmax, 
+              alpha0=ifelse(method=="C",alpha0,NA), alpha=alpha,
+              CV=CV, n1=n1, targetpower=targetpower, pmethod=pmethod,
+              theta0=exp(mlog), theta1=theta1, theta2=theta2, Nmax=Nmax,
               nsims=nsims,
-              # results 
-              pBE=sum(BE)/nsims, pBE_s1=sum(BE[stage==1])/nsims, 
-              pct_s2=100*length(BE[stage==2])/nsims, 
+              # results
+              pBE=sum(BE)/nsims, pBE_s1=sum(BE[stage==1])/nsims,
+              pct_s2=100*length(BE[stage==2])/nsims,
               nmean=mean(ntot), nrange=range(ntot), nperc=quantile(ntot, p=npct)
               )
 
@@ -244,10 +246,10 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
   if (is.finite(Nmax)){
     res$ntable <- table(ntot)
   }
-  
+
   # output is now done via S3 print method
 
   class(res) <- c("pwrtsd", "list")
   return(res)
-  
+
 } #end function

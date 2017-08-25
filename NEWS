@@ -6,6 +6,7 @@
      Contributed by Benjamin Lang.
    - GitHub URL and bug reports URL added
    - function sampleN2.TOST() to estimate n2 in 2x2 and parallel designs.
+   - Stops if length(alpha) != 2
 Version 0.4-5
 2017-01-18
    - DOI for references in man pages added.

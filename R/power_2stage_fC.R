@@ -1,43 +1,45 @@
 # ----------------------------------------------------------------------------
-# power (or alpha) of 2-stage studies according to Potvin et. al. 
+# power (or alpha) of 2-stage studies according to Potvin et. al.
 # method "B" or "C" modified to include a futility criterion for PE or CI and
 # modified to use PE of stage 1 in sample size estimation
 #
 # author D.L.
 # ----------------------------------------------------------------------------
 
-power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05, 
-                            alpha=c(0.0294,0.0294), n1, CV, GMR, targetpower=0.8, 
-                            pmethod=c("nct","exact", "shifted"), 
+power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
+                            alpha=c(0.0294,0.0294), n1, CV, GMR, targetpower=0.8,
+                            pmethod=c("nct","exact", "shifted"),
                             usePE=FALSE, powerstep=TRUE, min.n2=0, max.n=Inf,
-                            fCrit=c("CI", "PE"), fClower, fCupper, theta0, theta1, 
-                            theta2, npct=c(0.05, 0.5, 0.95), nsims, setseed=TRUE, 
+                            fCrit=c("CI", "PE"), fClower, fCupper, theta0, theta1,
+                            theta2, npct=c(0.05, 0.5, 0.95), nsims, setseed=TRUE,
                             details=FALSE)
-{ 
+{
   # chek method, check futility criterion
   method <- match.arg(method)
   fCrit  <- match.arg(fCrit)
-  
+
   if (missing(CV)) stop("CV must be given!")
   if (CV<=0)       stop("CV must be >0!")
-  
+
   if (missing(n1)) stop("Number of subjects in stage 1 (n1) must be given!")
   if (n1<=0)       stop("Number of subjects in stage 1 (n1) must be >0!")
-  
+
+  if (length(alpha) != 2) stop("alpha must have two elements")
+
   if (missing(GMR)) GMR <- 0.95
-  
+
   if (missing(theta1)  & missing(theta2))  theta1 <- 0.8
   if (!missing(theta1) & missing(theta2))  theta2 <- 1/theta1
   if (missing(theta1)  & !missing(theta2)) theta1 <- 1/theta2
-  
+
   if (GMR<=theta1 | GMR>=theta2) stop("GMR must be within acceptance range!")
-  
+
   if (missing(theta0)) theta0 <- GMR
-  
+
   if(missing(nsims)){
     if(theta0<=theta1 | theta0>=theta2) nsims <- 1E6 else  nsims <- 1E5
   }
-  
+
   if(fCrit=="PE"){
     if (missing(fClower) & missing(fCupper))  fClower <- 0.8
     if (missing(fClower) & !missing(fCupper)) fClower <- 1/fCupper
@@ -55,19 +57,19 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
     min.n2 <- min.n2 + min.n2%%2
     message("min.n2 rounded up to next even", min.n2)
   }
-  
+
   # check max.n
   if (n1>=max.n) stop("max.n <= n1 doestn't make sense!")
-  
+
   # check if power calculation method is nct or exact
   pmethod <- match.arg(pmethod)
-  
+
   if(details){
     cat(nsims,"sims. Stage 1")
   }
   # start timer
   ptm  <- proc.time()
-  
+
   if (setseed) set.seed(1234567)
 
   ltheta1 <- log(theta1)
@@ -80,7 +82,7 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
   bk      <- 2   # 2x2x2 crossover design const
   # reserve memory
   BE      <- rep.int(NA, times=nsims)
-  
+
 # ----- stage 1 ----------------------------------------------------------
   Cfact <- bk/n1
   df    <- n1-2
@@ -94,10 +96,10 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
   mses  <- mse*rchisq(n=nsims, df=df)/df
   if(method=="C"){
     # if method=C then calculate power for alpha0=0.05 and plan GMR
-    pwr <- .calc.power(alpha=alpha0, ltheta1=ltheta1, ltheta2=ltheta2, 
-                       diffm=lGMR, sem=sqrt(bk*mses/n1), df=df,  
+    pwr <- .calc.power(alpha=alpha0, ltheta1=ltheta1, ltheta2=ltheta2,
+                       diffm=lGMR, sem=sqrt(bk*mses/n1), df=df,
                        method=pmethod)
-    
+
     tval0 <- qt(1-alpha0, df)
     hw    <- tval0*sqrt(Cfact*mses)
     lower <- pes - hw
@@ -105,7 +107,7 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
     # fail or pass
     BE    <- lower>=ltheta1 & upper<=ltheta2
     # if power>0.8 then calculate CI for alpha=0.05
-    # i.e. if power<0.8 then 
+    # i.e. if power<0.8 then
     BE[pwr<targetpower] <- NA # not yet decided
     powerstep <- TRUE
     # take care of memory
@@ -124,24 +126,24 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
     #if BE met -> PASS stop
     #if not BE -> goto futility check, sample size estimation i.e flag BE1 as NA
     BE1[!BE1] <- NA
-  } else { 
+  } else {
     # method B / E or B0==MSDBE
     if(powerstep){
       # evaluate power at alpha[2] according to Xu et al. Method E, F
       pwr_alpha <- alpha[2]
       # MSDBE scheme == B0: power at alpha[1]
       if(method=="B0") pwr_alpha <- alpha[1]
-      pwr <- .calc.power(alpha=pwr_alpha, ltheta1=ltheta1, ltheta2=ltheta2, 
-                         diffm=lGMR, sem=sqrt(bk*mses_tmp/n1), df=df, 
+      pwr <- .calc.power(alpha=pwr_alpha, ltheta1=ltheta1, ltheta2=ltheta2,
+                         diffm=lGMR, sem=sqrt(bk*mses_tmp/n1), df=df,
                          method=pmethod)
       if (method=="B0") {
         # if BE met then decide BE regardless of power, i.e. use BE1 result
         # if not BE and power>=0.8 then Fail, i.e. use also BE1
         # if not BE and power<0.8 then goto sample size est. for stage 2
-        BE1[ !BE1 & pwr<targetpower] <- NA 
+        BE1[ !BE1 & pwr<targetpower] <- NA
       } else {
         # Potvin method E:
-        # if not BE and if power >= 0.8 (targetpower) make a second BE evaluation 
+        # if not BE and if power >= 0.8 (targetpower) make a second BE evaluation
         # with alpha[2]
         # only if alpha[1] != alpha[2] necessary, but works also without if(...)
         BE12  <- BE1 # reserve memory
@@ -154,12 +156,12 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
         BE12  <- lower>=ltheta1 & upper<=ltheta2
         # browser()
         # if BE(a1) then BE1=TRUE, regardless of power
-        BE1[BE11==TRUE] <- TRUE 
+        BE1[BE11==TRUE] <- TRUE
         # if not BE(a1) but power >= 0.8 then make BE decision at alpha2
         BE1[BE11==FALSE & pwr>=targetpower] <- BE12[BE11==FALSE & pwr>=targetpower]
         # if not BE(a1) and power<0.8 then not decided yet (marker NA)
         # will be further decided by futility criterion
-        BE1[BE11==FALSE & pwr<targetpower]  <- NA 
+        BE1[BE11==FALSE & pwr<targetpower]  <- NA
         # keep care of memory
         rm(BE11, BE12)
       }
@@ -184,7 +186,7 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
   BE[is.na(BE)] <- BE1
   # take care of memory, done with them
   rm(hw, lower, upper, BE1, outside)
-  
+
   # time for stage 1
   if(details){
     cat(" - Time consumed (secs):\n")
@@ -197,7 +199,7 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
   # filter out those were stage 2 is necessary
   pes_tmp  <- pes[is.na(BE)]
   mses_tmp <- mses[is.na(BE)]
-  
+
   # Maybe we are already done with stage 1
   if (length(pes_tmp)>0) {
     if (details) {
@@ -206,7 +208,7 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
       cat("will be estimated. May need some time.\n")
     }
     # preliminary setting stage=2 for those not yet decided BE
-    # may be altered for those with nt>Nmax or nt=Inf 
+    # may be altered for those with nt>Nmax or nt=Inf
     # from sample size est. if pe outside acceptance range
     # see below
     stage[is.na(BE)] <- 2
@@ -220,12 +222,12 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
       # use mse1 & pe1 like in the paper of Karalis/Macheras
       # sample size function returns Inf if pe1 is outside acceptance range
       nt <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=pes_tmp,
-                      mse=mses_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
+                      mse=mses_tmp, ltheta1=ltheta1, ltheta2=ltheta2,
                       method=pmethod)
     } else {
       # use mse1 & GMR to calculate sample size (original Potvin)
       nt <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR,
-                      mse=mses_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
+                      mse=mses_tmp, ltheta1=ltheta1, ltheta2=ltheta2,
                       method=pmethod)
     }
     # cap to max.n, but not for infinite nt
@@ -233,14 +235,14 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
     # n for stage 2
     n2 <- ifelse(nt>n1, nt - n1, 0)
     # assure a min.n2
-    n2[n2<min.n2] <- min.n2 
-    
-    
+    n2[n2<min.n2] <- min.n2
+
+
     if(details){
       cat("Time consumed (secs):\n")
       print(round((proc.time()-ptms),1))
     }
-    
+
     if (any(!is.finite(nt))){
       # sample size may return Inf if PE is used in ss estimation
       # for cases where PE is outside theta1 ... theta2
@@ -250,7 +252,7 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
       s2[BE2==FALSE]  <- 1
       # debug print
       # cat(sum(!BE2, na.rm=T)," cases with nt>Nmax or nt=Inf\n")
-      # save 
+      # save
       stage[is.na(BE)] <- s2
       # save the FALSE and NA in BE
       BE[is.na(BE)]    <- BE2
@@ -259,7 +261,7 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
       mses_tmp <- mses_tmp[is.na(BE2)]
       n2       <- n2[is.na(BE2)]
     }
-    
+
     # ---------- stage 2 evaluation --------------------------------------
     m1    <- pes_tmp
     SS1   <- (n1-2)*mses_tmp
@@ -271,7 +273,7 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
     m2    <- ifelse(n2>0, rnorm(n=nsim2, mean=mlog, sd=sqrt(mse*bk/n2)), 0)
     SS2   <- ifelse(n2>2, (n2-2)*mse*rchisq(n=nsim2, df=n2-2)/(n2-2), 0)
     # reset options
-    options(ow) 
+    options(ow)
     SSmean <- ifelse(n2>0, (m1-m2)^2/(2/n1+2/n2), 0)
     nt     <- n1+n2
     df2    <- ifelse(n2>0, nt-3, n1-2)
@@ -296,33 +298,33 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
   # the return list
   res <- list(design="2x2 crossover",
               method=method, alpha0=alpha0, # alpha0 is in method B also used for CI futility
-              alpha=alpha, CV=CV, n1=n1, GMR=GMR, 
-              targetpower=targetpower, pmethod=pmethod, 
-              theta0=exp(mlog), theta1=theta1, theta2=theta2, usePE=usePE, 
+              alpha=alpha, CV=CV, n1=n1, GMR=GMR,
+              targetpower=targetpower, pmethod=pmethod,
+              theta0=exp(mlog), theta1=theta1, theta2=theta2, usePE=usePE,
               powerstep=powerstep, min.n2=min.n2, max.n=max.n,
-              fCrit=fCrit, fCrange=c(fClower, fCupper), 
+              fCrit=fCrit, fCrange=c(fClower, fCupper),
               nsims=nsims,
-              # results 
+              # results
               pBE=sum(BE)/nsims, pBE_s1=sum(BE[ntot==n1])/nsims,
               # dec 2014 meaning of pct_s2 changed
-              pct_s2=100*sum(ntot>n1)/nsims, 
-              nmean=mean(ntot), nrange=range(ntot), 
+              pct_s2=100*sum(ntot>n1)/nsims,
+              nmean=mean(ntot), nrange=range(ntot),
               nperc=quantile(ntot, p=npct))
-  
+
   # table object summarizing the discrete distri of ntot
   # only if usePE=FALSE or if usePE=TRUE then a futility range must be used
   # or return it always?
   if (usePE==FALSE | (usePE==TRUE & fClower>0 & is.finite(fCupper))){
     res$ntable <- table(ntot)
   }
-  
+
   if (details){
     cat("Total time (secs):\n")
     print(round((proc.time()-ptm),1))
     cat("\n")
   }
-  
+
   class(res) <- c("pwrtsd", "list")
   return(res)
-  
+
 } #end function

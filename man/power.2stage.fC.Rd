@@ -61,7 +61,8 @@ power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
     48 (if CV 30--55\%).
   }
   \item{CV}{
-    Coefficient of variation of the intra-subject variability as ratio.
+    Coefficient of variation of the intra-subject variability
+    (use \emph{e.g.}, 0.3 for 30\%).
   }
   \item{GMR}{
     Ratio T/R to be used in decision scheme (power calculations in
@@ -142,7 +143,7 @@ power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
   }
   \item{nsims}{
     Number of studies to simulate.\cr
-    If missing, \verb{nsims} is set to 1E+05 = 100,000 or to 1E+06 = 1 Mio if you are
+    If missing, \verb{nsims} is set to 1E+05 = 100,000 or to 1E+06 = 1 Mio if
     estimating the empiric Type I Error (\verb{'alpha'}), \emph{i.e.}, with \verb{theta0} at
     the border or outside the acceptance range \verb{theta1} \ldots \verb{theta2}.
   }

@@ -37,6 +37,8 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
   if (n1%%2!=0) warning("Number of subjects in stage 1 should be even.\n",
                         "  Will be truncated to even.", immediate. = TRUE)
 
+  if (length(alpha) != 2) stop("alpha must have two elements")
+
   if (missing(GMR)) GMR <- 0.95
 
   if (missing(theta1) & missing(theta2))  theta1 <- 0.8

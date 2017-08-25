@@ -1,16 +1,16 @@
 # -----------------------------------------------------------------------------
-# power (or alpha) of 2-stage studies with 2-group parallel design according to 
+# power (or alpha) of 2-stage studies with 2-group parallel design according to
 # Potvin et al. methods "B" and "C", modified to include a futility criterion Nmax,
 # modified to use PE of stage 1 in sample size estimation
 #
 # author D.L.
 # -----------------------------------------------------------------------------
 
-power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294), 
-                           n1, GMR, CV, targetpower=0.8, 
-                           pmethod=c("nct", "exact", "shifted"), 
+power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294),
+                           n1, GMR, CV, targetpower=0.8,
+                           pmethod=c("nct", "exact", "shifted"),
                            usePE=FALSE, Nmax=Inf, test=c("welch", "t-test", "anova"),
-                           theta0, theta1, theta2, npct=c(0.05, 0.5, 0.95),  
+                           theta0, theta1, theta2, npct=c(0.05, 0.5, 0.95),
                            nsims, setseed=TRUE, details=FALSE)
 {
   if (missing(CV)) stop("CV(s) must be given!")
@@ -39,6 +39,8 @@ power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294
     n1R <- n1[2]
   }
   n1 <- n1T+n1R
+
+  if (length(alpha) != 2) stop("alpha must have two elements")
 
   if (missing(GMR)) GMR <- 0.95
 

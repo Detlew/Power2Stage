@@ -44,7 +44,8 @@ power.2stage.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
     Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
   }
   \item{CV}{
-    Coefficient of variation of the intra-subject variability as ratio.
+    Coefficient of variation of the intra-subject variability
+    (use \emph{e.g.}, 0.3 for 30\%).
   }
   \item{targetpower}{
     Power threshold in the first step of Potvin \verb{"C"} and power to
@@ -82,7 +83,7 @@ power.2stage.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   \item{nsims}{
     Number of studies to simulate.\cr
     If missing, \verb{nsims} is set to 1E+05 = 100,000 or to 1E+06 = 1 Mio
-    if you are estimating the empiric Type I Error (\verb{'alpha'}), \emph{i.e.},
+    if estimating the empiric Type I Error (\verb{'alpha'}), \emph{i.e.},
     with \verb{theta0} at the border or outside the acceptance range
     \verb{theta1} \ldots \verb{theta2}.
   }

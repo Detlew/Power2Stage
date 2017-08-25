@@ -60,7 +60,8 @@ power.2stage.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
     \ifelse{html}{\out{stage&nbsp;2}}{stage~2}).
   }
   \item{CV}{
-    Coefficient of variation of the total variability as ratio.\cr
+    Coefficient of variation of the total variability
+    (use \emph{e.g.}, 0.3 for 30\%)\cr
     Can be a vector with two elements. In that case \verb{CV[1]} is for
     Test and \verb{CV[2]} for the Reference treatment.
   }
@@ -128,7 +129,7 @@ power.2stage.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   }
   \item{nsims}{
     Number of studies to simulate.\cr
-    If missing, \verb{nsims} is set to 1E+05 = 100,000 or to 1E+06 = 1 Mio if you are
+    If missing, \verb{nsims} is set to 1E+05 = 100,000 or to 1E+06 = 1 Mio if
     estimating the empiric Type I Error (\verb{'alpha'}), \emph{i.e.}, with \verb{theta0} at
     the border or outside the acceptance range \verb{theta1} \ldots \verb{theta2}.
   }

@@ -236,8 +236,8 @@ print.pwrtsd <- function(x, ...)
 {
   # --- results part
   cat("\n", x$nsims," sims at theta0 = ", x$theta0, sep="")
-  if(x$theta0<=x$theta1 | x$theta0>=x$theta2) cat(" (p(BE)=TIE 'alpha').\n") else {
-    cat(" (p(BE)='power').\n")}
+  if(x$theta0<=x$theta1 | x$theta0>=x$theta2) cat(" (p(BE) = TIE 'alpha').\n") else {
+    cat(" (p(BE) = 'power').\n")}
   cat("p(BE)    = ", x$pBE,"\n", sep="")
   # power.2stage.ssr() has no pBE_s1
   if(!is.null(x$pBE_s1)){
