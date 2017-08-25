@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# power (or alpha) of 2-stage studies with a 2-group parallel desig according 
-# to Potvin et. al. # methods "B" and "C", modified to include a futility 
+# power (or alpha) of 2-stage studies with a 2-group parallel desig according
+# to Potvin et. al. # methods "B" and "C", modified to include a futility
 # criterion Nmax and modified to use PE of stage 1 in sample size estimation
 #
 # variant of power.2stage.p() wich calculates power always via pooled t-test
@@ -9,11 +9,11 @@
 # author D.L.
 # ----------------------------------------------------------------------------
 
-power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294), 
-                             n1, GMR, CV, targetpower=0.8, 
-                             pmethod=c("shifted", "nct", "exact"), 
+power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294),
+                             n1, GMR, CV, targetpower=0.8,
+                             pmethod=c("shifted", "nct", "exact"),
                              usePE=FALSE, Nmax=Inf, test=c("welch", "t-test", "anova"),
-                             theta0, theta1, theta2, npct=c(0.05, 0.5, 0.95),  
+                             theta0, theta1, theta2, npct=c(0.05, 0.5, 0.95),
                              nsims, setseed=TRUE, details=FALSE)
 {
   if (missing(CV)) stop("CV(s) must be given!")
@@ -27,7 +27,7 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
   }
   varT <- CV2mse(CVT)
   varR <- CV2mse(CVR)
-  
+
   if (missing(n1)) stop("Number of subjects in stage 1 must be given!")
   if (length(n1)>1) {
     warning("n1 has to be a scalar. Sum of vector will be used.")
@@ -36,37 +36,38 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
   if (n1<=0)    stop("Number of subjects in stage 1 must be >0!")
   if (n1%%2!=0) warning("Number of subjects in stage 1 should be even.\n",
                         "  Will be truncated to even.", immediate. = TRUE)
-  
+
   if (missing(GMR)) GMR <- 0.95
-  
+
   if (missing(theta1) & missing(theta2))  theta1 <- 0.8
   if (!missing(theta1) & missing(theta2)) theta2 <- 1/theta1
   if (missing(theta1) & !missing(theta2)) theta1 <- 1/theta2
-  
+
   if (GMR<=theta1 | GMR>=theta2) stop("GMR must be within acceptance range!")
-  
+
   if (missing(theta0)) theta0 <- GMR
-  
+
   if (n1>Nmax) stop("n1>Nmax doestn't make sense!")
 
   if(missing(nsims)){
     nsims <- 1E5
     if(theta0<=theta1 | theta0>=theta2) nsims <- 1E6
   }
-  
+
   # check if Potvin B or C
   method  <- match.arg(method)
   # check test
-  test  <- match.arg(test)
+  test <- match.arg(test)
+  test <- tolower(test)
   # check if power calculation method is nct or exact
   pmethod <- match.arg(pmethod)
-  
+
   if(details){
     cat(nsims,"sims. Stage 1")
   }
   # start timer
   ptm  <- proc.time()
-  
+
   if (setseed) set.seed(1234567)
 
   ltheta1 <- log(theta1)
@@ -76,9 +77,9 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
   bk      <- 4   # 2-group parallel design constant
   # reserve memory for the BE result
   BE      <- rep.int(NA, times=nsims)
-  
+
 # ----- stage 1 ----------------------------------------------------------
-  
+
   n1T  <- n1R <- trunc(n1/2) # if not even
   nT    <- n1T; nR <- n1R
   n1    <- n1T + n1R
@@ -99,8 +100,8 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
     # if method=C then calculate power for alpha0=0.05 and plan GMR
     # Here we use A.Fuglsangs settings, namely power monitoring steps
     # and sample size via pooled t-test
-    pwr <- .calc.power(alpha=alpha0, ltheta1=ltheta1, ltheta2=ltheta2, 
-                       diffm=lGMR, sem=sqrt(bk*Vpooled/n1), df=df,  
+    pwr <- .calc.power(alpha=alpha0, ltheta1=ltheta1, ltheta2=ltheta2,
+                       diffm=lGMR, sem=sqrt(bk*Vpooled/n1), df=df,
                        method=pmethod)
     # calculate CIs at alpha0 for all
     if (test=="t-test" || test=="anova"){
@@ -118,15 +119,15 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
     # fail or pass
     BE    <- lower>=ltheta1 & upper<=ltheta2
     # if power>0.8 then calculate CI for alpha=0.05
-    # i.e. if power<0.8 then 
+    # i.e. if power<0.8 then
     BE[pwr<targetpower] <- NA # not yet decided
   }
   # method "B" or power<=0.8 in method "C"
   # evaluate BE with alpha[1]
   Vpooled_tmp <- Vpooled[is.na(BE)]
   pes_tmp <- pes[is.na(BE)]
-  varsT_tmp   <- varsT[is.na(BE)] 
-  varsR_tmp   <- varsR[is.na(BE)] 
+  varsT_tmp   <- varsT[is.na(BE)]
+  varsR_tmp   <- varsR[is.na(BE)]
   BE1 <- rep.int(NA, times=length(Vpooled_tmp))
   # calculate CI for alpha=alpha[1]
   if (test=="t-test" || test=="anova"){
@@ -134,7 +135,7 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
   } else {
     # Welch's t-test
     se  <- sqrt(varsT_tmp/nT + varsR_tmp/nR)
-    dfs <- (varsT_tmp/nT + varsR_tmp/nR)^2/(varsT_tmp^2/nT^2/(nT-1) + 
+    dfs <- (varsT_tmp/nT + varsR_tmp/nR)^2/(varsT_tmp^2/nT^2/(nT-1) +
                                     varsR_tmp^2/nR^2/(nR-1))
     # dfs <- trunc(dfs)
     hw  <- qt(1-alpha[1],dfs)*se
@@ -147,18 +148,18 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
     #if BE met -> PASS and stop
     #if not BE -> goto sample size estimation i.e flag BE1 as NA
     BE1[!BE1] <- NA
-  } else { 
+  } else {
     # method B/E
     # evaluate power at alpha[2] and planGMR
-    pwr <- .calc.power(alpha=alpha[2], ltheta1=ltheta1, ltheta2=ltheta2, 
-                       diffm=lGMR, sem=sqrt(bk*Vpooled_tmp/n1), df=df, 
+    pwr <- .calc.power(alpha=alpha[2], ltheta1=ltheta1, ltheta2=ltheta2,
+                       diffm=lGMR, sem=sqrt(bk*Vpooled_tmp/n1), df=df,
                        method=pmethod)
     # Next is MSDBE scheme
     # if BE met then decide BE regardless of power
     # if not BE and power<0.8 then goto stage 2
-    #BE1[ !BE1 & pwr<targetpower] <- NA 
+    #BE1[ !BE1 & pwr<targetpower] <- NA
     # Xu et al., Potvin method E:
-    # if not BE and if power >= 0.8 (targetpower) make a second BE evaluation 
+    # if not BE and if power >= 0.8 (targetpower) make a second BE evaluation
     # with alpha[2]
     # only if alpha[1] != alpha[2] necessary, but works also without if(...)
     BE12  <- BE1 # reserve memory for second BE decision with alpha[2]
@@ -176,12 +177,12 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
     upper <- pes_tmp + hw
     BE12 <- lower>=ltheta1 & upper<=ltheta2
     # if BE(a1) then BE1=TRUE, regardless of power
-    BE1[BE11==TRUE] <- TRUE 
+    BE1[BE11==TRUE] <- TRUE
     # if not BE(a1) but power >= 0.8 then make BE decision at alpha2
     BE1[BE11==FALSE & pwr>=targetpower] <- BE12[BE11==FALSE & pwr>=targetpower]
     # if not BE(a1) and power<0.8 then not decided yet (marker NA)
     # will be further decided by futility criterion
-    BE1[BE11==FALSE & pwr<targetpower]  <- NA 
+    BE1[BE11==FALSE & pwr<targetpower]  <- NA
     # keep care of memory
     rm(BE11, BE12)
   }
@@ -190,7 +191,7 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
   # take care of memory
   # done with them
   rm(BE1, hw, lower, upper, pes_tmp, Vpooled_tmp)
-  
+
   # time for stage 1
   if(details){
     cat(" - Time consumed (secs):\n")
@@ -202,7 +203,7 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
   stage    <- rep(1, times=nsims)
   # filter out those were stage 2 is necessary
   pes_tmp  <- pes[is.na(BE)]
-  
+
   # Maybe we are already done with stage 1
   if(length(pes_tmp)>0){
     if(details){
@@ -211,7 +212,7 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
       cat("will be estimated. May need some time.\n")
     }
     # preliminary setting stage=2 for those not yet decided BE
-    # may be altered for those with nts>Nmax or nts=Inf 
+    # may be altered for those with nts>Nmax or nts=Inf
     # from sample size est. if pe outside acceptance range
     # see below
     stage[is.na(BE)] <- 2
@@ -226,22 +227,22 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
     ptms <- proc.time()
     # degrees of freedom
     if (test=="anova") dfc <- "n-3" else dfc <- "n-2"
-    
+
     if (usePE){
       # use mse1 & pe1 like in the paper of Karalis/Macheras
       # sample size function returns Inf if pe1 is outside acceptance range
       nts <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=pes_tmp,
-                       mse=Vpooled_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
+                       mse=Vpooled_tmp, ltheta1=ltheta1, ltheta2=ltheta2,
                        method=pmethod, bk=4, dfc=dfc)
     } else {
       # use mse1 & plan GMR to calculate sample size (original Potvin)
       nts <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR,
-                       mse=Vpooled_tmp, ltheta1=ltheta1, ltheta2=ltheta2, 
+                       mse=Vpooled_tmp, ltheta1=ltheta1, ltheta2=ltheta2,
                        method=pmethod, bk=4, dfc=dfc)
     }
-    
+
     n2  <- ifelse(nts>n1, nts - n1, 0)
-    
+
     if(details){
       cat("Time consumed (secs):\n")
       print(round((proc.time()-ptms),1))
@@ -256,7 +257,7 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
       s2[BE2==FALSE]  <- 1
       # debug print
       # cat(sum(!BE2, na.rm=T)," cases with nts>Nmax or nts=Inf\n")
-      # save 
+      # save
       stage[is.na(BE)] <- s2
       # save the FALSE and NA in BE
       BE[is.na(BE)]    <- BE2
@@ -291,12 +292,12 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
     mt  <- (nT*mT+nR*mR)/(nT+nR)
     # simulate variances via chi-squared distribution
     # attention! in case of n2X==1 rchisq gives NaN!
-    # TODO: work out the correct way for n2X==1 
+    # TODO: work out the correct way for n2X==1
     vars2T  <- ifelse(n2T>1, varT*rchisq(n=nsim2, df=n2T-1)/(n2T-1), 0)
     vars2R  <- ifelse(n2R>1, varR*rchisq(n=nsim2, df=n2R-1)/(n2R-1), 0)
     # reset options
-    options(ow) 
-    
+    options(ow)
+
     # vars T/R over stage 1, stage 2
     # sy2 = sum of y squared
     # SQ = sum((y-mean)^2) = sum(y^2) - sum(y)^2/n = sum(y^2) - n*mean^2
@@ -319,7 +320,7 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
       Vpooled <- ((nT-1)*varsT + (nR-1)*varsR)/(nT+nR-2)
       dfs <- (nT+nR-2)
       if (test=="anova"){
-        # no subjects in stage 2 ((n2R+n2T)==0) may occure in case of 
+        # no subjects in stage 2 ((n2R+n2T)==0) may occure in case of
         # high n1 and/or haybittle-peto alpha's
         # according to Anders paper
         Vpooled <- ifelse(n2R+n2T>0,
@@ -338,7 +339,7 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
       hw  <- qt(1-alpha[2],dfs)*se
       rm(se, dfs)
     }
-    
+
     lower <- pes - hw
     upper <- pes + hw
     BE2   <- lower>=ltheta1 & upper<=ltheta2
@@ -351,17 +352,17 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
   # take care of memory
   rm(pes_tmp, pes)
   # the return list
-  res <- list(design="2 parallel groups", method=method, 
-              alpha0=ifelse(method=="C",alpha0,NA), alpha=alpha, CV=CV, n1=n1, 
-              GMR=GMR, test=test, targetpower=targetpower, pmethod=pmethod, 
-              theta0=exp(mlog), theta1=theta1, theta2=theta2, 
+  res <- list(design="2 parallel groups", method=method,
+              alpha0=ifelse(method=="C",alpha0,NA), alpha=alpha, CV=CV, n1=n1,
+              GMR=GMR, test=test, targetpower=targetpower, pmethod=pmethod,
+              theta0=exp(mlog), theta1=theta1, theta2=theta2,
               usePE=usePE, Nmax=Nmax, nsims=nsims,
-              # results 
+              # results
               pBE=sum(BE)/nsims, pBE_s1=sum(BE[stage==1])/nsims,
               # Dec 2014: meaning of pct_s2 changed
-              pct_s2=100*sum(ntot>n1)/nsims, 
+              pct_s2=100*sum(ntot>n1)/nsims,
               nmean=mean(ntot), nrange=range(ntot), nperc=quantile(ntot, p=npct))
-  
+
   # table object summarizing the discrete distri of ntot
   # only if usePE=FALSE or if usePE=TRUE then Nmax must be finite
   # or return it always?
@@ -373,8 +374,8 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
     print(round((proc.time()-ptm),1))
     cat("\n")
   }
-    
+
   class(res) <- c("pwrtsd", "list")
   return(res)
-  
+
 } #end function

@@ -6,7 +6,7 @@ print.pwrtsd <- function(x, ...)
 {
   if(is.null(x$design)) x$design="2x2 crossover"
   cat("TSD with", x$design, "\n")
-  
+
   # power.2stage.GS() has no method argument
   if(is.null(x$method)){
     cat(" non-adaptive group sequential with\n")
@@ -19,19 +19,19 @@ print.pwrtsd <- function(x, ...)
     }
     cat("BE acceptance range = ", x$theta1," ... ", x$theta2,"\n\n", sep="")
     cat("CV= ", x$CV,"; n(s1, s2)= ", x$n[1]," " , x$n[2], "\n", sep="")
-    
+
     # no sample size distribution in results here
     .print_results(x)
 
     return(invisible(x))
   }
-  
+
   # power.2stage.ssr() has method="SSR" in return
   if(tolower(x$method)=="ssr"){
     if(x$blind) blinded <- "blinded " else blinded <- ""
     cat(" with ", blinded, "sample size re-estimation (only)\n", sep="")
     cat("Nominal alpha =", x$alpha, "\n")
-    cat("Sample size est. based on power calculated via", 
+    cat("Sample size est. based on power calculated via",
         .pmethod_nice(x$pmethod), "\n")
     if(!x$usePE) {
       cat("with CV1, GMR =", x$GMR,"and targetpower =", x$targetpower,"\n")
@@ -46,17 +46,17 @@ print.pwrtsd <- function(x, ...)
     }
     cat("BE acceptance range = ", x$theta1," ... ", x$theta2,"\n\n", sep="")
     cat("CV= ", x$CV,"; n(stage 1) = ", x$n1,"\n", sep="")
-    
+
     .print_results(x)
-    
+
     return(invisible(x))
-    
+
   }
-  
+
   # power.2stage.in() has method="IN" in return
   if(tolower(x$method)=="in"){
     cat("Inverse Normal approach\n")
-    if (x$max.comb.test) cat(" - maximum") else cat(" - standard") 
+    if (x$max.comb.test) cat(" - maximum") else cat(" - standard")
     cat(" combination test (")
     if (x$max.comb.test) cat("weights = ", x$weight[1], " ", x$weight[2], ")\n",
                              sep="")
@@ -70,15 +70,15 @@ print.pwrtsd <- function(x, ...)
     else
       cat("conditional error rates and conditional power\n")
     cat("Overall target power = ", x$targetpower, sep="")
-    cat("\nThreshold in power monitoring step for futility =", 
+    cat("\nThreshold in power monitoring step for futility =",
         x$power.threshold, "\n")
     .print_pmethod(x$pmethod)
-    
-    if (x$usePE) 
-      cat("CV1 and PE1 in sample size est. used\n") 
+
+    if (x$usePE)
+      cat("CV1 and PE1 in sample size est. used\n")
     else
       cat("CV1 and GMR =", x$GMR, "in sample size est. used\n")
-    
+
     # futility criterion w.r.t. PE or CI or Nmax
     if(!is.null(x$fCrit)){
       if(is.finite(x$fCNmax)) {
@@ -104,32 +104,32 @@ print.pwrtsd <- function(x, ...)
     }
     # --- BE acceptance range
     cat("BE acceptance range = ", x$theta1," ... ", x$theta2,"\n\n", sep="")
-    
+
     # ---CV, n1 and GMR (GMR only if usePE=F)
     cat("CV = ", x$CV, sep="")
     cat("; n(stage 1) = ", x$n1, sep="")
     cat("; GMR = ", x$GMR, "\n", sep="")
-    
+
     .print_results(x)
     return(invisible(x))
   }
-  
+
   #all other functions
   cat("Method ", x$method,":", sep="")
   if (x$method=="C") cat(" alpha0 = ", x$alpha0, ",",sep="")
   cat(" alpha (s1/s2) =", x$alpha[1], x$alpha[2], "\n")
-  
+
   # power.2stage.KM()
   if(!is.null(x$modified)){
     if(x$modified=="KM") {
       cat("Modification(s) according to Karalis/Macheras:\n")
-      cat("- PE and mse of stage 1 in power steps AND sample size est. used\n") 
-      cat("- Futility criterion PE outside 0.8 ... 1.25\n") 
+      cat("- PE and mse of stage 1 in power steps AND sample size est. used\n")
+      cat("- Futility criterion PE outside 0.8 ... 1.25\n")
     }
     if(x$modified=="DL") {
       cat("Modification according to DL:\n")
-      cat("- PE and mse of stage 1 in sample size est. used if PE1 outside\n") 
-      cat("  GMR ... 1/GMR, else GMR and mse1 is used\n") 
+      cat("- PE and mse of stage 1 in sample size est. used if PE1 outside\n")
+      cat("  GMR ... 1/GMR, else GMR and mse1 is used\n")
     }
   }
 
@@ -138,27 +138,27 @@ print.pwrtsd <- function(x, ...)
     cat("CI's based on", ifelse(x$test=="welch","Welch's t-test", x$test),"\n")
   }
   if(is.null(x$powerstep)){
-    cat("Target power in power monitoring and sample size est. = ", 
+    cat("Target power in power monitoring and sample size est. = ",
         x$targetpower,"\n",sep="")
     .print_pmethod(x$pmethod)
   } else {
     # only function power.2stage.fC() has argument powerstep
-    if (x$powerstep) cat("Interim power monitoring step included\n") else 
+    if (x$powerstep) cat("Interim power monitoring step included\n") else
       cat("No interim power monitoring step used\n")
     if (x$powerstep){
-      cat("Target power in power monitoring and sample size est. = ", 
+      cat("Target power in power monitoring and sample size est. = ",
           x$targetpower,"\n",sep="")
     } else {
       cat("Target power in sample size est. = ", x$targetpower,"\n",sep="")
-    }  
+    }
     .print_pmethod(x$pmethod)
   }
 
-  # usePE is not in all results 
+  # usePE is not in all results
   if(!is.null(x$usePE)){
     if(x$usePE) cat("CV1 and PE1 in sample size est. used\n") else {
       cat("CV1 and GMR =", x$GMR, "in sample size est. used\n")}
-  } 
+  }
   # futility criterion Nmax is not in all results
   if(!is.null(x$Nmax)){
     if(is.finite(x$Nmax)) {
@@ -173,7 +173,7 @@ print.pwrtsd <- function(x, ...)
       cat("Maximum sample size max.n = ", x$max.n,"\n", sep="")
     }
   }
-  
+
   # futility criterion w.r.t. PE or CI
   if(!is.null(x$fCrit)){
     if(x$fCrange[1L] >0 & is.finite(x$fCrange[2L])){
@@ -190,7 +190,7 @@ print.pwrtsd <- function(x, ...)
   }
   # --- BE acceptance range
   cat("BE acceptance range = ", x$theta1," ... ", x$theta2,"\n\n", sep="")
-  
+
   # ---CV, n1 and GMR (GMR only if usePE=F)
   if (length(x$CV)==2){
     cat("CVs = "); cat(x$CV, sep=", ")
@@ -203,18 +203,18 @@ print.pwrtsd <- function(x, ...)
     #this is the case for power.2stage.p only
     cat("; ntot(stage 1) = ", sum(x$n1), " (nT, nR = ", x$n1[1], ", ", x$n1[2],")", sep="")
   }
-  
+
   # power.2stage.KM() has no GMR
   # if usePE=T then also no output of GMR
   if(!is.null(x$usePE)) {
     if(x$usePE==TRUE) x$GMR <- NULL
-  } 
+  }
   if(!is.null(x$GMR)) cat("; GMR=", x$GMR, "\n") else cat("\n")
-  
+
   .print_results(x)
 
   return(invisible(x))
-  
+
 } # end function
 
 # nice power calc. method
@@ -236,7 +236,7 @@ print.pwrtsd <- function(x, ...)
 {
   # --- results part
   cat("\n", x$nsims," sims at theta0 = ", x$theta0, sep="")
-  if(x$theta0<=x$theta1 | x$theta0>=x$theta2) cat(" (p(BE)='alpha').\n") else { 
+  if(x$theta0<=x$theta1 | x$theta0>=x$theta2) cat(" (p(BE)=TIE 'alpha').\n") else {
     cat(" (p(BE)='power').\n")}
   cat("p(BE)    = ", x$pBE,"\n", sep="")
   # power.2stage.ssr() has no pBE_s1

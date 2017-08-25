@@ -5,7 +5,7 @@
      TSD's evaluated via p-value combination using the inverse normal approach.
      Contributed by Benjamin Lang.
    - GitHub URL and bug reports URL added
-   - function sampleN2.TOST() to estimate n2 in 2x2 and parallel dewigns.
+   - function sampleN2.TOST() to estimate n2 in 2x2 and parallel designs.
 Version 0.4-5
 2017-01-18
    - DOI for references in man pages added.
@@ -13,7 +13,7 @@ Version 0.4-5
      negative residual variances in case of test="anova" and imprecise power
      values in all other cases for certain scenarios of n1, CV.
    - Large sample approximation to the sample size adapted to deal with
-     unsymmetrical BE acceptance ranges, one limit = Inf allowed
+     unsymmetric BE acceptance ranges, one limit = Inf allowed
    - Maintenance release to refelect changes in power calculation of
      package PowerTOST
    - Some small cosmetic changes in code w.r.t min.n2

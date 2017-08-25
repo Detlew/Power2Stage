@@ -23,27 +23,42 @@ power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
 \arguments{
   \item{method}{
     Decision schemes according to Potvin \emph{et.al.} (defaults to \verb{"B"}).\cr
-    Montague\enc{’}{'}s \sQuote{method D} can be obtained by choosing \verb{"C"} but setting
+    Montague\enc{’}{'}s \sQuote{Method D} can be obtained by choosing \verb{"C"} but setting
     \verb{alpha=c(0.028, 0.028)}.\cr
     \sQuote{Method E} of Xu \emph{et al.} can be obtained by choosing \verb{"B"} and setting alphas,
     futility criterion \verb{"CI"}, \verb{max.n}, and \verb{n1} according to the reference.\cr
     \sQuote{Method F} can be obtained choosing \verb{"C"} with the appropriate design setting
     according to the reference.\cr
-    \verb{method="B0"} uses the decision scheme of Zheng \emph{et al.} \verb{"MSDBE"} which
-    differs from B/E in case of different alphas w.r.t. power monitoring and BE decision
-    in case of power >= target power.
+    \verb{method="B0"} uses the decision scheme of Zheng \emph{et al.} \acronym{MSDBE}
+    (modified sequential design for \acronym{B}E studies) which differs from B in case
+    of different alphas w.r.t. power monitoring and BE decision in case of power
+    >= target power.
   }
   \item{alpha0}{
     Alpha value for the first step(s) in Potvin \verb{"C"}, the power inspection
-    and BE decision if power > targetpower.\cr
-    Defaults to 0.05.
+    and BE decision if power > targetpower. Defaults to 0.05.\cr
+    Only observed if \verb{method="C"}
   }
   \item{alpha}{
-    Vector of the nominal alphas for the two stages.\cr
-    Defaults to Pocock\enc{’}{'}s alpha setting \verb{alpha=c(0.0294, 0.0294)}.
+    Vector (two elements) of the nominal alphas for the two stages. Defaults to
+    Pocock\enc{’}{'}s setting \verb{alpha=c(0.0294, 0.0294)}.\cr
+    Common values together with other arguments are:\cr
+    \verb{rep(0.0294, 2)}: Potvin \emph{et al.} \sQuote{Method B} \verb{(fCrit="CI", fCupper=Inf)}\cr
+    \verb{rep(0.0269, 2)}: Fulgsang \sQuote{Method C/D} \verb{(method="C", GMR=0.9, targetpower=0.9, fCrit="CI", fCupper=Inf)}\cr
+    \verb{rep(0.0274, 2)}: Fuglsang \sQuote{Method C/D} \verb{(method="C", targetpower=0.9, fCrit="CI", fCupper=Inf)}\cr
+    \verb{rep(0.0280, 2)}: Montague \emph{et al.} \sQuote{Method D} \verb{(method="C", GMR=0.9, fCrit="CI", fCupper=Inf)}\cr
+    \verb{rep(0.0284, 2)}: Fulgsang \sQuote{Method B} \verb{(GMR=0.9, targetpower=0.9, fCrit="CI", fCupper=Inf)}\cr
+    \verb{rep(0.0304, 2)}: Kieser & Rauch \verb{(fCrit="CI", fCupper=Inf)}\cr
+    \verb{c(0.01, 0.04)}: Zheng \emph{et al.} \sQuote{MSDBE} \verb{(method="B0", fCrit="CI", fCupper=Inf)}\cr
+    \verb{c(0.0249, 0.0357)}: Xu \emph{et al.} \sQuote{Method E} for CV 10--30\% \verb{(fCrit="CI", fClower=0.9374, max.n=42)}\cr
+    \verb{c(0.0254, 0.0363)}: Xu \emph{et al.} \sQuote{Method E} for CV 30--55\% \verb{(fCrit="CI", fClower=0.9305, max.n=42)}\cr
+    \verb{c(0.0248, 0.0364)}: Xu \emph{et al.} \sQuote{Method F} for CV 10--30\% \verb{(method="C", , fCrit="CI", fClower=0.9492, max.n=180)}\cr
+    \verb{c(0.0259, 0.0349)}: Xu \emph{et al.} \sQuote{Method F} for CV 30--55\% \verb{(method="C", , fCrit="CI", fClower=0.9305, max.n=180)}
   }
   \item{n1}{
-    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}. For Xu\enc{’}{'}s
+    methods the recommended sample size should be at least 18 (if CV 10--30\%) or
+    48 (if CV 30--55\%).
   }
   \item{CV}{
     Coefficient of variation of the intra-subject variability as ratio.
@@ -88,8 +103,8 @@ power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
     \emph{i.e.}, the total sample size to \code{n1+min.n2}.
   }
   \item{max.n}{
-    If \verb{max.n} is set to a finite value the re-estimated total sample size (N) is set
-    to \code{min(max.n, N)}.\cr
+    If \verb{max.n} is set to a finite value the re-estimated total sample size (N) is
+    set to \code{min(max.n, N)}.\cr
     Defaults to \verb{Inf} which is equivalent to not constrain the re-estimated sample size.\cr
     Attention! \verb{max.n} here is \bold{not} a futility criterion like \verb{Nmax}
     in other functions of this package.
@@ -100,9 +115,10 @@ power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
   \item{fClower}{
     Lower futility limit for the \verb{PE} or \verb{CI} of
     \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
-    If the \verb{PE} or \verb{CI} is outside \verb{fClower} \ldots \verb{fCupper} the
-    study is stopped with the result FAIL (not BE).\cr
-    May be missing. Defaults then to 0.8 if \verb{fCrit="PE"} or 0.925 if \verb{fCrit="CI"}.
+    If the \verb{PE} or \verb{CI} is outside \verb{fClower} \ldots \verb{fCupper}
+    the study is stopped in the interim with the result FAIL (not BE).\cr
+    May be missing. Defaults then to 0.8 if \verb{fCrit="PE"} or 0.925 if
+    \verb{fCrit="CI"}.
   }
   \item{fCupper}{
     Upper futility limit for the \verb{PE} or \verb{CI} of
@@ -119,8 +135,10 @@ power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
     Upper bioequivalence limit. Defaults to 1.25.
   }
   \item{npct}{
-    Percentiles to be used for the presentation of the distribution of \verb{n(total)=n1+n2}.\cr
-    Defaults to \verb{c(0.05, 0.5, 0.95)} to obtain the 5\% and 95\% percentiles and the median.
+    Percentiles to be used for the presentation of the distribution of
+    \verb{n(total)=n1+n2}.\cr
+    Defaults to \verb{c(0.05, 0.5, 0.95)} to obtain the 5\% and 95\% percentiles
+    and the median.
   }
   \item{nsims}{
     Number of studies to simulate.\cr
@@ -164,12 +182,19 @@ power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
   This component is only given back if \code{usePE==FALSE} or
   \code{usePE==TRUE & fClower>0 & is.finite(fCupper)}, \emph{i.e.}, a futility range is used.}
 }
+\author{
+D. Labes
+}
 \references{
 Potvin D, DiLiberti CE, Hauck WW, Parr AF, Schuirmann DJ, Smith RA. \emph{Sequential design approaches for bioequivalence studies with crossover designs.}\cr
 Pharm Stat. 2008; 7(4):245--62. \doi{10.1002/pst.294}
 
 Montague TH, Potvin D, DiLiberti CE, Hauck WW, Parr AF, Schuirmann DJ. \emph{Additional results for \sQuote{Sequential design approaches for bioequivalence studies with crossover designs}.}\cr
 Pharm Stat. 2011; 11(1):8--13. \doi{10.1002/pst.483}
+
+Fuglsang A. \emph{Sequential Bioequivalence Trial Designs with Increased Power and
+Controlled Type I Error Rates.}\cr
+AAPS J. 2013; 15(3):659--61. \doi{10.1208/s12248-013-9475-5}
 
 \enc{Schütz}{Schuetz} H. \emph{Two-stage designs in bioequivalence trials.}\cr
 Eur J Clin Pharmacol. 2015; 71(3):271--81. \doi{10.1007/s00228-015-1806-2}
@@ -183,9 +208,6 @@ Pharm Stat. 2015; 14(3):180--8. \doi{10.1002/pst.1672}
 Xu J, Audet C, DiLiberti CE, Hauck WW, Montague TH, Parr TH, Potvin D, Schuirmann DJ.
 \emph{Optimal adaptive sequential designs for crossover bioequivalence studies.}\cr
 Pharm Stat. 2016;15(1):15--27. \doi{10.1002/pst.1721}
-}
-\author{
-D. Labes
 }
 \seealso{
 \code{\link{power.2stage}}

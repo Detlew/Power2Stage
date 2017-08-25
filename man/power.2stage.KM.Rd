@@ -14,7 +14,7 @@ Power calculation of adaptive 2-stage BE studies (2x2 crossover)
   the point estimate (\acronym{PE}) of T/R from \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
   }
 \usage{
-power.2stage.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294,0.0294),
+power.2stage.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
                 n1, CV, targetpower = 0.8, pmethod = c("nct", "exact"),
                 Nmax = 150, theta0, theta1, theta2, npct = c(0.05, 0.5, 0.95),
                 nsims, setseed = TRUE, details = FALSE)
@@ -36,7 +36,7 @@ power.2stage.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294,0.0294),
     Defaults to 0.05.
   }
   \item{alpha}{
-    Vector of the nominal alphas for the two stages.\cr
+    Vector (two elements) of the nominal alphas for the two stages.\cr
     Defaults to Pocock\enc{’}{'}s alpha setting \verb{alpha=c(0.0294, 0.0294)}
     as in \acronym{TSD} of Karalis & Macheras.
   }
@@ -126,6 +126,9 @@ power.2stage.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294,0.0294),
   of n(total) via its distinct values and counts of occurences of these values.\cr
   This component is only given back if \verb{is.finite(Nmax)}.}
 }
+\author{
+D. Labes
+}
 \references{
 Potvin D, DiLiberti CE, Hauck WW, Parr AF, Schuirmann DJ, Smith RA. \emph{Sequential design approaches for bioequivalence studies with crossover designs.}\cr
 Pharm Stat. 2008; 7(4):245--62. \doi{10.1002/pst.294}
@@ -141,9 +144,6 @@ AAPS J. 2014; 16(1):79--82. \doi{10.1208/s12248-013-9540-0}
 
 \enc{Schütz}{Schuetz} H. \emph{Two-stage designs in bioequivalence trials.}\cr
 Eur J Clin Pharmacol. 2015; 71(3):271--81. \doi{10.1007/s00228-015-1806-2}
-}
-\author{
-D. Labes
 }
 \examples{
 # using all the defaults

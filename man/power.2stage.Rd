@@ -20,21 +20,32 @@ power.2stage(method = c("B", "C", "B0"), alpha0 = 0.05,
 }
 \arguments{
   \item{method}{
-    Decision schemes according to Potvin \emph{et.al.} (defaults to \verb{"B"}). \cr
-    Montague\enc{’}{'}s \sQuote{method D} can be obtained by choosing \verb{"C"} but setting
+    Decision schemes according to Potvin \emph{et.al.} (defaults to \verb{"B"}).\cr
+    Potvin\enc{’}{'}s \sQuote{Method D} can be obtained by choosing \verb{"C"} but setting
     \verb{alpha=c(0.028, 0.028)}.\cr
-    \verb{method="B0"} uses the decision scheme of Zheng \emph{et al.} \verb{"MSDBE"} which
-    differs from B/E in case of different alphas w.r.t. power monitoring and BE decision
-    in case of power >= target power.
+    Montague\enc{’}{'}s \sQuote{Method D} can be obtained by choosing \verb{"C"} but setting
+    \verb{alpha=c(0.028, 0.028)} and \verb{GMR=0.9}.\cr
+    \verb{method="B0"} uses the decision scheme of Zheng \emph{et al.} \acronym{MSDBE}
+    (modified sequential design for \acronym{B}E studies) which differs from B in case
+    of different alphas w.r.t. power monitoring and BE decision in case of power
+    >= target power.
   }
   \item{alpha0}{
     Alpha value for the first step(s) in Potvin \verb{"C"}, the power inspection
-    and BE decision if power > targetpower.\cr
-    Defaults to 0.05.
+    and BE decision if power > targetpower. Defaults to 0.05.\cr
+    Only observed if \verb{method="C"}.
   }
   \item{alpha}{
-    Vector of the nominal alphas for the two stages.\cr
-    Defaults to Pocock\enc{’}{'}s alpha setting \verb{alpha=c(0.0294, 0.0294)}.
+    Vector (two elements) of the nominal alphas for the two stages. Defaults to
+    Pocock\enc{’}{'}s setting \verb{alpha=c(0.0294, 0.0294)}.\cr
+    Common values together with other arguments are:\cr
+    \verb{rep(0.0294, 2)}: Potvin \emph{et al.} \sQuote{Method B}\cr
+    \verb{rep(0.0269, 2)}: Fulgsang \sQuote{Method C/D} \verb{(method="C", GMR=0.9, targetpower=0.9)}\cr
+    \verb{rep(0.0274, 2)}: Fuglsang \sQuote{Method C/D} \verb{(method="C", targetpower=0.9)}\cr
+    \verb{rep(0.0280, 2)}: Montague \emph{et al.} \sQuote{Method D} \verb{(method="C", GMR=0.9)}\cr
+    \verb{rep(0.0284, 2)}: Fulgsang \sQuote{Method B} \verb{(GMR=0.9, targetpower=0.9)}\cr
+    \verb{rep(0.0304, 2)}: Kieser & Rauch\cr
+    \verb{c(0.01, 0.04)}: Zheng \emph{et al.} \sQuote{MSDBE} \verb{(method="B0")}
   }
   \item{n1}{
     Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
@@ -117,13 +128,13 @@ power.2stage(method = c("B", "C", "B0"), alpha0 = 0.05,
   }
 }
 \details{
-    The calculations follow in principle the simulations as described in Potvin
-    \emph{et al}.\cr
-    The underlying subject data are assumed to be evaluated after log-transformation.
-    But instead of simulating subject data, the statistics pe1, mse1 and pe2, SS2 are
-    simulated via their associated distributions (normal and
-    \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distributions).
-  }
+  The calculations follow in principle the simulations as described in Potvin
+  \emph{et al}.\cr
+  The underlying subject data are assumed to be evaluated after log-transformation.
+  But instead of simulating subject data, the statistics pe1, mse1 and pe2, SS2 are
+  simulated via their associated distributions (normal and
+  \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distributions).
+}
 \value{
   Returns an object of class \verb{"pwrtsd"} with all the input arguments and results
   as components.\cr
@@ -139,7 +150,10 @@ power.2stage(method = c("B", "C", "B0"), alpha0 = 0.05,
   n(total) via its distinct values and counts of occurences of these values.\cr
   This component is only given back if \verb{usePE==FALSE} or otherwise if
   \verb{is.finite(Nmax)}, \emph{i.e.}, a futility criterion is used.}
-  }
+}
+\author{
+D. Labes
+}
 \references{
 Potvin D, DiLiberti CE, Hauck WW, Parr AF, Schuirmann DJ, Smith RA. \emph{Sequential design approaches for bioequivalence studies with crossover designs.}\cr
 Pharm Stat. 2008; 7(4):245--62. \doi{10.1002/pst.294}
@@ -166,12 +180,6 @@ Stat Med. 2015; 34(16):2403--16. \doi{10.1002/sim.6487}
 Zheng Ch, Zhao L, Wang J. \emph{Modifications of sequential designs in bioequivalence trials.}\cr
 Pharm Stat. 2015; 14(3):180--8. \doi{10.1002/pst.1672}
 
-Xu J, Audet C, DiLiberti CE, Hauck WW, Montague TH, Parr TH, Potvin D, Schuirmann DJ.
-\emph{Optimal adaptive sequential designs for crossover bioequivalence studies.}\cr
-Pharm Stat. 2016;15(1):15--27. \doi{10.1002/pst.1721}
-}
-\author{
-D. Labes
 }
 \seealso{
 \code{\link{power.2stage.p}} for analogous calculations for 2-group parallel
