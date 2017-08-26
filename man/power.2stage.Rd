@@ -5,7 +5,7 @@
 Power calculation of adaptive 2-stage BE studies in a 2x2 crossover design
 }
 \description{
-  This function calculates the empirical power of 2-stage BE studies according
+  This function calculates the \sQuote{empiric} power of 2-stage BE studies according
   to Potvin \emph{et al.} via simulations. The Potvin methods are modified to include
   a futility criterion Nmax and to allow the sample size estimation step to be
   done with the point estimate (\acronym{PE}) and \acronym{MSE} (calculated from CV)

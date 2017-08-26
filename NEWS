@@ -2,7 +2,7 @@
    - df for sample size re-estimation changed to n-3 for Potvin like TSD schemes
      (pooled evaluation with additionally stage term)
    - Function power.2stage.in() to calculate the operational characteristics of
-     TSD's evaluated via p-value combination using the inverse normal approach.
+     TSDs evaluated via p-value combination using the inverse normal approach.
      Contributed by Benjamin Lang.
    - GitHub URL and bug reports URL added
    - function sampleN2.TOST() to estimate n2 in 2x2 and parallel designs.
@@ -35,7 +35,7 @@ Version 0.4-3
      Xu et al.This gives small differences compared to previous calculations
      with unequal alphas, f.i. Haybittle-Peto alphas
    - The CI futility criterion is now based on the 90% CI according to Xu et al.
-     Was former the 1-2*alpha[1] CI
+     Was formerly the 1-2*alpha[1] CI
    - Default futility criterion changed to "CI" with a lower bound = 0.925
    - Defunct print argument removed from all power.2stage.xyz() functions
 Version 0.4-2
@@ -94,7 +94,7 @@ released to alpha-testers only
      min.n2 to restrict the sample size for stage 2 to a lower limit
    - Calculation of % studies in stage 2 re-defined to studies having total n>n1
      (was in the past studies which had to be evaluated with alpha2, affects
-      only 'unsymmetrical' alpha settings)
+     only 'unsymmetric' alpha settings)
    - Function power.2stage.ssr() for (blinded) sample size re-estimation added
      (2-stage design without BE decision at interim)
    - Some code streamlining
@@ -139,7 +139,7 @@ Version 0.0-6
 2014-01-02
    - Examples adapted to complain with CRAN policy "Examples should run for
      no more than a few seconds each". Few seconds means below 5 sec as I learned.
-     Attention! Number of sims are too low to have meaningfull results.
+     Attention! Number of sims are too low to get meaningful results.
      Minimum number of sims should be 1E5 for 'power', 1E6 sims for 'alpha'.
 Version 0.0-5
 2013-12-27
@@ -148,7 +148,7 @@ Version 0.0-4
 2013-09-12 not released, internal version only
    - Function power2.2stage() renamed to power.2stage.KM()
    - Arguments in power.2stage.KM() omitted which are not necessary for
-     the TSD's described in the Karalis & Macheras and in Karalis papers
+     the TSDs described in the Karalis & Macheras and in Karalis papers
      (see references).
    - Default method in power.2stage.KM() shifted to "C".
    - Function power.2stage.Bf() implemented which evaluates a 2-stage design

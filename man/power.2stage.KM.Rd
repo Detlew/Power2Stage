@@ -6,7 +6,7 @@ Power calculation of adaptive 2-stage BE studies (2x2 crossover)
 (variant of power.2stage to obtain the results of Karalis / Macheras)
 }
 \description{
-  This function calculates the empirical power of 2-stage BE studies according
+  This function calculates the \sQuote{empiric} power of 2-stage BE studies according
   to Potvin \emph{et al.} via simulations. The Potvin methods are modified as
   described by Karalis & Macheras to include a futility criterion Nmax and to
   perform the power calculation steps and the sample size estimation step in
@@ -66,7 +66,8 @@ power.2stage.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
     Set this argument to \verb{Inf}, to work without that futility criterion.
   }
   \item{theta0}{
-    True ratio of T/R for simulating. Defaults to 0.95.
+    Assumed ratio of geometric means (T/R) for simulations. If missing,
+    defaults to \verb{GMR}.
   }
   \item{theta1}{
     Lower bioequivalence limit. Defaults to 0.8.

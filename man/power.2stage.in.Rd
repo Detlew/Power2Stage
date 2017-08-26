@@ -6,7 +6,7 @@ Power calculation of adaptive 2-stage BE studies with 2x2 crossover design,
 based on the Inverse-Normal method
 }
 \description{
-  The function calculates the empirical power of 2-stage BE studies based
+  The function calculates the \sQuote{empiric} power of 2-stage BE studies based
   on the Inverse-Normal combination method. The main design scheme is according
   to Maurer \emph{et al.}, but it may also be used for modified designs to
   allow for usage of the observed treatment difference after

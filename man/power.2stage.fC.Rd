@@ -6,7 +6,7 @@ Power calculation of adaptive 2-stage BE studies (2x2 crossover) with a
 futility criterion for the point estimate of T/R or its 90\%CI
 }
 \description{
-  This function calculates the empirical power of 2-stage BE studies according
+  This function calculates the \sQuote{empiric} power of 2-stage BE studies according
   to Potvin \emph{et al.} \sQuote{method B/C} via simulations. The Potvin methods are
   modified to include a futility criterion for the point estimate or for its
   90\%CI and to allow the sample size estimation step to be done with the point
@@ -111,6 +111,17 @@ power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
     in other functions of this package.
   }
   \item{fCrit}{
+    Futility criterion.\cr
+    If set to \verb{"PE"} the study stops after
+    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} if not \acronym{BE} and if the point
+    estimate (\acronym{PE}) of \ifelse{html}{\out{stage&nbsp;1}}{stage~1} evaluation
+    is outside the range defined in the next two  arguments \verb{"fClower"} and
+    \verb{"fCupper"}.\cr
+    If set to \verb{"CI"} the study stops after \ifelse{html}{\out{stage&nbsp;1}}{stage~1}
+    if not \acronym{BE} and if the confidence interval of
+    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} evaluation is outside the range
+    defined in the next two arguments.\cr
+    Defaults to \verb{"PE"}.
     Futility criterion to use for \verb{PE} or \verb{CI}.
   }
   \item{fClower}{
@@ -127,7 +138,8 @@ power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
     Will be set to \verb{1/fClower} if missing.
   }
   \item{theta0}{
-    True ratio of T/R for simulating. Defaults to the \verb{GMR} argument.
+    Assumed ratio of geometric means (T/R) for simulations. If missing,
+    defaults to \verb{GMR}.
   }
   \item{theta1}{
     Lower bioequivalence limit. Defaults to 0.8.
@@ -160,13 +172,13 @@ power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
   }
 }
 \details{
-    The calculations follow in principle the simulations as described in Potvin
-    \emph{et al}.\cr
-    The underlying subject data are assumed to be evaluated after log-transformation.
-    But instead of simulating subject data, the statistics pe1, mse1 and pe2, SS2 are
-    simulated via their associated distributions (normal and
-    \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distributions).
-  }
+  The calculations follow in principle the simulations as described in Potvin
+  \emph{et al}.\cr
+  The underlying subject data are assumed to be evaluated after log-transformation.
+  But instead of simulating subject data, the statistics pe1, mse1 and pe2, SS2 are
+  simulated via their associated distributions (normal and
+  \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distributions).
+}
 \value{
   Returns an object of class \verb{"pwrtsd"} with all the input arguments and results
   as components.\cr

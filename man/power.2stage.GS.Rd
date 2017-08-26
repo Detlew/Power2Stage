@@ -31,7 +31,8 @@ power.2stage.GS(alpha = c(0.0294, 0.0294), n, CV, theta0, theta1, theta2,
     (use \emph{e.g.}, 0.3 for 30\%).
   }
   \item{theta0}{
-    True ratio of T/R for simulating. Defaults to 0.95 if missing.
+    Assumed ratio of geometric means (T/R) for simulations. If missing,
+    defaults to \verb{GMR}.
   }
   \item{theta1}{
     Lower bioequivalence limit. Defaults to 0.8.
