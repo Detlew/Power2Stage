@@ -6,7 +6,7 @@ Power calculation of adaptive 2-stage BE studies with 2x2 crossover design,
 based on the Inverse-Normal method
 }
 \description{
-  The function calculates the \sQuote{empiric} power of 2-stage BE studies based
+  The function calculates the \sQuote{empirical} power of 2-stage BE studies based
   on the Inverse-Normal combination method. The main design scheme is according
   to Maurer \emph{et al.}, but it may also be used for modified designs to
   allow for usage of the observed treatment difference after
@@ -25,7 +25,7 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
 \arguments{
   \item{alpha}{
     If one element is given, the overall one-sided significance level. If two
-    element are given, the adjusted one-sided alpha levels for
+    elements are given, the adjusted one-sided alpha levels for
     \ifelse{html}{\out{stage&nbsp;1}}{stage~1} and
     \ifelse{html}{\out{stage&nbsp;2}}{stage~21}, respectively.\cr
     If missing, defaults to \verb{0.05}.
@@ -92,10 +92,10 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   }
   \item{max.n}{
     Maximum overall sample size \ifelse{html}{\out{stage&nbsp;1}}{stage~1} +
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}).\cr
+    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.\cr
     This is \emph{not} a futility criterion regarding the maximum sample size! If
     \verb{max.n} is set to a finite value and the sample size re-estimation gives a
-    sample size for \ifelse{html}{\out{stage&nbsp;2}}{stage~2} (\verb{n2}), such
+    sample size for \ifelse{html}{\out{stage&nbsp;2}}{stage~2} (\verb{n2}) such
     that \verb{n1 + n2 > max.n}, then the sample size for
     \ifelse{html}{\out{stage&nbsp;2}}{stage~2} will be set to \verb{n2 = max.n - n1}.\cr
     Defaults to \verb{Inf}, \emph{i.e.}, no constraint on the re-estimated sample size.
@@ -177,8 +177,8 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
 }
 \details{
   The underlying subject data are assumed to be evaluated after log-transformation.
-  But instead of simulating subject data, the statistics pe1, mse1 and pe2, SS2 are
-  simulated via their associated distributions (normal and
+  But instead of simulating subject data, the statistics pe1, mse1 and pe2, mse2 
+  are simulated via their associated distributions (normal and
   \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distributions).\cr\cr
   If \verb{ssr.conditional = TRUE}, the design scheme generally calculates the
   conditional power of the second stage and uses this value as desired target
@@ -190,7 +190,7 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   cases the desired target power for sample size re-calculation will be set to
   \code{targetpower}.
   \item The futility criterion \eqn{power for stage 1 \ge } \code{power.threshold}
-  for cases with not yet BE after stage 1 may equivalently be expressed in terms of
+  for cases with not yet BE after stage 1 may be expressed in terms of
   the conditional power of the second stage: The criterion
   \deqn{conditional power \le x} is equivalent to
   \deqn{power for stage 1 \ge 1 - \beta/(1 - x),} where
@@ -209,7 +209,7 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   \item{pBE}{Fraction of studies found BE.}
   \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.}
   \item{pct_stop_s1}{Percentage of studies stopped after
-  \ifelse{html}{\out{stage&nbsp;1}}{stage~1} (due to BE ordue to futility).}
+  \ifelse{html}{\out{stage&nbsp;1}}{stage~1} (due to BE or due to futility).}
   \item{pct_stop_fut}{Percentage of studies stopped after
   \ifelse{html}{\out{stage&nbsp;1}}{stage~1} due to futility.}
   \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.}
@@ -242,7 +242,6 @@ power.2stage.in(n1 = 12, CV = 0.2)
 \dontrun{
 power.2stage.in(n1 = 12, CV = 0.2, max.n = 4000, pmethod = "exact", nsims = 1E6)}
 #
-# Example as above, but using futility constraints (the default ones)
-# regarding PE and Nmax:
+# As above, but using (default) futility constraints regarding PE and Nmax:
 power.2stage.in(n1 = 12, CV = 0.2, fCrit = c("PE", "Nmax"))
 }
