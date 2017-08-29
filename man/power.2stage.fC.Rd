@@ -3,7 +3,7 @@
 \alias{power.2stage.fC}
 \title{
 Power calculation of adaptive 2-stage BE studies (2x2 crossover) with a
-futility criterion for the point estimate of T/R or its 90\%CI
+futility criterion for the point estimate of T/R or its 90\% CI
 }
 \description{
   This function calculates the \sQuote{empiric} power of 2-stage BE studies according

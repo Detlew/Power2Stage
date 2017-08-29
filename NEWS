@@ -1,4 +1,5 @@
 2017-08-24 on GitHub
+   - Stops if length(alpha) != 2
    - df for sample size re-estimation changed to n-3 for Potvin like TSD schemes
      (pooled evaluation with additionally stage term)
    - Function power.2stage.in() to calculate the operational characteristics of
@@ -6,7 +7,6 @@
      Contributed by Benjamin Lang.
    - GitHub URL and bug reports URL added
    - function sampleN2.TOST() to estimate n2 in 2x2 and parallel designs.
-   - Stops if length(alpha) != 2
 Version 0.4-5
 2017-01-18
    - DOI for references in man pages added.
