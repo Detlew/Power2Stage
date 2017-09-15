@@ -157,15 +157,18 @@ Pharm Stat. 2008; 7(4):245--62. \doi{10.1002/pst.294}
 }
 \examples{
 # Not run to comply with CRAN policy about examples' run-time;
-# minimum number of sims should be 1E5 for 'power', 1E6 sims for 'alpha'
+# minimum number of sim's should be 1E5 for 'power', 1E6 sim's for 'alpha'
 \dontrun{
-power.2stage.ssr(alpha=0.05, n1=10, CV=0.245, GMR=1, pmethod="ls",
-                 blind=TRUE, theta0=1.25, nsims=1E6)}
-# should give an alpha-inflation ~0.0627
+power.2stage.ssr(alpha=0.05, n1=10, GMR=1, CV=0.239, targetpower=0.9,
+                 pmethod="ls", blind=TRUE, theta0=1.25)
+# should give an alpha-inflation 0.072359 (run time <5 seconds)
+# repeated with noncentral t-approximation
+power.2stage.ssr(alpha=0.05, n1=10, GMR=1, CV=0.239, targetpower=0.9,
+                 pmethod="nct", blind=TRUE, theta0=1.25)
+# should give an alpha-inflation 0.069789 (run time ~20 seconds)
 #
 # adjusted alpha to control the Type I Error, noncentral t-approx.
-\dontrun{
-power.2stage.ssr(alpha=0.03344, n1=10, CV=0.245, GMR=1, pmethod="nct",
-                 blind=TRUE, theta0=1.25, nsims=1E6)}
-# should give 0.04984
+power.2stage.ssr(alpha=0.03505, n1=10, GMR=1, CV=0.239, targetpower=0.9,
+                 pmethod="nct", blind=TRUE, theta0=1.25)
+# should control the TIE with 0.049877}
 }

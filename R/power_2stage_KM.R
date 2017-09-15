@@ -28,7 +28,7 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
 
   if (missing(theta0)) theta0 <- 0.95
 
-  if (n1>Nmax) stop("n1>Nmax doestn't make sense!")
+  if (n1>Nmax) stop("n1>Nmax doesn\'t make sense!")
 
   if(missing(nsims)){
     nsims <- 1E5

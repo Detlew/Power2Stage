@@ -49,7 +49,7 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
 
   if (missing(theta0)) theta0 <- GMR
 
-  if (n1>Nmax) stop("n1>Nmax doestn't make sense!")
+  if (n1>Nmax) stop("n1>Nmax doesn\'t make sense!")
 
   if(missing(nsims)){
     nsims <- 1E5

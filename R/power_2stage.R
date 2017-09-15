@@ -30,7 +30,7 @@ power.2stage <- function(method=c("B","C","B0"), alpha0=0.05, alpha=c(0.0294,0.0
 
   if (missing(theta0)) theta0 <- GMR
 
-  if (n1>Nmax) stop("n1>Nmax doestn't make sense!")
+  if (n1>Nmax) stop("n1>Nmax doesn\'t make sense!")
 
   if(missing(nsims)){
     nsims <- 1E5
@@ -41,7 +41,7 @@ power.2stage <- function(method=c("B","C","B0"), alpha0=0.05, alpha=c(0.0294,0.0
   # make even (round up)
   if( min.n2%%2 != 0) {
     min.n2 <- min.n2 + min.n2%%2
-    message("min.n2 rounded up to next even", min.n2)
+    message("min.n2 rounded up to next even ", min.n2)
   }
   # check if Potvin B or C
   method  <- match.arg(method)

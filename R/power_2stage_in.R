@@ -84,7 +84,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   if (n1 <= 0)      stop("Number of subjects in stage 1 must be >0!")
   if (n1 %% 2 != 0) {  # make it even
     n1 <- 2 * floor(n1 / 2) + 2
-    message("n1 rounded up to next even integer", n1)
+    message("n1 rounded up to next even integer ", n1)
   }
   if (missing(CV))  stop("CV must be given!")
   if (CV <= 0)      stop("CV must be >0!")

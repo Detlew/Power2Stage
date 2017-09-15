@@ -55,11 +55,11 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
   # make even (round up)
   if( min.n2%%2 != 0) {
     min.n2 <- min.n2 + min.n2%%2
-    message("min.n2 rounded up to next even", min.n2)
+    message("min.n2 rounded up to next even ", min.n2)
   }
 
   # check max.n
-  if (n1>=max.n) stop("max.n <= n1 doestn't make sense!")
+  if (n1>=max.n) stop("max.n <= n1 doesn\'t make sense!")
 
   # check if power calculation method is nct or exact
   pmethod <- match.arg(pmethod)
