@@ -64,14 +64,22 @@ print.pwrtsd <- function(x, ...)
     cat(" - alpha (s1/s2) =", round(x$alpha[1], 5), round(x$alpha[2], 5), "\n")
     cat(" - critical value (s1/s2) =", round(x$cval[1], 5), round(x$cval[2], 5),
         "\n")
-    if (x$ssr.conditional) cat(" - with ") else cat(" - without ")
-    if (x$power.threshold > x$targetpower)
-      cat("conditional error rates\n")
-    else
-      cat("conditional error rates and conditional power\n")
+    if (x$ssr.conditional == "no") {
+      cat(" - without conditional error rates and conditional power\n")
+    } else {
+      cat(" - with ")
+      if (x$ssr.conditional == "error") {
+        cat("conditional error rates\n")
+      } else {
+        if (x$fCpower > x$targetpower)
+          cat("conditional error rates\n")
+        else
+          cat("conditional error rates and conditional power\n")
+      }
+    }
     cat("Overall target power = ", x$targetpower, sep="")
     cat("\nThreshold in power monitoring step for futility =",
-        x$power.threshold, "\n")
+        x$fCpower, "\n")
     .print_pmethod(x$pmethod)
 
     if (x$usePE)

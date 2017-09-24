@@ -16,9 +16,10 @@ based on the Inverse-Normal method
 }
 \usage{
 power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
-                power.threshold = targetpower, theta0, theta1, theta2, GMR,
-                usePE = FALSE, min.n2 = 4, max.n = Inf, ssr.conditional = TRUE,
+                theta0, theta1, theta2, GMR, usePE = FALSE, 
+                min.n2 = 4, max.n = Inf, fCpower = targetpower, 
                 fCrit = NULL, fClower, fCupper, fCNmax,
+                ssr.conditional = c("error_power", "error", "no"),
                 pmethod = c("nct", "exact", "shifted"), npct = c(0.05, 0.5, 0.95),
                 nsims, setseed = TRUE, details = FALSE)
 }
@@ -52,16 +53,6 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   }
   \item{targetpower}{
     Desired target power to declare \acronym{BE} at the end of the trial.
-  }
-  \item{power.threshold}{
-    Threshold for power monitoring step to decide on futility for cases where
-    \acronym{BE} has not been achieved after
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}: If \acronym{BE} has not been
-    achieved after \ifelse{html}{\out{stage&nbsp;1}}{stage~1} and power for
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} is greater than or equal to
-    \verb{power.threshold}, then the study will be considered a failure.\cr\cr
-    See \sQuote{Details} for more information on the choice of
-    \verb{power.threshold}.
   }
   \item{theta0}{
     Assumed ratio of geometric means (T/R) for simulations. If missing,
@@ -100,10 +91,15 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     \ifelse{html}{\out{stage&nbsp;2}}{stage~2} will be set to \verb{n2 = max.n - n1}.\cr
     Defaults to \verb{Inf}, \emph{i.e.}, no constraint on the re-estimated sample size.
   }
-  \item{ssr.conditional}{
-    Logical; if \verb{TRUE}, the sample size re-estimation step uses conditional
-    error rates and conditional power. Defaults to \verb{TRUE}.\cr
-    See \sQuote{Details}.
+  \item{fCpower}{
+    Threshold for power monitoring step to decide on futility for cases where
+    \acronym{BE} has not been achieved after
+    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}: If \acronym{BE} has not been
+    achieved after \ifelse{html}{\out{stage&nbsp;1}}{stage~1} and the power for
+    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} is greater than or equal to
+    \verb{fCpower}, then the study will be considered a failure.\cr\cr
+    See \sQuote{Details} for more information on the choice of
+    \verb{fCpower}.
   }
   \item{fCrit}{
     Futility criterion to use: \verb{"PE"} (observed point estimate of the
@@ -140,6 +136,15 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     is missing, the value will be set to \verb{fCNmax = 4*n1}. If \verb{Nmax} is
     not specified within \verb{fCrit}, then there will be no futility constraint
     regarding maximum sample size (regardless of any specification of \verb{fCNmax}).
+  }
+  \item{ssr.conditional}{
+    Method for sample size re-estimation step: \verb{"no"} does not use
+    conditional error rates nor the conditional power for the second stage,
+    \verb{"error"} uses conditional error rates for the second stage, and
+    \verb{"error_power"} uses both conditional error rates and the conditonal
+    power for the second stage.\cr
+    Defaults to \verb{"error_power"}.\cr\cr
+    See also \sQuote{Details}.
   }
   \item{pmethod}{
     Power calculation method, also to be used in the sample size estimation for
@@ -180,23 +185,24 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   But instead of simulating subject data, the statistics pe1, mse1 and pe2, mse2 
   are simulated via their associated distributions (normal and
   \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distributions).\cr\cr
-  If \verb{ssr.conditional = TRUE}, the design scheme generally calculates the
+  If \verb{ssr.conditional = "error_power"}, the design scheme generally calculates the
   conditional power of the second stage and uses this value as desired target
   power in the sample size re-estimation process. There are two links between
-  the conditional power and the argument \verb{power.threshold}:
+  the conditional power and the argument \verb{fCpower}:
   \itemize{
-  \item If \code{power.threshold} > \code{targetpower}, then the conditional power
-  may actually be negative. This seems not to be sensible. Therefore, for such
-  cases the desired target power for sample size re-calculation will be set to
-  \code{targetpower}.
-  \item The futility criterion \eqn{power for stage 1 \ge } \code{power.threshold}
-  for cases with not yet BE after stage 1 may be expressed in terms of
-  the conditional power of the second stage: The criterion
-  \deqn{conditional power \le x} is equivalent to
+  \item If \code{fCpower} > \code{targetpower}, then the conditional power
+  may actually be negative. This does not seem sensible. Therefore, for such
+  cases the desired target power for the sample size re-calculation will be set 
+  to \code{targetpower}.
+  \item If \code{fCpower} \eqn{\le} \code{targetpower}: The futility criterion 
+  \eqn{'power for stage 1 \ge } \code{fCpower}\eqn{'}\verb{ }for cases where
+  BE has not been achieved after stage 1 may be expressed in terms of 
+  the conditional power of the second stage: 
+  The criterion \deqn{conditional power \le x} is equivalent to
   \deqn{power for stage 1 \ge 1 - \beta/(1 - x),} where
   \eqn{\beta = 1 - }\code{targetpower} and \eqn{x in [0, 1)}.
-  Therefore, \code{power.threshold} may be chosen such that futility is based
-  on the conditional power being less than some value \eqn{x}.
+  Therefore, \code{fCpower} may be chosen such that the power futility criterion
+  is based on the conditional power being less than some value \eqn{x}.
   }
 }
 \value{

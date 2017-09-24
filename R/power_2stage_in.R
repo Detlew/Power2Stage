@@ -3,10 +3,11 @@
 # Code based on power.2stage() and power.2stage.fC() by Detlew Labes
 ################################################################################
 power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV, 
-                            targetpower = 0.8, power.threshold = targetpower, 
-                            theta0, theta1, theta2, GMR, usePE = FALSE,
-                            min.n2 = 4, max.n = Inf, ssr.conditional = TRUE,
+                            targetpower = 0.8, theta0, theta1, theta2, 
+                            GMR, usePE = FALSE, min.n2 = 4, max.n = Inf, 
+                            fCpower = targetpower,
                             fCrit = NULL, fClower, fCupper, fCNmax, 
+                            ssr.conditional = c("error_power", "error", "no"),
                             pmethod = c("nct", "exact", "shifted"), 
                             npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, 
                             details = FALSE) {
@@ -23,8 +24,6 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   #   n1: Sample size for stage 1
   #   CV: Coefficient of variation (use e.g. 0.3 for 30%)
   #   targetpower: Desired target power for end of the trial 
-  #   power.threshold: Threshold for power monitoring step to decide on
-  #                    futility for cases 'not BE' after stage 1
   #   theta0: Assumed ratio of geometric means for simulations
   #   theta1: Lower (bio-)equivalence limits
   #   theta2: Upper (bio-)equivalence limits
@@ -33,14 +32,18 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   #          stage 1
   #   min.n2: Minimum sample size for stage 2
   #   max.n: Maximum overall sample size (stage 1 + stage 2) 
-  #   ssr.conditional: Logical; if TRUE, the sample size re-estimation step
-  #                    uses conditional error rates and conditional power
+  #   fCpower: Threshold for power monitoring step to decide on futility 
+  #            for cases 'not BE' after stage 1
   #   fCrit: Futility criterion to use: PE, CI or Nmax or a combination thereof
   #   fClower: Lower futility limit for PE or CI of stage 1
   #   fCupper: Upper futility limit for PE or CI of stage 1
   #   fCNmax: If re-estimated sample size n2 is such that n1+n2 > fCNmax,
   #           the study will not continue to stage 2 and will be considered
   #           an overall failure (no BE)
+  #   ssr.conditional: Specifies the use of conditional error rates and
+  #                    conditional power, only conditional error rates or
+  #                    no use at all of conditional values in the sample size 
+  #                    re-estimation step after stage 1
   #   pmethod: Power calculation method to be used in sample size re-est.
   #   npct: Percentiles for the distribution of overall (total) sample size
   #   nsims: Number of studies to simulate
@@ -90,8 +93,8 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   if (CV <= 0)      stop("CV must be >0!")
   if (targetpower <= 0 || targetpower >= 1) 
     stop("targetpower must be within (0, 1)")
-  if (power.threshold < 0 || power.threshold > 1) 
-    stop("power.threshold must be within [0, 1]")
+  if (fCpower < 0 || fCpower > 1) 
+    stop("fCpower must be within [0, 1]")
   if (min.n2 < 4) 
     stop("min.n2 has to be at least 4.")
   if (min.n2 %% 2 != 0) {  # make it even
@@ -148,6 +151,9 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     fCupper <- Inf
     fCNmax <- Inf
   }
+  
+  # Check usage of conditional error rates / power
+  ssr.conditional <- match.arg(ssr.conditional)
   
   # Check if power calculation method is nct, exact or shifted
   pmethod <- match.arg(pmethod)
@@ -209,8 +215,8 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   # - if result is FALSE and power for stage 1 is 'sufficiently high', then
   #   the result will be considered a fail (ie leave FALSE)
   #   otherwise (power not high) we leave it open (ie set to NA)
-  fut <- sum(BE == FALSE & pwr_s1 >= power.threshold)
-  BE[BE == FALSE & pwr_s1 < power.threshold] <- NA
+  fut <- sum(BE == FALSE & pwr_s1 >= fCpower)
+  BE[BE == FALSE & pwr_s1 < fCpower] <- NA
   
   # From those NAs may still consider some of them as failure due to futility:
   # Futility check - here only regarding PE or CI (fCNmax comes later)
@@ -270,23 +276,24 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     Z11 <- qnorm(1 - p11) 
     Z12 <- qnorm(1 - p12)
     
-    if (ssr.conditional) {
-      if (power.threshold > targetpower) {
-        # If power.threshold > targetpower, conditional power may be negative.
-        # This is not sensible. We then use the overall targetpower as desired
-        # target power for re-calculation
-        pwr_ssr <- targetpower
-      } else {
-        # Calculate conditional power
-        pwr_ssr <- 1 - (1 - targetpower) / (1 - pwr_s1)
-      }
-    
+    if (ssr.conditional == "no") {
+      alpha_ssr <- cl$siglev[2]
+      pwr_ssr <- targetpower
+      lGMR_ssr <- if (usePE) pes_tmp else lGMR
+    } else {
       # Derive conditional error rates
       alpha_ssr <- 1 - pnorm(pmin(
         (cl$cval[2] - sqrt(weight[1])*cbind(Z11, Z12)) / sqrt(1 - weight[1]),
         (cl$cval[2] - sqrt(weight[lw])*cbind(Z11, Z12)) / sqrt(1 - weight[lw])
       ))
-    
+      
+      # Define target power for ssr
+      pwr_ssr <- targetpower
+      if ((ssr.conditional == "error_power") && (fCpower <= targetpower)) {
+        # Use conditional power
+        pwr_ssr <- 1 - (1 - targetpower) / (1 - pwr_s1)
+      }
+      
       if (usePE) {
         lGMR_ssr <- pes_tmp
       } else {
@@ -295,18 +302,13 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
         sgn_pes_tmp <- ifelse(pes_tmp >= 0, 1, -1)
         lGMR_ssr <- lGMR * sgn_pes_tmp * if (lGMR >= 0) 1 else -1
       }
-    } else {
-      alpha_ssr <- cl$siglev[2]
-      pwr_ssr <- targetpower
-      lGMR_ssr <- if (usePE) pes_tmp else lGMR
     }
-    
     # Sample size for stage 2
     ptms <- proc.time()
     n2 <- .sampleN3(alpha = alpha_ssr, targetpower = pwr_ssr, 
                     ltheta0 = lGMR_ssr, mse = mses_tmp, 
                     ltheta1 = ltheta1, ltheta2 = ltheta2, method = pmethod)
-    if (!ssr.conditional)
+    if (ssr.conditional == "no")
       n2 <- n2 - n1
     n2 <- pmax.int(pmin.int(n2, max.n - n1), min.n2)
     
@@ -390,7 +392,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     # Information
     design = "2x2 crossover", method = "IN", alpha = cl$siglev, weight = weight,
     cval = cl$cval, max.comb.test = max.comb.test, n1 = n1, CV = CV, GMR = GMR, 
-    usePE = usePE, targetpower = targetpower, power.threshold = power.threshold, 
+    usePE = usePE, targetpower = targetpower, fCpower = fCpower, 
     min.n2 = min.n2, max.n = max.n, ssr.conditional = ssr.conditional, 
     theta0 = theta0, theta1 = theta1, theta2 = theta2, 
     fCrit = fCrit, fCrange = c(fClower, fCupper), fCNmax = fCNmax, 
