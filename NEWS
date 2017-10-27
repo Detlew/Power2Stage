@@ -1,12 +1,13 @@
 2017-08-24 on GitHub
-   - Stops if length(alpha) != 2
+   - New function sampleN2.TOST() to estimate n2 in 2x2 and parallel designs
+     based on conditional error rates and conditional power.
    - df for sample size re-estimation changed to n-3 for Potvin like TSD schemes
      (pooled evaluation with additionally stage term)
+   - Same for power.2Stage.ssr().
    - Function power.2stage.in() to calculate the operational characteristics of
      TSDs evaluated via p-value combination using the inverse normal approach.
      Contributed by Benjamin Lang.
    - GitHub URL and bug reports URL added
-   - function sampleN2.TOST() to estimate n2 in 2x2 and parallel designs.
 Version 0.4-5
 2017-01-18
    - DOI for references in man pages added.
