@@ -2,7 +2,7 @@ Version 0.4-6
 2017-10-27
    - Updates of various man pages.
    - New function sampleN2.TOST() to estimate n2 in 2x2 and parallel designs
-     based on conditional error rates and conditional power.
+     based on df=n-3 for stage 2.
    - df for sample size re-estimation changed to n-3 for Potvin like TSD schemes
      (pooled evaluation with additionally stage term)
    - Same for power.2Stage.ssr().
