@@ -1,8 +1,8 @@
 Package: Power2Stage
 Type: Package
 Title: Power and Sample-Size Distribution of 2-Stage Bioequivalence Studies
-Version: 0.4-6
-Date: 2017-10-27
+Version: 0.4.6.9000
+Date: 2017-10-29
 Authors@R: c(person("Detlew", "Labes", role = c("aut","cre"), 
                     email = "DetlewLabes@gmx.de"),
              person("Benjamin", "Lang", role = c("aut", "ctb"), 
