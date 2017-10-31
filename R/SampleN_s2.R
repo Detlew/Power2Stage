@@ -5,7 +5,7 @@
 # author D. Labes based on Ben's power.2stage.in()
 # ------------------------------------------------------------------------------
 
-SampleNs2.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV1, GMR1,
+sampleNs2.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV1, GMR1,
                          targetpower = 0.8, theta0, theta1, theta2, 
                          usePE = FALSE, min.n2 = 4, 
                          ssr.conditional = c("error_power", "error", "no"),
@@ -98,6 +98,10 @@ SampleNs2.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV1, GMR1,
   p12 <- pt(t2, df = df, lower.tail = TRUE)
   
   # TODO: return n2=0 if p11 & p12 significant
+  # here or later?
+  if(p11<=alpha && p12<=alpha){
+    return(0)
+  }
   
   # power of stage 1
   pwr_s1 <- .calc.power(alpha = cl$siglev[1], ltheta1 = ltheta1, 
@@ -128,7 +132,8 @@ SampleNs2.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV1, GMR1,
       # this formula may give negative values if pwr_s1 >= targetpower. 
       # TODO: what then?
       pwr_ssr <- 1 - (1 - targetpower) / (1 - pwr_s1)
-      if (pwr_ssr<0) pwr_ssr <- 0 # ??? with this setting n2=Inf returns
+      if (pwr_ssr<=0) pwr_ssr <- 0 # ??? with this setting n2=Inf returns
+      if (pwr_ssr<=0) pwr_ssr <- 1E-5 # ??? with this setting n2=Inf returns
     }
     if (usePE) {
       lGMR_ssr <- lGMR
