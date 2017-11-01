@@ -7,6 +7,7 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
                               ssr.conditional = c("error_power", "error", "no"),
                               pmethod = c("nct", "exact", "shifted")) {
 
+  # TODO: Set pmethod to "exact" as default?
   ### Error handling and default value set-up ----------------------------------
   if (missing(GMR1)) stop("GMR1 must be given.")
   if (missing(CV1))  stop("CV1 must be given!")
@@ -216,14 +217,20 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
     n2 <- pmax.int(pmin.int(n2, max.n - n1), min.n2)
     
     # Futility check regarding maximum overall sample size
+    # TODO: Check this formula. I (DL) think the brackets are not correct
     fut <- fut + (is.infinite(n2) | (n1 + n2 > fCNmax))
+    # TODO: futility wrt max. sample size should influence n2
   }
   
   ### Define final output ------------------------------------------------------
   res <- list(
+    # alpha values also (DL)
+    alpha_1=cl$siglev[1], alpha_2=cl$siglev[2], 
     GMR1 = GMR1, CV1 = CV1, p11 = p11, p12 = p12, 'Power Stage 1' = pwr_s1, 
     n2 = n2, stop_s1 = (n2 == 0), BE_s1 = (n2 == 0 && fut == 0), 
     stop_fut = (fut > 0)
+    # TODO: Check which interim results are also useful
+    # f.i. conditional error rates and power
   )
   if (!is.null(fCrit)) {
     if (nms_match[2])
