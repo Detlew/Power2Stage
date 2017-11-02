@@ -27,14 +27,14 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   \item{alpha}{
     If one element is given, the overall one-sided significance level. If two
     elements are given, the adjusted one-sided alpha levels for
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} and
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~21}, respectively.\cr
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2}, respectively.\cr
     If missing, defaults to \verb{0.05}.
   }
   \item{weight}{
-    Weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage~1} (information fraction).
+    Weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (information fraction).
     This argument will be ignored if \verb{alpha} contains two elements.
-    Otherwise, \verb{weight} must either be either contain one element (in case
+    Otherwise, \verb{weight} must either contain one element (in case
     of \verb{max.comb.test = FALSE}) or two elements (in case of
     \verb{max.comb.test = TRUE}).\cr
     If missing, defaults to \verb{0.5} (for \verb{max.comb.test = FALSE}) or
@@ -45,7 +45,7 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     used, otherwise the standard combination test.
   }
   \item{n1}{
-    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
   \item{CV}{
     Coefficient of variation of the intra-subject variability (use \emph{e.g.}, 0.3 for
@@ -66,36 +66,36 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   }
   \item{GMR}{
     Assumed ratio of geometric means (T/R) to be used in power calculation
-    for \ifelse{html}{\out{stage&nbsp;1}}{stage~1} and sample size re-estimation
-    for \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.
+    for \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and sample size re-estimation
+    for \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.
   }
   \item{usePE}{
     If \verb{TRUE} the sample size re-estimation step is done with the
     observed point estimate (\acronym{PE}) of the treatment difference in
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     Defaults to \verb{FALSE}.
   }
   \item{min.n2}{
-    Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage~2}. Defaults to 4.\cr
+    Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Defaults to 4.\cr
     If the sample size re-estimation step gives a sample size for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2} less than \verb{min.n2}, then
-    \verb{min.n2} will be used for \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} less than \verb{min.n2}, then
+    \verb{min.n2} will be used for \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.
   }
   \item{max.n}{
-    Maximum overall sample size \ifelse{html}{\out{stage&nbsp;1}}{stage~1} +
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.\cr
+    Maximum overall sample size \ifelse{html}{\out{stage&nbsp;1}}{stage 1} +
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.\cr
     This is \emph{not} a futility criterion regarding the maximum sample size! If
     \verb{max.n} is set to a finite value and the sample size re-estimation gives a
-    sample size for \ifelse{html}{\out{stage&nbsp;2}}{stage~2} (\verb{n2}) such
+    sample size for \ifelse{html}{\out{stage&nbsp;2}}{stage 2} (\verb{n2}) such
     that \verb{n1 + n2 > max.n}, then the sample size for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2} will be set to \verb{n2 = max.n - n1}.\cr
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} will be set to \verb{n2 = max.n - n1}.\cr
     Defaults to \verb{Inf}, \emph{i.e.}, no constraint on the re-estimated sample size.
   }
   \item{fCpower}{
     Threshold for power monitoring step to decide on futility for cases where
     \acronym{BE} has not been achieved after
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}: If \acronym{BE} has not been
-    achieved after \ifelse{html}{\out{stage&nbsp;1}}{stage~1} and the power for
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}: If \acronym{BE} has not been
+    achieved after \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and the power for
     \ifelse{html}{\out{stage&nbsp;1}}{stage~1} is greater than or equal to
     \verb{fCpower}, then the study will be considered a failure.\cr\cr
     See \sQuote{Details} for more information on the choice of
@@ -123,17 +123,17 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   }
   \item{fCupper}{
     Upper futility limit for the \acronym{PE} or \acronym{CI} of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     Analogous to \verb{fClower}: Will be set to \verb{1/fClower} if missing.
   }
   \item{fCNmax}{
     Futility criterion regarding maximum sample size. If the determined sample size
-    for \ifelse{html}{\out{stage&nbsp;2}}{stage~2} (\verb{n2}), is such that
+    for \ifelse{html}{\out{stage&nbsp;2}}{stage 2} (\verb{n2}) is such that
     \verb{n1 + n2 > fCNmax}, the study will not continue to
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2} and stopped due to futility (not
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} and stopped due to futility (not
     \acronym{BE}).\cr
-    If \verb{Nmax} is specified within \verb{fCrit} and argument \verb{fCNmax}
-    is missing, the value will be set to \verb{fCNmax = 4*n1}. If \verb{Nmax} is
+    If \verb{"Nmax"} is specified within \verb{fCrit} and argument \verb{fCNmax}
+    is missing, the value will be set to \verb{fCNmax = 4*n1}. If \verb{"Nmax"} is
     not specified within \verb{fCrit}, then there will be no futility constraint
     regarding maximum sample size (regardless of any specification of \verb{fCNmax}).
   }
@@ -148,11 +148,11 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   }
   \item{pmethod}{
     Power calculation method, also to be used in the sample size estimation for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.\cr
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.\cr
     Implemented are \verb{"nct"} (approximate calculations via non-central
     \emph{t}-distribution, \verb{"exact"} (exact calculations via Owen\enc{’}{'}s Q),
     and \verb{"shifted"} (approximate calculation via shifted central \emph{t}-distribution
-    like in the paper of Potvin \emph{et al.}\cr
+    like in the paper of Potvin \emph{et al.})\cr
     Defaults to \verb{"nct"} as a reasonable compromise between speed and
     accuracy in the sample size estimation step.
   }
@@ -166,7 +166,7 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     Number of studies to simulate.\cr
     If missing, \verb{nsims} is set to 1E+05 = 100,000 or to 1E+06 = 1 Mio if
     estimating the empiric Type I Error (\verb{'alpha'}), \emph{i.e.}, with \verb{theta0} at
-    the border or outside the acceptance range \verb{theta1} \ldots \verb{theta2}.
+    the border of the acceptance range \verb{theta1} \ldots \verb{theta2}.
   }
   \item{setseed}{
     Simulations are dependent on the starting point of the (pseudo) random number
@@ -195,12 +195,12 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   cases the desired target power for the sample size re-calculation will be set 
   to \code{targetpower}.
   \item If \code{fCpower} \eqn{\le} \code{targetpower}: The futility criterion 
-  \eqn{'power for stage 1 \ge } \code{fCpower}\eqn{'}\verb{ }for cases where
+  \emph{power for stage 1} \eqn{ \ge } \code{fCpower}\verb{ }for cases where
   BE has not been achieved after stage 1 may be expressed in terms of 
   the conditional power of the second stage: 
   The criterion \deqn{conditional power \le x} is equivalent to
   \deqn{power for stage 1 \ge 1 - \beta/(1 - x),} where
-  \eqn{\beta = 1 - }\code{targetpower} and \eqn{x in [0, 1)}.
+  \eqn{\beta = 1 - }\code{targetpower} and \eqn{x} in [0, 1).
   Therefore, \code{fCpower} may be chosen such that the power futility criterion
   is based on the conditional power being less than some value \eqn{x}.
   }
@@ -213,12 +213,12 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   The class \verb{"pwrtsd"} has an S3 print method.\cr\cr
   The results are in the components:
   \item{pBE}{Fraction of studies found BE.}
-  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.}
+  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
   \item{pct_stop_s1}{Percentage of studies stopped after
-  \ifelse{html}{\out{stage&nbsp;1}}{stage~1} (due to BE or due to futility).}
+  \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (due to BE or due to futility).}
   \item{pct_stop_fut}{Percentage of studies stopped after
-  \ifelse{html}{\out{stage&nbsp;1}}{stage~1} due to futility.}
-  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.}
+  \ifelse{html}{\out{stage&nbsp;1}}{stage 1} due to futility.}
+  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
   \item{nmean}{Mean of n(total).}
   \item{nrange}{Range (min, max) of n(total).}
   \item{nperc}{Vector of percentiles of the distribution of n(total).}
@@ -240,14 +240,14 @@ Stat Med. 2015; 34(16):2403--16. \doi{10.1002/sim.6487}
 
 \examples{
 # Using all defaults, 12 subjects in stage 1 and a CV of 20\%
+# This setting resembles values in Table 6.8 and 6.10 in Patterson and Jones.
 power.2stage.in(n1 = 12, CV = 0.2)
 
-# This setting resembles values in Table 6.8 and 6.10 in Patterson and Jones.
 # Note that actual replication would require the following additional
 # arguments (extremely long run-time)
 \dontrun{
 power.2stage.in(n1 = 12, CV = 0.2, max.n = 4000, pmethod = "exact", nsims = 1E6)}
-#
+
 # As above, but using (default) futility constraints regarding PE and Nmax:
 power.2stage.in(n1 = 12, CV = 0.2, fCrit = c("PE", "Nmax"))
 }

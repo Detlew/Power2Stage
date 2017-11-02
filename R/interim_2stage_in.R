@@ -223,13 +223,16 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
     
     # Futility check regarding maximum overall sample size
     fut[3] <- (is.infinite(n2) | (n1 + n2 > fCNmax))
-    if (fut[3]) n2 <- 0
+    if (fut[3]) {
+      n2_out <- n2  # for printing with details = TRUE
+      n2 <- 0
+    }
   }
   
   ### Define final output ------------------------------------------------------
   res <- list(
-    GMR1 = GMR1, CV1 = CV1, alpha = cl$siglev,
-    p11 = p11, p12 = p12, 'Power Stage 1' = pwr_s1, n2 = n2, 
+    GMR1 = GMR1, CV1 = CV1, alpha = cl$siglev, t1 = t1, t2 = t2,
+    p1 = p11, p2 = p12, 'Power Stage 1' = pwr_s1, n2 = n2, 
     stop_s1 = (n2 == 0), BE_s1 = (n2 == 0 && all(fut == 0)), 
     stop_fut = any(fut > 0)
   )
@@ -277,20 +280,27 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
       cat("futility\n")
       switch(which(fut == 1), 
              {
-               cat(" - Power Stage 1 ", round(100 * pwr_s1, 2), 
-                   " >= fCpower", sep = "")
+               cat(" - Power Stage 1 ")
+               if (details) cat(round(100 * pwr_s1, 2)) 
+               cat(" >= fCpower")
              },
              {
                cat(" - Stage 1 ")
-               if (nms_match[1]) cat("GMR") 
+               if (nms_match[1]) {
+                 cat("GMR")
+                 if (details) cat(" (", round(100 * GMR1, 2), ")")
+               }
                if (nms_match[2]) {
-                 cat("90% CI (", round(100 * res$LL90, 2), ", ", 
-                     round(100 * res$UL90, 2), ")", sep = "") 
+                 cat("90% CI")
+                 if (details) cat(" (", round(100 * res$LL90, 2), ", ", 
+                                  round(100 * res$UL90, 2), ")", sep = "")
                  cat(" completely outside (fClower, fCupper)")
                }
              },
              {
-               cat(" - n2 such that n1 + n2 > fCNmax")
+               cat(" - n2")
+               if (details) cat(" =", n2_out, sep = "")
+               cat(" such that n1 + n2 > fCNmax")
              }
       )
       cat("\n")
@@ -300,6 +310,24 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   }
   if (details) {
     # TO DO: Add more details here 
+    cat("\n")
+    cat("Test statistics values of T1 and T2: ")
+    cat("t1 = ", round(t1, 5), ", t2 = ", round(t2, 5), "\n", sep = "")
+    cat("p-values: ")
+    cat("p1 = ", round(p11, 5), ", p2 = ", round(p12, 5), "\n", sep = "")
+    cat("Power for stage 1: ", round(100 * pwr_s1, 2), "\n", sep = "")
+    if (!is.null(fCrit) && nms_match[2]) {
+      cat("90% CI based on stage 1 data:") 
+      cat(" (", round(100 * res$LL90, 2), ", ", 
+          round(100 * res$UL90, 2), ")", sep = "")
+      cat("\n")
+    }
+    if (!res$stop_s1) {
+      cat("alpha values for the two null hypotheses for SSR: ")
+      cat("alpha1 = ", round(alpha_ssr[1], 5), ", alpha2 = ", 
+          round(alpha_ssr[2], 5), "\n", sep = "")
+      cat("Targetpower for SSR =", round(100 * pwr_ssr, 2), "\n")
+    }
   }
   return(invisible(res))
 }
