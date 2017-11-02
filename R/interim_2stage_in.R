@@ -5,9 +5,9 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
                               fCpower = targetpower,
                               fCrit = NULL, fClower, fCupper, fCNmax, 
                               ssr.conditional = c("error_power", "error", "no"),
-                              pmethod = c("nct", "exact", "shifted")) {
-
-  # TODO: Set pmethod to "exact" as default?
+                              pmethod = c("exact", "nct", "shifted"),
+                              details = FALSE) {
+  
   ### Error handling and default value set-up ----------------------------------
   if (missing(GMR1)) stop("GMR1 must be given.")
   if (missing(CV1))  stop("CV1 must be given!")
@@ -129,6 +129,7 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
     # if two alphas, ignore possibly given weights and only use those alphas
     list(cval = qnorm(1 - alpha), siglev = alpha)
   
+  ### Evaluation of Stage 1 ----------------------------------------------------
   t1 <- (lGMR1 - ltheta1) / sem
   t2 <- (lGMR1 - ltheta2) / sem
   
@@ -136,8 +137,11 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   p11 <- pt(t1, df = df, lower.tail = FALSE)
   p12 <- pt(t2, df = df, lower.tail = TRUE)
  
-  ## Evaluation of stage 1
+  # BE?
   BE <- (p11 < cl$siglev[1] & p12 < cl$siglev[1])
+  
+  # Initialize n2 to be zero (= stop after stage 1)
+  n2 <- 0
   
   # Cases with BE == TRUE are clear: early stop due to BE
   # Cases with BE == FALSE are not yet clear:
@@ -148,7 +152,8 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   # - if result is FALSE and power for stage 1 is 'sufficiently high', then
   #   the result will be considered a fail (ie leave FALSE)
   #   otherwise (power not high) we leave it open (ie set to NA)
-  fut <- sum(BE == FALSE & pwr_s1 >= fCpower)
+  fut <- vector("integer", 3)
+  fut[1] <- (BE == FALSE & pwr_s1 >= fCpower)
   BE[BE == FALSE & pwr_s1 < fCpower] <- NA
   
   # If NA may still consider it as failure due to futility:
@@ -167,15 +172,15 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
       upper <- lGMR1 + hw
       outside <- (lower > lfCupper) | (upper < lfClower)
     }
-    fut <- fut + sum(is.na(BE) & outside)
+    fut[2] <- (is.na(BE) & outside)
     # If identified as futile set to a failure
     BE[is.na(BE) & outside] <- FALSE
   }
   
-  # Initialize n2 to be zero (= stop after stage 1)
-  n2 <- 0
+  ### Sample size re-estimation ------------------------------------------------
   if (is.na(BE)) {
-    ## We need stage 2 (or at least need further information regarding fCNmax)
+    # We need stage 2 (or at least need further information regarding fCNmax)
+    
     # Derive components for z-statistics
     Z11 <- qnorm(1 - p11) 
     Z12 <- qnorm(1 - p12)
@@ -217,27 +222,84 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
     n2 <- pmax.int(pmin.int(n2, max.n - n1), min.n2)
     
     # Futility check regarding maximum overall sample size
-    # TODO: Check this formula. I (DL) think the brackets are not correct
-    fut <- fut + (is.infinite(n2) | (n1 + n2 > fCNmax))
-    # TODO: futility wrt max. sample size should influence n2
+    fut[3] <- (is.infinite(n2) | (n1 + n2 > fCNmax))
+    if (fut[3]) n2 <- 0
   }
   
   ### Define final output ------------------------------------------------------
   res <- list(
-    # alpha values also (DL)
-    alpha_1=cl$siglev[1], alpha_2=cl$siglev[2], 
-    GMR1 = GMR1, CV1 = CV1, p11 = p11, p12 = p12, 'Power Stage 1' = pwr_s1, 
-    n2 = n2, stop_s1 = (n2 == 0), BE_s1 = (n2 == 0 && fut == 0), 
-    stop_fut = (fut > 0)
-    # TODO: Check which interim results are also useful
-    # f.i. conditional error rates and power
+    GMR1 = GMR1, CV1 = CV1, alpha = cl$siglev,
+    p11 = p11, p12 = p12, 'Power Stage 1' = pwr_s1, n2 = n2, 
+    stop_s1 = (n2 == 0), BE_s1 = (n2 == 0 && all(fut == 0)), 
+    stop_fut = any(fut > 0)
   )
   if (!is.null(fCrit)) {
     if (nms_match[2])
-      res <- c(res, LL90 = exp(lower), UL90 = exp(upper))
+      res <- append(res, list(LL90 = exp(lower), UL90 = exp(upper)))
     if (nms_match[3])
-      res <- c(res, fCNmax = fCNmax)
+      res <- append(res, list(fCNmax = fCNmax))
   }
-  # TO DO: add class or add output text directly? Temporarily just return res
-  res
+  if (!res$stop_s1) {
+    res <- append(res, list(alpha_ssr = as.numeric(alpha_ssr), 
+                            targetpower_ssr = pwr_ssr))
+  }
+  
+  cat("TSD with 2x2 crossover\n")
+  cat("Inverse Normal approach\n")
+  if (max.comb.test) cat(" - maximum") else cat(" - standard")
+  cat(" combination test (")
+  if (max.comb.test) cat("weights = ", weight[1], " ", weight[2], ")\n", 
+                         sep="")
+  else cat("weight = ", weight, ")\n", sep="")
+  cat(" - alpha (s1/s2) =", round(cl$siglev[1], 5), round(cl$siglev[2], 5), "\n")
+  cat(" - critical value (s1/s2) =", round(cl$cval[1], 5), round(cl$cval[2], 5),
+      "\n")
+  if (ssr.conditional == "no") {
+    cat(" - without conditional error rates and conditional power\n")
+  } else {
+    cat(" - with ")
+    if (ssr.conditional == "error") {
+      cat("conditional error rates\n")
+    } else {
+      if (fCpower > targetpower)
+        cat("conditional error rates\n")
+      else
+        cat("conditional error rates and conditional power\n")
+    }
+  }
+  
+  cat("\nInterim analysis after stage 1\n")
+  if (res$stop_s1) {
+    cat(" - Stop after stage 1 due to ")
+    if (res$BE_s1) {
+      cat("early BE\n") 
+    } else {
+      cat("futility\n")
+      switch(which(fut == 1), 
+             {
+               cat(" - Power Stage 1 ", round(100 * pwr_s1, 2), 
+                   " >= fCpower", sep = "")
+             },
+             {
+               cat(" - Stage 1 ")
+               if (nms_match[1]) cat("GMR") 
+               if (nms_match[2]) {
+                 cat("90% CI (", round(100 * res$LL90, 2), ", ", 
+                     round(100 * res$UL90, 2), ")", sep = "") 
+                 cat(" completely outside (fClower, fCupper)")
+               }
+             },
+             {
+               cat(" - n2 such that n1 + n2 > fCNmax")
+             }
+      )
+      cat("\n")
+    }
+  } else {
+    cat(" - Continue to stage 2 with n2 = ", n2, " subjects.\n", sep = "")
+  }
+  if (details) {
+    # TO DO: Add more details here 
+  }
+  return(invisible(res))
 }
