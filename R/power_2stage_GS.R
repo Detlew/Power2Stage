@@ -161,3 +161,6 @@ power.2stage.GS <- function(alpha=c(0.0294,0.0294), n, CV, theta0, theta1,
   return(res)
   
 } #end function
+
+# alias of the function
+power.tsd.GS <- power.2stage.GS

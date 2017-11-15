@@ -417,3 +417,6 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   class(res) <- c("pwrtsd", "list")
   res
 }  # end function power.2stage.in
+
+# alias of the function
+power.tsd.in <- power.2stage.in

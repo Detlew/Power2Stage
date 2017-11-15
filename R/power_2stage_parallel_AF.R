@@ -381,3 +381,6 @@ power.2stage.pAF <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.02
   return(res)
 
 } #end function
+
+# alias
+power.tsd.pAF <- power.2stage.pAF

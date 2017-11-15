@@ -253,3 +253,6 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
   return(res)
 
 } #end function
+
+# alias
+power.tsd.KM <- power.2stage.KM

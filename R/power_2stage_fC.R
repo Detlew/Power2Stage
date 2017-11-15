@@ -328,3 +328,6 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
   return(res)
 
 } #end function
+
+# alias of the function
+power.tsd.fC <- power.2stage.fC

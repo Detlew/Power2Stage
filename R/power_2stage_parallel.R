@@ -457,3 +457,6 @@ power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294
   return(res)
 
 } #end function
+
+# alias of the function
+power.tsd.p <- power.2stage.p

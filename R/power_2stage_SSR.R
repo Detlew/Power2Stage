@@ -233,3 +233,6 @@ power.2stage.ssr <- function(alpha=0.05, n1, GMR, CV, targetpower=0.8,
   return(res)
   
 } #end function
+
+# alias of the function
+power.tsd.ssr <- power.2stage.ssr
