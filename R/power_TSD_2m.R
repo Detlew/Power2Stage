@@ -10,32 +10,46 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), n1, GMR, CV, targetpower=0.8,
                          theta2, npct=c(0.05, 0.5, 0.95), nsims, setseed=TRUE, 
                          details=FALSE)
 {
-  if (missing(CV)) stop("CV's must be given.")
-  if (any(CV<=0))  stop("CV's must be >0.")
+  if(missing(CV))  stop("CV's must be given.")
+    else {
+      if(length(CV)==1) CV <- rep(CV,2)
+      if(length(CV)!=2) stop("GMR must have 2 elements.")
+      if(any(CV<=0))   stop("CV's must be >0.")
+    }
+  if(missing(n1)) stop("Number of subjects in stage 1 must be given.")
+  if(length(n1)!=1) {
+    n1 <- n1[1]
+    message("n1 must be scalar. First element of n1 used.")
+    if(n1<=0) stop("Number of subjects in stage 1 must be >0.")
+  }
+  if(length(alpha)==1) {
+    alpha <- rep(alpha, 2)
+    message("Scalar alpha used for both stages.")
+  }
+  if(length(alpha) != 2) stop("alpha must have two elements.")
 
-  if (missing(n1)) stop("Number of subjects in stage 1 must be given.")
-  if (n1<=0)       stop("Number of subjects in stage 1 must be >0.")
-
-  if (length(alpha) != 2) stop("alpha must have two elements")
-
-  if (missing(GMR)) GMR <- rep(0.95, 2)
+  if(missing(GMR)) GMR <- rep(0.95, 2)
+    else {
+      if(length(GMR)==1) GMR <- rep(GMR, 2)
+      if(length(GMR)!=2) stop("GMR must have 2 elements.")
+    }
 
   if (missing(theta1) & missing(theta2))  theta1 <- 0.8
   if (!missing(theta1) & missing(theta2)) theta2 <- 1/theta1
   if (missing(theta1) & !missing(theta2)) theta1 <- 1/theta2
+  stopifnot(length(theta1)==1, length(theta2)==1)
 
-  if (GMR[1]<=theta1 | GMR[1]>=theta2) stop("GMR[1] must be within acceptance range.")
-  if (GMR[2]<=theta1 | GMR[2]>=theta2) stop("GMR[2] must be within acceptance range.")
+  if(any(GMR<=theta1) | any(GMR>=theta2)) stop("GMR's must be within acceptance range.") 
   
   if (missing(theta0)) theta0 <- GMR
   else {
-    if(length(theta0)!=2) stop("theta0 must have two elements")
+    if(length(theta0)==1) theta0 <- rep(theta0, 2)
+    if(length(theta0)!=2) stop("theta0 must have two elements.")
   }
 
   if(missing(nsims)){
     nsims <- 1E5
-    if(theta0[1] <= theta1 | theta0[1] >= theta2) nsims <- 1E6
-    if(theta0[2] <= theta1 | theta0[2] >= theta2) nsims <- 1E6
+    if(any(theta0<=theta1) | any(theta0>=theta2)) nsims <- 1E6
   }
 
   # check if power calculation method is nct or exact
@@ -94,6 +108,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), n1, GMR, CV, targetpower=0.8,
   # BE == FALSE not yet
   ntot <- rep(n1, nsims)
   if(sum(!BE)>0){
+    ptms <- proc.time()
     ind <- !BE
     pes_m1  <- pes_m1[ind]
     mses_m1 <- mses_m1[ind]
@@ -103,18 +118,44 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), n1, GMR, CV, targetpower=0.8,
     # 'abbreviated' method B, i.e. implicite power calculation via sample size 
     # estimation only
     # ------sample size for stage 2 -----------------------------------------
-    # metric 1
-    nt_m1 <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR[1],
-                       mse=mses_m1, ltheta1=ltheta1, ltheta2=ltheta2,
-                       method=pmethod)
-    n2_m1 <- ifelse(nt_m1>n1, nt_m1 - n1, 0)
-    # same for metric 2
-    nt_m2 <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR[2],
-                       mse=mses_m2, ltheta1=ltheta1, ltheta2=ltheta2,
-                       method=pmethod)
-    n2_m2 <- ifelse(nt_m2>n1, nt_m2 - n1, 0)
     
-    n2 <- pmax(n2_m1, n2_m2 )
+    if(GMR[1]==GMR[2]){
+      if(details){
+        cat("Keep calm. Sample sizes for stage 2 (", sum(!BE),
+            " studies)\n", sep="")
+        cat("will be estimated. May need some time.\n")
+      }
+      # use the max. mse for sample size
+      mses_max <- pmax(mses_m1, mses_m2)
+      nt_max <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR[1],
+                          mse=mses_max, ltheta1=ltheta1, ltheta2=ltheta2,
+                          method=pmethod)
+      n2 <- ifelse(nt_max>n1, nt_max - n1, 0)
+      rm(mses_max, nt_max)
+    } else {
+      if(details){
+        cat("Keep calm. Sample sizes for stage 2 (2x ", sum(!BE),
+            " studies)\n", sep="")
+        cat("will be estimated. May need some time.\n")
+      }
+      
+      # metric 1
+      nt_m1 <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR[1],
+                         mse=mses_m1, ltheta1=ltheta1, ltheta2=ltheta2,
+                         method=pmethod)
+      n2_m1 <- ifelse(nt_m1>n1, nt_m1 - n1, 0)
+      # same for metric 2
+      nt_m2 <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR[2],
+                         mse=mses_m2, ltheta1=ltheta1, ltheta2=ltheta2,
+                         method=pmethod)
+      n2_m2 <- ifelse(nt_m2>n1, nt_m2 - n1, 0)
+      n2 <- pmax(n2_m1, n2_m2 )
+      rm(nt_m1, n2_m1, nt_m2, n2_m2)
+    }
+    if(details){
+      cat("Time consumed (secs):\n")
+      print(round((proc.time()-ptms),1))
+    }
     
     # ------stage 2 evaluation ----------------------------------------------
     # simulate stage 2 and evalute the combined data from stage 1 + 2
@@ -163,15 +204,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), n1, GMR, CV, targetpower=0.8,
               theta0=exp(mlog), theta1=theta1, theta2=theta2, nsims=nsims,
               # results
               pBE=sum(BE)/nsims,
-              # Dec 2014 changed to
               pBE_s1=sum(BE[ntot==n1])/nsims,
-              # was
-              #pBE_s1=sum(BE[stage==2])/nsims,
-              # Dec 2014 changed the meaning of pct_s2, was
-              #pct_s2=100*length(BE[stage==2])/nsims,
-              # whereby in case of unsymmetric alpha's stage 2 was also assigned
-              # if n2=0 but not BE using alpha[1] to fascilate BE test with alpha[2]
-              # now it is
               pct_s2=100*sum(ntot>n1)/nsims,
               # which simply means all those with n2>0
               nmean=mean(ntot), nrange=range(ntot), nperc=quantile(ntot, p=npct)
