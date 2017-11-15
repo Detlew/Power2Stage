@@ -210,7 +210,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), n1, GMR, CV, targetpower=0.8,
               nmean=mean(ntot), nrange=range(ntot), nperc=quantile(ntot, p=npct)
               #, ntot=ntot # experimental: return also all sample sizes
               )
-
+  res$ntable <- table(ntot)
 
   if (details){
     cat("Total time consumed (secs):\n")
