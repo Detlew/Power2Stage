@@ -1,3 +1,8 @@
+2017-11-15
+on GitHub
+   - Aliases power.tsd.xyz introduced (not public yet)
+   - Experimental function power.tsd.2m() to deal with 2 PK metrics
+     in the TSD decision scheme Potvin "B"
 Version 0.4-6
 2017-10-27
    - Updates of various man pages.
