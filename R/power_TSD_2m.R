@@ -110,7 +110,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), n1, GMR, CV, targetpower=0.8,
     n2_m1 <- ifelse(nt_m1>n1, nt_m1 - n1, 0)
     # same for metric 2
     nt_m2 <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR[2],
-                       mse=mses_m1, ltheta1=ltheta1, ltheta2=ltheta2,
+                       mse=mses_m2, ltheta1=ltheta1, ltheta2=ltheta2,
                        method=pmethod)
     n2_m2 <- ifelse(nt_m2>n1, nt_m2 - n1, 0)
     
