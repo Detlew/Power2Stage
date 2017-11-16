@@ -199,7 +199,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), n1, GMR, CV, targetpower=0.8,
     
   # the return list
   res <- list(design="2x2 crossover",
-              method="B", alpha=alpha, VV=CV, n1=n1, GMR=GMR, 
+              method="B2m", alpha=alpha, CV=CV, n1=n1, GMR=GMR, 
               targetpower=targetpower, pmethod=pmethod,
               theta0=exp(mlog), theta1=theta1, theta2=theta2, nsims=nsims,
               # results
@@ -218,7 +218,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), n1, GMR, CV, targetpower=0.8,
     cat("\n")
   }
 
-#  class(res) <- c("pwrtsd", "list")
+  class(res) <- c("pwrtsd", "list")
   return(res)
 
 } #end function

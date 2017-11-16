@@ -18,7 +18,7 @@ print.pwrtsd <- function(x, ...)
       cat("No futility criterion\n")
     }
     cat("BE acceptance range = ", x$theta1," ... ", x$theta2,"\n\n", sep="")
-    cat("CV= ", x$CV,"; n(s1, s2)= ", x$n[1]," " , x$n[2], "\n", sep="")
+    cat("CV= "); cat(x$CV); cat("; n(s1, s2)= ", x$n[1]," " , x$n[2], "\n", sep="")
 
     # no sample size distribution in results here
     .print_results(x)
@@ -217,7 +217,9 @@ print.pwrtsd <- function(x, ...)
   if(!is.null(x$usePE)) {
     if(x$usePE==TRUE) x$GMR <- NULL
   }
-  if(!is.null(x$GMR)) cat("; GMR=", x$GMR, "\n") else cat("\n")
+  if(!is.null(x$GMR)) {
+    cat("; GMR = "); cat(x$GMR, sep=", "); cat("\n")
+  } else cat("\n")
 
   .print_results(x)
 
@@ -243,8 +245,11 @@ print.pwrtsd <- function(x, ...)
 .print_results <- function(x)
 {
   # --- results part
-  cat("\n", x$nsims," sims at theta0 = ", x$theta0, sep="")
-  if(x$theta0<=x$theta1 | x$theta0>=x$theta2) cat(" (p(BE) = TIE 'alpha').\n") else {
+  # theta0 may have more then one element
+  th0str <- paste(x$theta0, collapse=", ")
+  cat("\n", x$nsims," sims at theta0 = ", th0str, sep="")
+  if(any(x$theta0<=x$theta1) | any(x$theta0>=x$theta2)) 
+    cat(" (p(BE) = TIE 'alpha').\n") else {
     cat(" (p(BE) = 'power').\n")}
   cat("p(BE)    = ", x$pBE,"\n", sep="")
   # power.2stage.ssr() has no pBE_s1
