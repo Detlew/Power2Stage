@@ -10,11 +10,11 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
                          theta0, theta1, theta2, npct=c(0.05, 0.5, 0.95), 
                          nsims, setseed=TRUE, details=FALSE)
 {
-  if(missing(CV))  stop("CV's must be given.")
+  if(missing(CV))  stop("CVs must be given.")
     else {
       if(length(CV)==1) CV <- rep(CV,2)
       if(length(CV)!=2) stop("GMR must have 2 elements.")
-      if(any(CV<=0))   stop("CV's must be >0.")
+      if(any(CV<=0))   stop("CVs must be >0.")
     }
   if(missing(n1)) stop("Number of subjects in stage 1 must be given.")
   if(length(n1)!=1) {
@@ -39,8 +39,8 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   if (missing(theta1) & !missing(theta2)) theta1 <- 1/theta2
   stopifnot(length(theta1)==1, length(theta2)==1)
 
-  if(any(GMR<=theta1) | any(GMR>=theta2)) stop("GMR's must be within acceptance range.") 
-  
+  if(any(GMR<=theta1) | any(GMR>=theta2)) stop("GMRs must be within acceptance range.")
+
   if (missing(theta0)) theta0 <- GMR
   else {
     if(length(theta0)==1) theta0 <- rep(theta0, 2)
@@ -97,7 +97,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   # simulate mse via chi-squared distribution
   mses_m1  <- mse[1]*rchisq(n=nsims, df=df)/df
   mses_m2  <- mse[2]*rchisq(n=nsims, df=df)/df
-  
+
   BE <- function(mses, pes)
   {
     hw <- tval*sqrt(Cfact*mses)
@@ -108,16 +108,16 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   # make BE decision for stage 1
   BE_m1 <- BE(mses_m1, pes_m1)
   BE_m2 <- BE(mses_m2, pes_m2)
-  
+
   # overall BE in stage 1
   BE <- BE_m1 & BE_m2
-  
+
   # time for stage 1
   if(details){
     cat(" - Time consumed (secs):\n")
     print(round((proc.time()-ptm),1))
   }
-  
+
   # BE == TRUE is decided yet
   # BE == FALSE not yet
   ntot <- rep(n1, nsims)
@@ -129,10 +129,10 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
     pes_m2  <- pes_m2[ind]
     mses_m2 <- mses_m2[ind]
     rm(ind)
-    # 'abbreviated' method B, i.e. implicite power calculation via sample size 
+    # 'abbreviated' method B, i.e. implicit power calculation via sample size
     # estimation only
     # ------sample size for stage 2 -----------------------------------------
-    
+
     if(GMR[1]==GMR[2]){
       if(details){
         cat("Keep calm. Sample sizes for stage 2 (", sum(!BE),
@@ -152,7 +152,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
             " studies)\n", sep="")
         cat("will be estimated. May need some time.\n")
       }
-      
+
       # metric 1
       nt_m1 <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR[1],
                          mse=mses_m1, ltheta1=ltheta1, ltheta2=ltheta2,
@@ -170,7 +170,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       cat("Time consumed (secs):\n")
       print(round((proc.time()-ptms),1))
     }
-    
+
     # ------stage 2 evaluation ----------------------------------------------
     # simulate stage 2 and evalute the combined data from stage 1 + 2
     BE2 <- function(pes1, mses1, n2, nu)
@@ -201,7 +201,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       lower <- pe2 - hw
       upper <- pe2 + hw
       BE2   <- lower>=ltheta1 & upper<=ltheta2
-      BE2    
+      BE2
     }
     # browser()
     BE2_m1 <- BE2(pes_m1, mses_m1, n2, nu=1)
@@ -210,10 +210,10 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
     ntot[!BE] <- n2 + n1
     BE[!BE] <- BE2_m1 & BE2_m2
   }
-    
+
   # the return list
   res <- list(design="2x2 crossover",
-              method="B2m", alpha=alpha, CV=CV, n1=n1, GMR=GMR, 
+              method="B2m", alpha=alpha, CV=CV, n1=n1, GMR=GMR,
               targetpower=targetpower, pmethod=pmethod,
               theta0=exp(mlog), theta1=theta1, theta2=theta2, nsims=nsims,
               # results
