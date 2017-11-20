@@ -5,10 +5,10 @@
 # Author D.L.
 # --------------------------------------------------------------------------
 
-power.tsd.2m <- function(alpha=c(0.0294,0.0294), n1, GMR, CV, targetpower=0.8,
-                         pmethod=c("nct","exact", "shifted"), theta0, theta1, 
-                         theta2, npct=c(0.05, 0.5, 0.95), nsims, setseed=TRUE, 
-                         details=FALSE)
+power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR, 
+                         targetpower=0.8, pmethod=c("nct","exact", "shifted"), 
+                         theta0, theta1, theta2, npct=c(0.05, 0.5, 0.95), 
+                         nsims, setseed=TRUE, details=FALSE)
 {
   if(missing(CV))  stop("CV's must be given.")
     else {
@@ -46,7 +46,10 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), n1, GMR, CV, targetpower=0.8,
     if(length(theta0)==1) theta0 <- rep(theta0, 2)
     if(length(theta0)!=2) stop("theta0 must have two elements.")
   }
-
+  
+  if(rho!=0) warning("rho != 0 is only experimental.", call. = FALSE)
+  stopifnot(length(rho)==1, rho<-1 | rho>1)
+  
   if(missing(nsims)){
     nsims <- 1E5
     if(any(theta0<=theta1) | any(theta0>=theta2)) nsims <- 1E6
@@ -77,9 +80,20 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), n1, GMR, CV, targetpower=0.8,
   df    <- n1-2
   tval  <- qt(1-alpha[1], df)
   sdm   <- sqrt(mse*Cfact)
+  
+  sigma <- diag(sdm^2)
+  sigma[1,2] <- sigma[2,1] <- rho*sdm[1]*sdm[2]
+  
   # simulate point est. via normal distribution
-  pes_m1   <- rnorm(n=nsims, mean=mlog[1], sd=sdm[1]) # metric 1, f.i. AUC
-  pes_m2   <- rnorm(n=nsims, mean=mlog[2], sd=sdm[2]) # metric 2, f.i. Cmax
+  if (rho==0){
+    pes_m1   <- rnorm(n=nsims, mean=mlog[1], sd=sdm[1]) # metric 1, f.i. AUC
+    pes_m2   <- rnorm(n=nsims, mean=mlog[2], sd=sdm[2]) # metric 2, f.i. Cmax
+  } else {
+    # multivariate normal with rho
+    pes <- rmvnorm(nsims, mean=mlog, sigma=sigma)
+    pes_m1 <- pes[, 1]
+    pes_m2 <- pes[, 2]
+  }
   # simulate mse via chi-squared distribution
   mses_m1  <- mse[1]*rchisq(n=nsims, df=df)/df
   mses_m2  <- mse[2]*rchisq(n=nsims, df=df)/df
