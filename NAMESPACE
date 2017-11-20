@@ -21,7 +21,7 @@ import(
 # good practice would be importFrom
 #importFrom(PowerTOST, CV2se, CV2mse, OwensQ)
 #importFrom(stats, pt, qt, pnorm, qnorm, rnorm, rchisq, quantile)
-importFrom(mvtnorm, pmvt, pmvnorm, GenzBretz)
+importFrom(mvtnorm, pmvt, pmvnorm, GenzBretz, rmvnorm)
 
 # Define S3 methods for the return value class "pwrtsd"
 # of the power.2stage.xyz() functions

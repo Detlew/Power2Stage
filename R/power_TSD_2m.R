@@ -47,8 +47,8 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
     if(length(theta0)!=2) stop("theta0 must have two elements.")
   }
   
-  if(rho!=0) warning("rho != 0 is only experimental.", call. = FALSE)
-  stopifnot(length(rho)==1, rho<-1 | rho>1)
+  #if(rho!=0) warning("rho != 0 is only experimental.", call. = FALSE)
+  stopifnot(length(rho)==1, rho >= -1, rho <= 1)
   
   if(missing(nsims)){
     nsims <- 1E5
@@ -80,16 +80,16 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   df    <- n1-2
   tval  <- qt(1-alpha[1], df)
   sdm   <- sqrt(mse*Cfact)
-  
-  sigma <- diag(sdm^2)
-  sigma[1,2] <- sigma[2,1] <- rho*sdm[1]*sdm[2]
-  
+
   # simulate point est. via normal distribution
-  if (rho==0){
+  if (rho==Inf){
     pes_m1   <- rnorm(n=nsims, mean=mlog[1], sd=sdm[1]) # metric 1, f.i. AUC
     pes_m2   <- rnorm(n=nsims, mean=mlog[2], sd=sdm[2]) # metric 2, f.i. Cmax
   } else {
     # multivariate normal with rho
+    # TODO: check this
+    sigma <- diag(sdm^2)
+    sigma[1,2] <- sigma[2,1] <- rho*sdm[1]*sdm[2]
     pes <- rmvnorm(nsims, mean=mlog, sigma=sigma)
     pes_m1 <- pes[, 1]
     pes_m2 <- pes[, 2]
