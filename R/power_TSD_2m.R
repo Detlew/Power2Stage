@@ -213,9 +213,10 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
 
   # the return list
   res <- list(design="2x2 crossover",
-              method="B2m", alpha=alpha, CV=CV, n1=n1, GMR=GMR,
+              method="B2m", alpha=alpha, CV=CV, n1=n1, GMR=GMR, rho=rho,
               targetpower=targetpower, pmethod=pmethod,
-              theta0=exp(mlog), theta1=theta1, theta2=theta2, nsims=nsims,
+              theta0=exp(mlog), theta1=theta1, theta2=theta2, usePE=FALSE, 
+              nsims=nsims,
               # results
               pBE=sum(BE)/nsims,
               pBE_s1=sum(BE[ntot==n1])/nsims,
