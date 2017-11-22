@@ -82,7 +82,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   sdm   <- sqrt(mse*Cfact)
 
   # simulate point est. via normal distribution
-  if (rho==Inf){
+  if (rho==0){
     pes_m1   <- rnorm(n=nsims, mean=mlog[1], sd=sdm[1]) # metric 1, f.i. AUC
     pes_m2   <- rnorm(n=nsims, mean=mlog[2], sd=sdm[2]) # metric 2, f.i. Cmax
   } else {
@@ -173,6 +173,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
 
     # ------stage 2 evaluation ----------------------------------------------
     # simulate stage 2 and evalute the combined data from stage 1 + 2
+    
     BE2 <- function(pes1, mses1, n2, nu)
     {
       # nu is number of metric
@@ -180,10 +181,27 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       m1    <- pes1
       SS1   <- (n1-2)*mses1
       nsim2 <- length(pes1)
+      rm(pes1)
       # to avoid warnings for n2=0 in rnorm() and rchisq()
       ow    <- options("warn")
       options(warn=-1)
-      m2    <- ifelse(n2>0, rnorm(n=nsim2, mean=mlog[nu], sd=sqrt(mse[nu]*bk/n2)), 0)
+      if(rho==0){
+        # next statement is only valid if rho==0!
+        m2    <- ifelse(n2>0, rnorm(n=nsim2, mean=mlog[nu], sd=sqrt(mse[nu]*bk/n2)), 0)
+      } else {
+        m2 <- vector(mode="numeric", length=length(m1))
+        for(i in seq_along(m1)) {
+          if (n2[i]>0){
+            sem <- sqrt(mse*bk/n2[i])
+            sigma <- diag(sem^2)
+            sigma[1,2] <- sigma[2,1] <- rho*sem[1]*sem[2]
+            m2[i] <- rmvnorm(1, mean=mlog, sigma=sigma)[nu]
+          } else {
+            m2[i] <- 0
+          }
+        }
+      }
+      # now simulate sum of squares for stage 2
       # ??? (n2-2) cancels out!
       SS2   <- ifelse(n2>2, (n2-2)*mse[nu]*rchisq(n=nsim2, df=n2-2)/(n2-2), 0)
       # reset options
@@ -191,7 +209,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       SSmean <- ifelse(n2>0, (m1-m2)^2/(2/n1+2/n2), 0)
       nt     <- n1+n2
       df2    <- ifelse(n2>0, nt-3, n1-2)
-      pe2    <- ifelse(n2>0, (n1*m1+n2*m2)/nt, pes1)
+      pe2    <- ifelse(n2>0, (n1*m1+n2*m2)/nt, m1)
       mse2   <- ifelse(n2>0, (SS1+SSmean+SS2)/df2, mses1)
       # take care of memory
       rm(m1, m2, SS1, SS2, SSmean)
