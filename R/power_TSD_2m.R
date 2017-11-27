@@ -173,8 +173,25 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
 
     # ------stage 2 evaluation ----------------------------------------------
     # simulate stage 2 and evalute the combined data from stage 1 + 2
-    
-    BE2 <- function(pes1, mses1, n2, nu)
+    nsim2 <- length(pes_m1)
+    pes2   <- matrix(0, ncol=2, nrow=nsim2 )
+    ow    <- options("warn")
+    options(warn=-1)
+    #browser()
+    if (rho!=0){
+      # we are simulating for mean=0, sigma = matrix 1 rho, rho 1
+      sigma2 <- diag(1,2,2)
+      sigma2[1,2] <- sigma2[2,1] <- rho
+      pes2 <- rmvnorm(nsim2, mean=rep(0,2), sigma=sigma2)
+      # now transform to the actual variance and mean
+      pes2[ ,1] <- ifelse(n2>0, pes2[ ,1]*sqrt(mse[1]*bk/n2) + mlog[1], 0)
+      pes2[ ,2] <- ifelse(n2>0, pes2[ ,2]*sqrt(mse[2]*bk/n2) + mlog[2], 0)
+    } else {
+      pes2[,1] <- ifelse(n2>0, rnorm(n=nsim2, mean=mlog[1], sd=sqrt(mse[1]*bk/n2)), 0)
+      pes2[,2] <- ifelse(n2>0, rnorm(n=nsim2, mean=mlog[2], sd=sqrt(mse[2]*bk/n2)), 0)
+    }
+    options(ow)
+    BE2 <- function(pes1, mses1, n2, nu, pes2)
     {
       # nu is number of metric
       #browser()
@@ -182,25 +199,11 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       SS1   <- (n1-2)*mses1
       nsim2 <- length(pes1)
       rm(pes1)
+      m2 <- pes2[, nu]
+      rm(pes2)
       # to avoid warnings for n2=0 in rnorm() and rchisq()
       ow    <- options("warn")
       options(warn=-1)
-      if(rho==0){
-        # next statement is only valid if rho==0!
-        m2    <- ifelse(n2>0, rnorm(n=nsim2, mean=mlog[nu], sd=sqrt(mse[nu]*bk/n2)), 0)
-      } else {
-        m2 <- vector(mode="numeric", length=length(m1))
-        for(i in seq_along(m1)) {
-          if (n2[i]>0){
-            sem <- sqrt(mse*bk/n2[i])
-            sigma <- diag(sem^2)
-            sigma[1,2] <- sigma[2,1] <- rho*sem[1]*sem[2]
-            m2[i] <- rmvnorm(1, mean=mlog, sigma=sigma)[nu]
-          } else {
-            m2[i] <- 0
-          }
-        }
-      }
       # now simulate sum of squares for stage 2
       # ??? (n2-2) cancels out!
       SS2   <- ifelse(n2>2, (n2-2)*mse[nu]*rchisq(n=nsim2, df=n2-2)/(n2-2), 0)
@@ -222,8 +225,8 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       BE2
     }
     # browser()
-    BE2_m1 <- BE2(pes_m1, mses_m1, n2, nu=1)
-    BE2_m2 <- BE2(pes_m2, mses_m2, n2, nu=2)
+    BE2_m1 <- BE2(pes_m1, mses_m1, n2, nu=1, pes2)
+    BE2_m2 <- BE2(pes_m2, mses_m2, n2, nu=2, pes2)
     # combine stage 1 & stage 2
     ntot[!BE] <- n2 + n1
     BE[!BE] <- BE2_m1 & BE2_m2
