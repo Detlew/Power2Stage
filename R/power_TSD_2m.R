@@ -278,16 +278,24 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
 
 # --------------------------------------------------------------------------
 # utility function to create Wishart random draws
+# only dim(Sigma) == c(2,2) implemented
 rWish2 <- function(n, df, Sigma)
 {
   lendf <- length(df)
-  
+  # more checks to come
+  stopifnot(dim(Sigma)==c(2,2))
   if (lendf==1) {
     rWishart(n, df, Sigma)
   } else {
     ret <- array(0, dim=c(2,2,n))
     for(i in seq_along(df)) {
-      ret[,,i] <- rWishart(1, df[i], Sigma)
+      if(df[i] > 1) {
+        ret[,,i] <- rWishart(1, df[i], Sigma)
+      } else {
+        # return null matrix
+        # TODO: is this reasonable
+        ret[,,i] <- matrix(0, nrow=2, ncol=2)
+      }
     }
     ret  
   }
