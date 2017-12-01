@@ -7,8 +7,8 @@
 
 power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR, 
                          targetpower=0.8, pmethod=c("nct","exact", "shifted"), 
-                         theta0, theta1, theta2, npct=c(0.05, 0.5, 0.95), 
-                         nsims, setseed=TRUE, details=FALSE)
+                         powerstep=FALSE, theta0, theta1, theta2, 
+                         npct=c(0.05, 0.5, 0.95), nsims, setseed=TRUE, details=FALSE)
 {
   if(missing(CV))  stop("CVs must be given.")
     else {
@@ -111,31 +111,48 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
 
   # overall BE in stage 1
   BE <- BE_m1 & BE_m2
-
+  #browser()
+  # set BE to NA if BE not decided yet
+  BE[!BE] <- NA
+  
+  if(powerstep) {
+    # metric 1 power
+    pwr_m1 <- .calc.power(alpha=alpha[2], ltheta1=ltheta1, ltheta2=ltheta2,
+                          diffm=lGMR[1], sem=sqrt(bk*mses_m1/n1), df=df, 
+                          method=pmethod)
+    BE[BE_m2 & !BE_m1 & pwr_m1>=targetpower] <- FALSE
+    # metric 2 power
+    pwr_m2 <- .calc.power(alpha=alpha[2], ltheta1=ltheta1, ltheta2=ltheta2,
+                          diffm=lGMR[2], sem=sqrt(bk*mses_m2/n1), df=df, 
+                          method=pmethod)
+    BE[BE_m1 & !BE_m2 & pwr_m2>=targetpower] <- FALSE
+    # take care of memory
+    rm(pwr_m1, pwr_m2)
+  }
+  # take care of memory
+  rm(BE_m1, BE_m2)
   # time for stage 1
   if(details){
     cat(" - Time consumed (secs):\n")
     print(round((proc.time()-ptm),1))
   }
 
-  # BE == TRUE is decided yet
-  # BE == FALSE not yet
+  # BE == TRUE/FALSE is decided yet
+  # BE == NA not yet decided
   ntot <- rep(n1, nsims)
-  if(sum(!BE)>0){
+  if(sum(is.na(BE)) > 0) {
     ptms <- proc.time()
-    ind <- !BE
+    ind <- is.na(BE)
     pes_m1  <- pes_m1[ind]
     mses_m1 <- mses_m1[ind]
     pes_m2  <- pes_m2[ind]
     mses_m2 <- mses_m2[ind]
     rm(ind)
-    # 'abbreviated' method B, i.e. implicit power calculation via sample size
-    # estimation only
-    # ------sample size for stage 2 -----------------------------------------
 
+    # ------sample size for stage 2 -----------------------------------------
     if(GMR[1]==GMR[2]){
       if(details){
-        cat("Keep calm. Sample sizes for stage 2 (", sum(!BE),
+        cat("Keep calm. Sample sizes for stage 2 (", sum(is.na(BE)),
             " studies)\n", sep="")
         cat("will be estimated. May need some time.\n")
       }
@@ -148,7 +165,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       rm(mses_max, nt_max)
     } else {
       if(details){
-        cat("Keep calm. Sample sizes for stage 2 (2x ", sum(!BE),
+        cat("Keep calm. Sample sizes for stage 2 (2x ", sum(is.na(BE)),
             " studies)\n", sep="")
         cat("will be estimated. May need some time.\n")
       }
@@ -170,7 +187,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       cat("Time consumed (secs):\n")
       print(round((proc.time()-ptms),1))
     }
-
+    #browser()
     # ------stage 2 evaluation ----------------------------------------------
     # simulate stage 2 and evalute the combined data from stage 1 + 2
     nsim2 <- length(pes_m1)
@@ -228,8 +245,8 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
     BE2_m1 <- BE2(pes_m1, mses_m1, n2, nu=1, pes2)
     BE2_m2 <- BE2(pes_m2, mses_m2, n2, nu=2, pes2)
     # combine stage 1 & stage 2
-    ntot[!BE] <- n2 + n1
-    BE[!BE] <- BE2_m1 & BE2_m2
+    ntot[is.na(BE)] <- n2 + n1
+    BE[is.na(BE)] <- BE2_m1 & BE2_m2
   }
 
   # the return list
@@ -258,3 +275,20 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   return(res)
 
 } #end function
+
+# --------------------------------------------------------------------------
+# utility function to create Wishart random draws
+rWish2 <- function(n, df, Sigma)
+{
+  lendf <- length(df)
+  
+  if (lendf==1) {
+    rWishart(n, df, Sigma)
+  } else {
+    ret <- array(0, dim=c(2,2,n))
+    for(i in seq_along(df)) {
+      ret[,,i] <- rWishart(1, df[i], Sigma)
+    }
+    ret  
+  }
+}
