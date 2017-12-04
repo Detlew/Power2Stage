@@ -1,3 +1,6 @@
+# -----------------------------------------------------------------------------
+# calculates the critical values for TSD evaluated via p-value combination
+# Pocock method
 critical.value.2stage <- function(alpha = 0.05, weight) {
   stopifnot(length(weight) <= 2, alpha > 0, alpha < 1)
   corr <- diag(1, nrow = 1 + length(weight), ncol = 1 + length(weight))
@@ -24,4 +27,33 @@ critical.value.2stage <- function(alpha = 0.05, weight) {
   # critical value for stage 1 equal to stage 2 critical value
   z_crit <- c(z_crit, z_crit)
   list(cval = z_crit, siglev = 1 - pnorm(z_crit))
+}
+
+# -----------------------------------------------------------------------------
+# utility function to create Wishart random draws of covariance matrices
+# only dim(Sigma) == c(2,2) implemented
+# attention! Sigma must be positiv definit!
+# that prevents the use of rho=1 or rho=-1.
+rWish2 <- function(n, df, Sigma)
+{
+  lendf <- length(df)
+  # more checks to come
+  stopifnot(dim(Sigma)==c(2,2))
+  
+  if (lendf==1) {
+    rWishart(n, df, Sigma)
+  } else {
+    stopifnot(lendf==n)
+    ret <- array(0, dim=c(2,2,n))
+    for(i in seq_along(df)) {
+      if(df[i] > 1) {
+        ret[,,i] <- rWishart(1, df[i], Sigma)
+      } else {
+        # return null matrix
+        # TODO: is this reasonable
+        ret[,,i] <- matrix(0, nrow=2, ncol=2)
+      }
+    }
+    ret  
+  }
 }

@@ -82,32 +82,44 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   sdm   <- sqrt(mse*Cfact)
 
   # simulate point est. via normal distribution
+  pes  <- matrix(0, nrow=nsims, ncol=2)
+  mses <- matrix(0, nrow=nsims, ncol=2)
   if (rho==0){
-    pes_m1   <- rnorm(n=nsims, mean=mlog[1], sd=sdm[1]) # metric 1, f.i. AUC
-    pes_m2   <- rnorm(n=nsims, mean=mlog[2], sd=sdm[2]) # metric 2, f.i. Cmax
+    pes[ , 1] <- rnorm(n=nsims, mean=mlog[1], sd=sdm[1]) # metric 1, f.i. AUC
+    pes[ , 2] <- rnorm(n=nsims, mean=mlog[2], sd=sdm[2]) # metric 2, f.i. Cmax
+    # simulate mse via chi-squared distribution
+    mses[ , 1] <- mse[1]*rchisq(n=nsims, df=df)/df
+    mses[ , 2] <- mse[2]*rchisq(n=nsims, df=df)/df
   } else {
     # multivariate normal with rho
     # TODO: check this
-    sigma <- diag(sdm^2)
-    sigma[1,2] <- sigma[2,1] <- rho*sdm[1]*sdm[2]
-    pes <- rmvnorm(nsims, mean=mlog, sigma=sigma)
-    pes_m1 <- pes[, 1]
-    pes_m2 <- pes[, 2]
+    #browser()
+    # variance-covariance matrix of means
+    s_m <- diag(sdm^2)
+    s_m[1,2] <- s_m[2,1] <- rho*s_m[1,1]*s_m[2,2]
+    pes <- rmvnorm(nsims, mean=mlog, sigma=s_m)
+    # simulate covariance matrices via Wishart distribution
+    s_mse  <- diag(mse)
+    s_mse[1,2] <- s_mse[2,1] <- rho*sqrt(s_mse[1,1]*s_mse[2,2])
+    #or do we have here df=n-1?
+    covm      <- rWish2(n=nsims, df=df, Sigma=s_mse)/df 
+    mses[, 1] <- covm[1, 1, ]
+    mses[, 2] <- covm[2, 2, ]
+    # take care of memory
+    rm(covm)
   }
-  # simulate mse via chi-squared distribution
-  mses_m1  <- mse[1]*rchisq(n=nsims, df=df)/df
-  mses_m2  <- mse[2]*rchisq(n=nsims, df=df)/df
 
-  BE <- function(mses, pes)
+  BE <- function(nu)
   {
-    hw <- tval*sqrt(Cfact*mses)
-    loCL <- pes - hw
-    upCL <- pes + hw
+    hw <- tval*sqrt(Cfact*mses[, nu])
+    loCL <- pes[, nu] - hw
+    upCL <- pes[, nu] + hw
     BE <- loCL >= ltheta1 & upCL <= ltheta2
+    BE
   }
   # make BE decision for stage 1
-  BE_m1 <- BE(mses_m1, pes_m1)
-  BE_m2 <- BE(mses_m2, pes_m2)
+  BE_m1 <- BE(nu=1)
+  BE_m2 <- BE(nu=2)
 
   # overall BE in stage 1
   BE <- BE_m1 & BE_m2
@@ -118,12 +130,12 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   if(powerstep) {
     # metric 1 power
     pwr_m1 <- .calc.power(alpha=alpha[2], ltheta1=ltheta1, ltheta2=ltheta2,
-                          diffm=lGMR[1], sem=sqrt(bk*mses_m1/n1), df=df, 
+                          diffm=lGMR[1], sem=sqrt(bk*mses[, 1]/n1), df=df, 
                           method=pmethod)
     BE[BE_m2 & !BE_m1 & pwr_m1>=targetpower] <- FALSE
     # metric 2 power
     pwr_m2 <- .calc.power(alpha=alpha[2], ltheta1=ltheta1, ltheta2=ltheta2,
-                          diffm=lGMR[2], sem=sqrt(bk*mses_m2/n1), df=df, 
+                          diffm=lGMR[2], sem=sqrt(bk*mses[, 2]/n1), df=df, 
                           method=pmethod)
     BE[BE_m1 & !BE_m2 & pwr_m2>=targetpower] <- FALSE
     # take care of memory
@@ -142,11 +154,9 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   ntot <- rep(n1, nsims)
   if(sum(is.na(BE)) > 0) {
     ptms <- proc.time()
-    ind <- is.na(BE)
-    pes_m1  <- pes_m1[ind]
-    mses_m1 <- mses_m1[ind]
-    pes_m2  <- pes_m2[ind]
-    mses_m2 <- mses_m2[ind]
+    ind  <- is.na(BE)
+    pes  <- pes[ind, ]
+    mses <- mses[ind, ]
     rm(ind)
 
     # ------sample size for stage 2 -----------------------------------------
@@ -157,11 +167,12 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
         cat("will be estimated. May need some time.\n")
       }
       # use the max. mse for sample size
-      mses_max <- pmax(mses_m1, mses_m2)
+      mses_max <- pmax(mses[, 1], mses[, 2])
       nt_max <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR[1],
                           mse=mses_max, ltheta1=ltheta1, ltheta2=ltheta2,
                           method=pmethod)
       n2 <- ifelse(nt_max>n1, nt_max - n1, 0)
+      # keep care of memory
       rm(mses_max, nt_max)
     } else {
       if(details){
@@ -172,12 +183,12 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
 
       # metric 1
       nt_m1 <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR[1],
-                         mse=mses_m1, ltheta1=ltheta1, ltheta2=ltheta2,
+                         mse=mses[, 1], ltheta1=ltheta1, ltheta2=ltheta2,
                          method=pmethod)
       n2_m1 <- ifelse(nt_m1>n1, nt_m1 - n1, 0)
       # same for metric 2
       nt_m2 <- .sampleN2(alpha=alpha[2], targetpower=targetpower, ltheta0=lGMR[2],
-                         mse=mses_m2, ltheta1=ltheta1, ltheta2=ltheta2,
+                         mse=mses[, 2], ltheta1=ltheta1, ltheta2=ltheta2,
                          method=pmethod)
       n2_m2 <- ifelse(nt_m2>n1, nt_m2 - n1, 0)
       n2 <- pmax(n2_m1, n2_m2 )
@@ -190,8 +201,9 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
     #browser()
     # ------stage 2 evaluation ----------------------------------------------
     # simulate stage 2 and evalute the combined data from stage 1 + 2
-    nsim2 <- length(pes_m1)
-    pes2   <- matrix(0, ncol=2, nrow=nsim2 )
+    nsim2 <- nrow(pes)
+    pes2  <- matrix(0, ncol=2, nrow=nsim2 )
+    SS2   <- matrix(0, ncol=2, nrow=nsim2 )
     ow    <- options("warn")
     options(warn=-1)
     #browser()
@@ -200,39 +212,38 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       sigma2 <- diag(1,2,2)
       sigma2[1,2] <- sigma2[2,1] <- rho
       pes2 <- rmvnorm(nsim2, mean=rep(0,2), sigma=sigma2)
-      # now transform to the actual variance and mean
+      # now we transform to the actual variance and mean
       pes2[ ,1] <- ifelse(n2>0, pes2[ ,1]*sqrt(mse[1]*bk/n2) + mlog[1], 0)
       pes2[ ,2] <- ifelse(n2>0, pes2[ ,2]*sqrt(mse[2]*bk/n2) + mlog[2], 0)
+      # SS2 via Wishart distribution
+      #browser()
+      covm     <- rWish2(n=nsim2, df=n2-2, Sigma=s_mse)
+      SS2[, 1] <- covm[1, 1, ]
+      SS2[, 2] <- covm[2, 2, ]
     } else {
       pes2[,1] <- ifelse(n2>0, rnorm(n=nsim2, mean=mlog[1], sd=sqrt(mse[1]*bk/n2)), 0)
       pes2[,2] <- ifelse(n2>0, rnorm(n=nsim2, mean=mlog[2], sd=sqrt(mse[2]*bk/n2)), 0)
+      # SS2 via independent chisqured distribution
+      SS2[, 1]   <- ifelse(n2>2, (n2-2)*mse[1]*rchisq(n=nsim2, df=n2-2)/(n2-2), 0)
+      SS2[, 2]   <- ifelse(n2>2, (n2-2)*mse[2]*rchisq(n=nsim2, df=n2-2)/(n2-2), 0)
     }
     options(ow)
-    BE2 <- function(pes1, mses1, n2, nu, pes2)
+    
+    BE2 <- function(nu)
     {
-      # nu is number of metric
       #browser()
-      m1    <- pes1
-      SS1   <- (n1-2)*mses1
-      nsim2 <- length(pes1)
-      rm(pes1)
+      m1    <- pes[, nu]
+      SS1   <- (n1-2)*mses[, nu]
+      nsim2 <- length(m1)
       m2 <- pes2[, nu]
       rm(pes2)
-      # to avoid warnings for n2=0 in rnorm() and rchisq()
-      ow    <- options("warn")
-      options(warn=-1)
-      # now simulate sum of squares for stage 2
-      # ??? (n2-2) cancels out!
-      SS2   <- ifelse(n2>2, (n2-2)*mse[nu]*rchisq(n=nsim2, df=n2-2)/(n2-2), 0)
-      # reset options
-      options(ow)
       SSmean <- ifelse(n2>0, (m1-m2)^2/(2/n1+2/n2), 0)
       nt     <- n1+n2
       df2    <- ifelse(n2>0, nt-3, n1-2)
       pe2    <- ifelse(n2>0, (n1*m1+n2*m2)/nt, m1)
-      mse2   <- ifelse(n2>0, (SS1+SSmean+SS2)/df2, mses1)
+      mse2   <- ifelse(n2>0, (SS1+SSmean+SS2[, nu])/df2, mses[, nu])
       # take care of memory
-      rm(m1, m2, SS1, SS2, SSmean)
+      rm(m1, m2, SS1, ss2, SSmean)
       # calculate CI for stage 2 with alpha[2]
       tval2 <- qt(1-alpha[2], df2)
       hw    <- tval2*sqrt(mse2*bk/nt)
@@ -242,8 +253,8 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       BE2
     }
     # browser()
-    BE2_m1 <- BE2(pes_m1, mses_m1, n2, nu=1, pes2)
-    BE2_m2 <- BE2(pes_m2, mses_m2, n2, nu=2, pes2)
+    BE2_m1 <- BE2(nu=1)
+    BE2_m2 <- BE2(nu=2)
     # combine stage 1 & stage 2
     ntot[is.na(BE)] <- n2 + n1
     BE[is.na(BE)] <- BE2_m1 & BE2_m2
@@ -275,28 +286,3 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   return(res)
 
 } #end function
-
-# --------------------------------------------------------------------------
-# utility function to create Wishart random draws
-# only dim(Sigma) == c(2,2) implemented
-rWish2 <- function(n, df, Sigma)
-{
-  lendf <- length(df)
-  # more checks to come
-  stopifnot(dim(Sigma)==c(2,2))
-  if (lendf==1) {
-    rWishart(n, df, Sigma)
-  } else {
-    ret <- array(0, dim=c(2,2,n))
-    for(i in seq_along(df)) {
-      if(df[i] > 1) {
-        ret[,,i] <- rWishart(1, df[i], Sigma)
-      } else {
-        # return null matrix
-        # TODO: is this reasonable
-        ret[,,i] <- matrix(0, nrow=2, ncol=2)
-      }
-    }
-    ret  
-  }
-}
