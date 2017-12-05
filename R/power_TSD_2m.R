@@ -94,7 +94,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
     # multivariate normal with rho
     # TODO: check this
     #browser()
-    # variance-covariance matrix of means
+    # (population) variance-covariance matrix of means
     s_m <- diag(sdm^2)
     s_m[1,2] <- s_m[2,1] <- rho*s_m[1,1]*s_m[2,2]
     pes <- rmvnorm(nsims, mean=mlog, sigma=s_m)
@@ -213,8 +213,10 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       sigma2[1,2] <- sigma2[2,1] <- rho
       pes2 <- rmvnorm(nsim2, mean=rep(0,2), sigma=sigma2)
       # now we transform to the actual variance and mean
-      pes2[ ,1] <- ifelse(n2>0, pes2[ ,1]*sqrt(mse[1]*bk/n2) + mlog[1], 0)
-      pes2[ ,2] <- ifelse(n2>0, pes2[ ,2]*sqrt(mse[2]*bk/n2) + mlog[2], 0)
+      # TODO: is this correct? Or have we to include rho in some way
+      # for the transformation?
+      pes2[, 1] <- ifelse(n2>0, pes2[ ,1]*sqrt(mse[1]*bk/n2) + mlog[1], 0)
+      pes2[, 2] <- ifelse(n2>0, pes2[ ,2]*sqrt(mse[2]*bk/n2) + mlog[2], 0)
       # SS2 via Wishart distribution
       #browser()
       covm     <- rWish2(n=nsim2, df=n2-2, Sigma=s_mse)
@@ -257,7 +259,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
     BE2_m2 <- BE2(nu=2)
     # combine stage 1 & stage 2
     ntot[is.na(BE)] <- n2 + n1
-    BE[is.na(BE)] <- BE2_m1 & BE2_m2
+    BE[is.na(BE)]   <- BE2_m1 & BE2_m2
   }
 
   # the return list
