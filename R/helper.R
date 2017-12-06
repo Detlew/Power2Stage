@@ -41,7 +41,7 @@ rWish2 <- function(n, df, Sigma)
   stopifnot(dim(Sigma)==c(2,2))
   
   if (lendf==1) {
-    rWishart(n, df, Sigma)
+    ret <- rWishart(n, df, Sigma)
   } else {
     stopifnot(lendf==n)
     ret <- array(0, dim=c(2,2,n))
@@ -54,6 +54,6 @@ rWish2 <- function(n, df, Sigma)
         ret[,,i] <- matrix(0, nrow=2, ncol=2)
       }
     }
-    ret  
   }
+  ret
 }

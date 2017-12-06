@@ -1,6 +1,6 @@
 # --------------------------------------------------------------------------
-# power (or alpha) of 2-stage studies according to Potvin et al.
-# methods "B" with 2 PK metrics
+# power (or alpha) of 2-stage studies according to Potvin et al. methods "B"
+# with 2 PK metrics
 #
 # Author D.L.
 # --------------------------------------------------------------------------
@@ -223,9 +223,10 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       SS2[, 1] <- covm[1, 1, ]
       SS2[, 2] <- covm[2, 2, ]
     } else {
+      # pe's of stage 2 data via independent normal distri's
       pes2[,1] <- ifelse(n2>0, rnorm(n=nsim2, mean=mlog[1], sd=sqrt(mse[1]*bk/n2)), 0)
       pes2[,2] <- ifelse(n2>0, rnorm(n=nsim2, mean=mlog[2], sd=sqrt(mse[2]*bk/n2)), 0)
-      # SS2 via independent chisqured distribution
+      # SS2 via independent chi-squared distribution
       SS2[, 1]   <- ifelse(n2>2, (n2-2)*mse[1]*rchisq(n=nsim2, df=n2-2)/(n2-2), 0)
       SS2[, 2]   <- ifelse(n2>2, (n2-2)*mse[2]*rchisq(n=nsim2, df=n2-2)/(n2-2), 0)
     }
@@ -233,25 +234,26 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
     
     BE2 <- function(nu)
     {
+      # this function sees pes[], mses[], pes2[], SS2[] and n2[]
+      # nu is number of metric
       #browser()
-      m1    <- pes[, nu]
-      SS1   <- (n1-2)*mses[, nu]
-      nsim2 <- length(m1)
-      m2 <- pes2[, nu]
-      rm(pes2)
+      m1     <- pes[, nu]
+      SS1    <- (n1-2)*mses[, nu]
+      nsim2  <- length(m1)
+      m2     <- pes2[, nu]
       SSmean <- ifelse(n2>0, (m1-m2)^2/(2/n1+2/n2), 0)
       nt     <- n1+n2
       df2    <- ifelse(n2>0, nt-3, n1-2)
       pe2    <- ifelse(n2>0, (n1*m1+n2*m2)/nt, m1)
       mse2   <- ifelse(n2>0, (SS1+SSmean+SS2[, nu])/df2, mses[, nu])
       # take care of memory
-      rm(m1, m2, SS1, ss2, SSmean)
+      rm(m1, m2, SS1, SSmean)
       # calculate CI for stage 2 with alpha[2]
-      tval2 <- qt(1-alpha[2], df2)
-      hw    <- tval2*sqrt(mse2*bk/nt)
-      lower <- pe2 - hw
-      upper <- pe2 + hw
-      BE2   <- lower>=ltheta1 & upper<=ltheta2
+      tval2  <- qt(1-alpha[2], df2)
+      hw     <- tval2*sqrt(mse2*bk/nt)
+      lower  <- pe2 - hw
+      upper  <- pe2 + hw
+      BE2    <- lower>=ltheta1 & upper<=ltheta2
       BE2
     }
     # browser()
