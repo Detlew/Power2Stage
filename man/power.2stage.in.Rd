@@ -8,17 +8,16 @@ based on the Inverse-Normal method
 \description{
   The function calculates the \sQuote{empirical} power of 2-stage BE studies based
   on the Inverse-Normal combination method. The main design scheme is according
-  to Maurer \emph{et al.}, but it may also be used for modified designs to
-  allow for usage of the observed treatment difference after
-  \ifelse{html}{\out{stage&nbsp;1}}{stage~1} in the sample size re-estimation
-  step, or a different power threshold to decide on futility after
-  \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+  to Maurer \emph{et al.} (Maximum Combination Test), but it may also be used 
+  for modified designs to allow for example usage of the observed treatment 
+  difference after \ifelse{html}{\out{stage&nbsp;1}}{stage~1} in the sample 
+  size re-estimation step, or different futility criteria.
 }
 \usage{
 power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
                 theta0, theta1, theta2, GMR, usePE = FALSE, 
                 min.n2 = 4, max.n = Inf, fCpower = targetpower, 
-                fCrit = NULL, fClower, fCupper, fCNmax,
+                fCrit = "CI", fClower, fCupper, fCNmax,
                 ssr.conditional = c("error_power", "error", "no"),
                 pmethod = c("nct", "exact", "shifted"), npct = c(0.05, 0.5, 0.95),
                 nsims, setseed = TRUE, details = FALSE)
@@ -32,7 +31,7 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     If missing, defaults to \verb{0.05}.
   }
   \item{weight}{
-    Weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (information fraction).
+    Weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
     This argument will be ignored if \verb{alpha} contains two elements.
     Otherwise, \verb{weight} must either contain one element (in case
     of \verb{max.comb.test = FALSE}) or two elements (in case of
@@ -52,7 +51,7 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     30\%).
   }
   \item{targetpower}{
-    Desired target power to declare \acronym{BE} at the end of the trial.
+    Desired (overall) target power to declare \acronym{BE} at the end of the trial.
   }
   \item{theta0}{
     Assumed ratio of geometric means (T/R) for simulations. If missing,
@@ -102,12 +101,14 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     \verb{fCpower}.
   }
   \item{fCrit}{
-    Futility criterion to use: \verb{"PE"} (observed point estimate of the
-    geometric mean ratio from \ifelse{html}{\out{stage&nbsp;1}}{stage~1}),
+    Futility criterion to use: \verb{"No"} (no futility criterion regarding
+    observed point estimate, confidence interval and maximum sample size), 
+    \verb{"PE"} (observed point estimate of the geometric mean ratio from 
+    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}), 
     \verb{"CI"} (90\% confidence interval of the geometric mean ratio from
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}) or \code{"Nmax"} (overall maximum
+    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}), \code{"Nmax"} (overall maximum
     sample size); or a combination thereof (concatenate abbreviations; see
-    \sQuote{Examples}).
+    \sQuote{Examples}). Defaults to "CI".
   }
   \item{fClower}{
     Lower futility limit for the \acronym{PE} or \acronym{CI} of
@@ -118,8 +119,8 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     the default will be set to 0.8 for \verb{fCrit = "PE"} or 0.95 for \verb{fCrit = "CI"}.
     If neither \verb{"PE"} nor \verb{"CI"} is specified within \verb{fCrit}, there
     will be no futility constraint regarding point estimate or confidence interval
-    from \ifelse{html}{\out{stage&nbsp;1}}{stage~1} (regardless of any specification
-    of \verb{fCupper}).
+    from \ifelse{html}{\out{stage&nbsp;1}}{stage~1} (regardless of any 
+    specification of \verb{fClower} and/or \verb{fCupper}).
   }
   \item{fCupper}{
     Upper futility limit for the \acronym{PE} or \acronym{CI} of
@@ -139,10 +140,10 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   }
   \item{ssr.conditional}{
     Method for sample size re-estimation step: \verb{"no"} does not use
-    conditional error rates nor the conditional power for the second stage,
-    \verb{"error"} uses conditional error rates for the second stage, and
-    \verb{"error_power"} uses both conditional error rates and the conditonal
-    power for the second stage.\cr
+    conditional error rates nor the conditional estimated target power for 
+    the second stage, \verb{"error"} uses conditional error rates for the 
+    second stage, and \verb{"error_power"} uses both conditional error rates 
+    and the conditonal estimated target power for the second stage.\cr
     Defaults to \verb{"error_power"}.\cr\cr
     See also \sQuote{Details}.
   }
@@ -153,7 +154,7 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     \emph{t}-distribution, \verb{"exact"} (exact calculations via Owen\enc{’}{'}s Q),
     and \verb{"shifted"} (approximate calculation via shifted central \emph{t}-distribution
     like in the paper of Potvin \emph{et al.})\cr
-    Defaults to \verb{"nct"} as a reasonable compromise between speed and
+    Defaults to \verb{"nct"} as it is a reasonable compromise between speed and
     accuracy in the sample size estimation step.
   }
   \item{npct}{
@@ -185,10 +186,11 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   But instead of simulating subject data, the statistics pe1, mse1 and pe2, mse2 
   are simulated via their associated distributions (normal and
   \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distributions).\cr\cr
-  If \verb{ssr.conditional = "error_power"}, the design scheme generally calculates the
-  conditional power of the second stage and uses this value as desired target
-  power in the sample size re-estimation process. There are two links between
-  the conditional power and the argument \verb{fCpower}:
+  If \verb{ssr.conditional = "error_power"}, the design scheme generally 
+  calculates the conditional estimated target power of the second stage and 
+  uses this value as desired target power in the sample size re-estimation 
+  process. There are two links between this conditional power and the argument 
+  \verb{fCpower}:
   \itemize{
   \item If \code{fCpower} > \code{targetpower}, then the conditional power
   may actually be negative. This does not seem sensible. Therefore, for such
@@ -228,26 +230,27 @@ B. Lang
 }
 \references{
 Patterson SD, Jones B. \emph{Bioequivalence and Statistics in Clinical Pharmacology.}\cr
-Boca Raton: CRC Press; 2\ifelse{html}{\out{<sup>nd</sup>}}{\eqn{^{nd}}} edition 2016.
+Boca Raton: CRC Press; 2\ifelse{html}{\out{<sup>nd</sup>}}{\eqn{^{nd}}} edition 2017.
 
 Maurer W, Jones B, Chen Y. \emph{Controlling the type 1 error rate in two-stage
 sequential designs when testing for average bioequivalence.}\cr
-Stat Med. (to be submitted).
+Stat Med. 2018;1--21. \doi{10.1002/sim.7614}
 
 Kieser M, Rauch G. \emph{Two-stage designs for cross-over bioequivalence trials.}\cr
 Stat Med. 2015; 34(16):2403--16. \doi{10.1002/sim.6487}
 }
 
 \examples{
-# Using all defaults, 12 subjects in stage 1 and a CV of 20\%
+# 12 subjects in stage 1, CV of 20\%, no futility rule, otherwise all defaults
 # This setting resembles values in Table 6.8 and 6.10 in Patterson and Jones.
-power.2stage.in(n1 = 12, CV = 0.2)
+power.2stage.in(n1 = 12, CV = 0.2, fCrit = "No")
 
 # Note that actual replication would require the following additional
 # arguments (extremely long run-time)
 \dontrun{
-power.2stage.in(n1 = 12, CV = 0.2, max.n = 4000, pmethod = "exact", nsims = 1E6)}
+power.2stage.in(n1 = 12, CV = 0.2, fCrit = "No", max.n = 4000, 
+                pmethod = "exact", nsims = 1E6)}
 
-# As above, but using (default) futility constraints regarding PE and Nmax:
-power.2stage.in(n1 = 12, CV = 0.2, fCrit = c("PE", "Nmax"))
+# Table 8 in Maurer et al
+power.2stage.in(n1 = 36, CV = 0.4, max.n = 4000)
 }
