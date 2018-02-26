@@ -225,7 +225,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   
   # From those NAs may still consider some of them as failure due to futility:
   # Futility check - here only regarding PE or CI (fCNmax comes later)
-  if (fCrit != "no" && sum(nms_match[1:2] > 0)) {
+  if (fCrit != "no" && sum(nms_match[1:2]) > 0) {
     lfClower <- log(fClower)
     lfCupper <- log(fCupper)
     if (nms_match[1]) {

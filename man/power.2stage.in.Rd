@@ -31,7 +31,7 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     If missing, defaults to \verb{0.05}.
   }
   \item{weight}{
-    Weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
+    Weight(s) (information fraction) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
     This argument will be ignored if \verb{alpha} contains two elements.
     Otherwise, \verb{weight} must either contain one element (in case
     of \verb{max.comb.test = FALSE}) or two elements (in case of
