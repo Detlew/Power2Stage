@@ -13,7 +13,7 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   if (CV1 <= 0)      stop("CV1 must be >0!")
   if (n1 <= 0)       stop("Number of subjects in stage 1 must be >0!")
   if (n1 >= max.n)   stop("max.n must be greater than n1.")
-  if (missing(alpha)) 
+  if (missing(alpha))
     alpha <- 0.05
   if (length(alpha) > 2) 
     stop("Length of alpha must be <= 2.")
@@ -22,20 +22,20 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   if (length(alpha) == 1 && missing(weight))
     weight <- if (max.comb.test) c(0.5, 0.25) else 0.5
   if (length(alpha) == 2) {
-    if (missing(weight))
+    if (missing(weight)) {
       stop("weight must be specified.")
-    message(paste0("Note: It is assumed that the specified alpha values are in", 
-                   " line with the specified max.comb.test argument."))
+    } else {
+      message(paste0("Note: Adjusted alphas are specified, it is assumed that",
+                     " the specified weight(s) are in line with the alpha",
+                     " values."))
+    }
   }
-  if (length(alpha) == 2 && !missing(weight))
-    message(paste0("Note: Adjusted alphas are specified, it is assumed that the",
-                   " specified weight(s) are in line with the alpha values."))
   lw <- length(weight)
   if (max.comb.test) {
-    if (length(alpha) != 2 && lw != 2)
+    if (lw != 2)
       stop("Two weights, w and w*, are required for maximum combination test.")
   } else {
-    if (length(alpha) == 1 && lw != 1)
+    if (lw != 1)
       stop("One weight, w, is required for standard combination test.")
   }
   if (any(weight <= 0) || any(weight >= 1))
@@ -127,9 +127,7 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   }
   
   ### Calculate adjusted critical levels ---------------------------------------
-  # length(alpha)=1 => if length(weight)=2, max.comb.test=TRUE is assumed here
   cl <- if (length(alpha) == 1) critical.value.2stage(alpha, weight) else
-    # if two alphas, ignore possibly given weights and only use those alphas
     list(cval = qnorm(1 - alpha), siglev = alpha)
   
   ### Evaluation of Stage 1 ----------------------------------------------------
@@ -252,8 +250,8 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   ### Define final output ------------------------------------------------------
   res <- list(
     method = "IN_1st", pmethod = pmethod, GMR1 = GMR1, CV1 = CV1, 
-    df1 = df, SEM1 = sem, weight = weight, alpha = cl$siglev[1], 
-    cval = cl$cval[1], ssr.conditional = ssr.conditional, fCrit = fCrit, 
+    df1 = df, SEM1 = sem, alpha1 = cl$siglev[1], 
+    cval1 = cl$cval[1], ssr.conditional = ssr.conditional, fCrit = fCrit, 
     fCpower = fCpower, fClower = fClower, fCupper = fCupper, fCNmax = fCNmax,
     futility = fut, t11 = t1, t12 = t2, p11 = p11, p12 = p12, 
     eRCI = ci,

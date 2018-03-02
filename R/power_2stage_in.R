@@ -63,20 +63,20 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   if (length(alpha) == 1 && missing(weight))
     weight <- if (max.comb.test) c(0.5, 0.25) else 0.5
   if (length(alpha) == 2) {
-    if (missing(weight))
+    if (missing(weight)) {
       stop("weight must be specified.")
-    message(paste0("Note: It is assumed that the specified alpha values are in", 
-                   " line with the specified max.comb.test argument."))
+    } else {
+      message(paste0("Note: Adjusted alphas are specified, it is assumed that",
+                     " the specified weight(s) are in line with the alpha",
+                     " values."))
+    }
   }
-  if (length(alpha) == 2 && !missing(weight))
-    message(paste0("Note: Adjusted alphas are specified, it is assumed that the",
-                   " specified weight(s) are in line with the alpha values."))
   lw <- length(weight)
   if (max.comb.test) {
-    if (length(alpha) != 2 && lw != 2)
+    if (lw != 2)
       stop("Two weights, w and w*, are required for maximum combination test.")
   } else {
-    if (length(alpha) == 1 && lw != 1)
+    if (lw != 1)
       stop("One weight, w, is required for standard combination test.")
   }
   if (any(weight <= 0) || any(weight >= 1))
