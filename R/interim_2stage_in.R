@@ -3,10 +3,9 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
                               targetpower = 0.8, theta1, theta2,
                               GMR, usePE = FALSE, min.n2 = 4, max.n = Inf, 
                               fCpower = targetpower,
-                              fCrit = NULL, fClower, fCupper, fCNmax, 
+                              fCrit = "CI", fClower, fCupper, fCNmax, 
                               ssr.conditional = c("error_power", "error", "no"),
-                              pmethod = c("exact", "nct", "shifted"),
-                              details = FALSE) {
+                              pmethod = c("exact", "nct", "shifted")) {
   
   ### Error handling and default value set-up ----------------------------------
   if (missing(GMR1)) stop("GMR1 must be given.")
@@ -65,23 +64,31 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
     stop("GMR must be within acceptance range!")
   
   # Check futility criterion
-  if (!is.null(fCrit)) {
-    fCrit <- tolower(fCrit)
-    fcrit_nms <- c("pe", "ci", "nmax")  # correct possibilities
-    nms_match <- fcrit_nms %in% fCrit  # check which fCrits are given
-    if (sum(nms_match) == 0)
-      stop("fCrit not correctly specified.")
-    if (nms_match[1]) {  # PE
-      if (missing(fClower) && missing(fCupper))  fClower <- theta1
-      if (missing(fClower) && !missing(fCupper)) fClower <- 1/fCupper
-      if (!missing(fClower) && missing(fCupper)) fCupper <- 1/fClower
+  stopifnot(is.character(fCrit))
+  fCrit <- tolower(fCrit)
+  fcrit_nms <- c("ci", "pe", "nmax", "no")  # correct possibilities
+  nms_match <- fcrit_nms %in% fCrit  # check which fCrits are given
+  if (sum(nms_match) == 0)
+    stop("fCrit not correctly specified.")
+  if (nms_match[4]) { # No futility criterion
+    if (sum(nms_match[1:3]) > 0) {
+      message("No futility will be applield.")
     }
-    if (nms_match[2]) {  # CI
-      if (nms_match[1]) {
+    fClower <- 0
+    fCupper <- Inf
+    fCNmax <- Inf
+  } else {
+    if (nms_match[1]) {  # CI
+      if (nms_match[2]) {
         message("Both PE and CI specified for futility, PE will be ignored.")
         nms_match[1] <- FALSE
       }
       if (missing(fClower) && missing(fCupper))  fClower <- 0.95
+      if (missing(fClower) && !missing(fCupper)) fClower <- 1/fCupper
+      if (!missing(fClower) && missing(fCupper)) fCupper <- 1/fClower
+    }
+    if (nms_match[2]) {  # PE
+      if (missing(fClower) && missing(fCupper))  fClower <- theta1
       if (missing(fClower) && !missing(fCupper)) fClower <- 1/fCupper
       if (!missing(fClower) && missing(fCupper)) fCupper <- 1/fClower
     }
@@ -96,10 +103,6 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
     } else {
       fCNmax <- Inf
     }
-  } else {
-    fClower <- 0
-    fCupper <- Inf
-    fCNmax <- Inf
   }
   
   ssr.conditional <- match.arg(ssr.conditional)
@@ -130,51 +133,70 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
     list(cval = qnorm(1 - alpha), siglev = alpha)
   
   ### Evaluation of Stage 1 ----------------------------------------------------
+
+  ## Bioequivalence?
+  # Test statistics
   t1 <- (lGMR1 - ltheta1) / sem
   t2 <- (lGMR1 - ltheta2) / sem
-  
   # p-values of first stage 1
   p11 <- pt(t1, df = df, lower.tail = FALSE)
   p12 <- pt(t2, df = df, lower.tail = TRUE)
- 
-  # BE?
-  BE <- (p11 < cl$siglev[1] & p12 < cl$siglev[1])
   
-  # Initialize n2 to be zero (= stop after stage 1)
+  BE <- (p11 < cl$siglev[1] && p12 < cl$siglev[1])
+  
+  ## Calculate corresponding exact repeated CI
+  # Root of f gives lower bound
+  f <- function(t)
+    pt((lGMR1 - t) / sem, df = df, lower.tail = FALSE) - cl$siglev[1]
+  # Root of g gives upper bound
+  g <- function(t)
+    pt((lGMR1 - t) / sem, df = df, lower.tail = TRUE) - cl$siglev[1]
+  search_int <- lGMR1 + c(-5, 5) * sem
+  ll <- uniroot(f, interval = search_int)$root
+  lu <- ll + 2 * (lGMR1 - ll)  # corresponding upper bound
+  ru <- uniroot(g, interval = search_int)$root
+  rl <- ru - 2 * (ru - lGMR1)  # corresponding lower bound
+  # CI for equivalence problem via intersection
+  lower <- max(ll, rl)
+  upper <- min(lu, ru)
+  ci <- if (upper < lower) NA else list(lower = exp(lower), upper = exp(upper))
+  
+  ## Initialize n2 to be zero (= stop after stage 1)
   n2 <- 0
   
   # Cases with BE == TRUE are clear: early stop due to BE
   # Cases with BE == FALSE are not yet clear:
   # - calculate power for stage 1
+  diffm_s1 <- if (usePE) pes else lGMR
   pwr_s1 <- .calc.power(alpha = cl$siglev[1], ltheta1 = ltheta1, 
-                        ltheta2 = ltheta2, diffm = lGMR, 
+                        ltheta2 = ltheta2, diffm = diffm_s1, 
                         sem = sem, df = df, method = pmethod)
   # - if result is FALSE and power for stage 1 is 'sufficiently high', then
   #   the result will be considered a fail (ie leave FALSE)
   #   otherwise (power not high) we leave it open (ie set to NA)
   fut <- vector("integer", 3)
-  fut[1] <- (BE == FALSE & pwr_s1 >= fCpower)
-  BE[BE == FALSE & pwr_s1 < fCpower] <- NA
+  fut[1] <- (BE == FALSE && pwr_s1 >= fCpower)
+  BE[BE == FALSE && pwr_s1 < fCpower] <- NA
   
   # If NA may still consider it as failure due to futility:
   # Futility check - here only regarding PE or CI (fCNmax comes later)
-  if (!is.null(fCrit) && sum(nms_match[1:2]) > 0) {
+  if (fCrit != "no" && sum(nms_match[1:2]) > 0) {
     lfClower <- log(fClower)
     lfCupper <- log(fCupper)
     if (nms_match[1]) {
-      outside <- ((lGMR1 - lfClower) < 1.25e-5 | (lfCupper - lGMR1) < 1.25e-5)
-    }
-    if (nms_match[2]) {
       tval <- qt(1 - 0.05, df)  # use 90% CI
-      #tval <- qt(1 - cl$siglev[1], df)  # use adjusted CI for this check
       hw <- tval * sem
       lower <- lGMR1 - hw
       upper <- lGMR1 + hw
-      outside <- (lower > lfCupper) | (upper < lfClower)
+      outside <- (lower > lfCupper) || (upper < lfClower)
     }
-    fut[2] <- (is.na(BE) & outside)
+    if (nms_match[2]) {
+      outside <- ((lGMR1 - lfClower) < 1.25e-5 | (lfCupper - lGMR1) < 1.25e-5)
+    }
+    fut[2] <- is.na(BE) && outside
     # If identified as futile set to a failure
     BE[is.na(BE) & outside] <- FALSE
+    rm(outside)
   }
   
   ### Sample size re-estimation ------------------------------------------------
@@ -208,7 +230,7 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
       } else {
         # Set sign of lGMR to the sign of estimated point estimate
         # (Maurer et al call this 'adaptive planning step')
-        sgn_pe <- ifelse(lGMR1 >= 0, 1, -1)
+        sgn_pe <- if (lGMR1 >= 0) 1 else -1
         lGMR_ssr <- abs(lGMR) * sgn_pe
       }
     }
@@ -219,115 +241,34 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
                     ltheta1 = ltheta1, ltheta2 = ltheta2, method = pmethod)
     if (ssr.conditional == "no")
       n2 <- n2 - n1
-    n2 <- pmax.int(pmin.int(n2, max.n - n1), min.n2)
+    n2 <- max(min(n2, max.n - n1), min.n2)
     
     # Futility check regarding maximum overall sample size
-    fut[3] <- (is.infinite(n2) | (n1 + n2 > fCNmax))
-    if (fut[3]) {
-      n2_out <- n2  # for printing with details = TRUE
+    fut[3] <- (n1 + n2 > fCNmax) || is.infinite(n2)
+    if (fut[3])
       n2 <- 0
-    }
   }
   
   ### Define final output ------------------------------------------------------
   res <- list(
-    GMR1 = GMR1, CV1 = CV1, alpha = cl$siglev, t1 = t1, t2 = t2,
-    p1 = p11, p2 = p12, 'Power Stage 1' = pwr_s1, n2 = n2, 
-    stop_s1 = (n2 == 0), BE_s1 = (n2 == 0 && all(fut == 0)), 
-    stop_fut = any(fut > 0)
+    method = "IN_1st", pmethod = pmethod, GMR1 = GMR1, CV1 = CV1, 
+    df1 = df, SEM1 = sem, weight = weight, alpha = cl$siglev[1], 
+    cval = cl$cval[1], ssr.conditional = ssr.conditional, fCrit = fCrit, 
+    fCpower = fCpower, fClower = fClower, fCupper = fCupper, fCNmax = fCNmax,
+    futility = fut, t11 = t1, t12 = t2, p11 = p11, p12 = p12, 
+    eRCI = ci,
+    CI90 = list(lower = if (nms_match[1]) exp(lower) else NULL,
+                upper = if (nms_match[1]) exp(upper) else NULL),
+    'Power Stage 1' = pwr_s1,
+    n2 = n2, stop_s1 = (n2 == 0), BE_s1 = (n2 == 0 && all(fut == 0)), 
+    stop_fut = any(fut > 0),
+    alpha_ssr = if (n2 == 0) NULL else as.numeric(alpha_ssr),
+    GMR_ssr = if (n2 == 0) NULL else exp(lGMR_ssr),
+    targetpower_ssr = if (n2 == 0) NULL else pwr_ssr
   )
-  if (!is.null(fCrit)) {
-    if (nms_match[2])
-      res <- append(res, list(LL90 = exp(lower), UL90 = exp(upper)))
-    if (nms_match[3])
-      res <- append(res, list(fCNmax = fCNmax))
-  }
-  if (!res$stop_s1) {
-    res <- append(res, list(alpha_ssr = as.numeric(alpha_ssr), 
-                            targetpower_ssr = pwr_ssr))
-  }
-  
-  cat("TSD with 2x2 crossover\n")
-  cat("Inverse Normal approach\n")
-  if (max.comb.test) cat(" - maximum") else cat(" - standard")
-  cat(" combination test (")
-  if (max.comb.test) cat("weights = ", weight[1], " ", weight[2], ")\n", 
-                         sep="")
-  else cat("weight = ", weight, ")\n", sep="")
-  cat(" - alpha (s1/s2) =", round(cl$siglev[1], 5), round(cl$siglev[2], 5), "\n")
-  cat(" - critical value (s1/s2) =", round(cl$cval[1], 5), round(cl$cval[2], 5),
-      "\n")
-  if (ssr.conditional == "no") {
-    cat(" - without conditional error rates and conditional power\n")
-  } else {
-    cat(" - with ")
-    if (ssr.conditional == "error") {
-      cat("conditional error rates\n")
-    } else {
-      if (fCpower > targetpower)
-        cat("conditional error rates\n")
-      else
-        cat("conditional error rates and conditional power\n")
-    }
-  }
-  
-  cat("\nInterim analysis after stage 1\n")
-  if (res$stop_s1) {
-    cat(" - Stop after stage 1 due to ")
-    if (res$BE_s1) {
-      cat("early BE\n") 
-    } else {
-      cat("futility\n")
-      switch(which(fut == 1), 
-             {
-               cat(" - Power Stage 1 ")
-               if (details) cat(round(100 * pwr_s1, 2)) 
-               cat(" >= fCpower")
-             },
-             {
-               cat(" - Stage 1 ")
-               if (nms_match[1]) {
-                 cat("GMR")
-                 if (details) cat(" (", round(100 * GMR1, 2), ")")
-               }
-               if (nms_match[2]) {
-                 cat("90% CI")
-                 if (details) cat(" (", round(100 * res$LL90, 2), ", ", 
-                                  round(100 * res$UL90, 2), ")", sep = "")
-                 cat(" completely outside (fClower, fCupper)")
-               }
-             },
-             {
-               cat(" - n2")
-               if (details) cat(" =", n2_out, sep = "")
-               cat(" such that n1 + n2 > fCNmax")
-             }
-      )
-      cat("\n")
-    }
-  } else {
-    cat(" - Continue to stage 2 with n2 = ", n2, " subjects.\n", sep = "")
-  }
-  if (details) {
-    # TO DO: Add more details here 
-    cat("\n")
-    cat("Test statistics values of T1 and T2: ")
-    cat("t1 = ", round(t1, 5), ", t2 = ", round(t2, 5), "\n", sep = "")
-    cat("p-values: ")
-    cat("p1 = ", round(p11, 5), ", p2 = ", round(p12, 5), "\n", sep = "")
-    cat("Power for stage 1: ", round(100 * pwr_s1, 2), "\n", sep = "")
-    if (!is.null(fCrit) && nms_match[2]) {
-      cat("90% CI based on stage 1 data:") 
-      cat(" (", round(100 * res$LL90, 2), ", ", 
-          round(100 * res$UL90, 2), ")", sep = "")
-      cat("\n")
-    }
-    if (!res$stop_s1) {
-      cat("alpha values for the two null hypotheses for SSR: ")
-      cat("alpha1 = ", round(alpha_ssr[1], 5), ", alpha2 = ", 
-          round(alpha_ssr[2], 5), "\n", sep = "")
-      cat("Targetpower for SSR =", round(100 * pwr_ssr, 2), "\n")
-    }
-  }
-  return(invisible(res))
-}
+  #class(res) <- c("eval_tsd_in", "list")
+  res
+}  # end function interim.2stage.in
+
+# alias of function
+interim.tsd.in <- interim.2stage.in

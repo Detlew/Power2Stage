@@ -9,9 +9,9 @@ based on the Inverse-Normal method
   The function calculates the \sQuote{empirical} power of 2-stage BE studies based
   on the Inverse-Normal combination method. The main design scheme is according
   to Maurer \emph{et al.} (Maximum Combination Test), but it may also be used 
-  for modified designs to allow for example usage of the observed treatment 
-  difference after \ifelse{html}{\out{stage&nbsp;1}}{stage~1} in the sample 
-  size re-estimation step, or different futility criteria.
+  for other/modified designs, e.g. standard combination method, usage of the 
+  observed treatment difference after \ifelse{html}{\out{stage&nbsp;1}}{stage~1} 
+  in the sample size re-estimation step or different futility criteria.
 }
 \usage{
 power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
@@ -69,8 +69,9 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     for \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.
   }
   \item{usePE}{
-    If \verb{TRUE} the sample size re-estimation step is done with the
-    observed point estimate (\acronym{PE}) of the treatment difference in
+    If \verb{TRUE} the sample size re-estimation and the power of stage 1 
+    futility inspection is done with the observed point estimate 
+    (\acronym{PE}) of the treatment difference in 
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     Defaults to \verb{FALSE}.
   }
