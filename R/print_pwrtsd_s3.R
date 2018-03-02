@@ -143,7 +143,7 @@ print.pwrtsd <- function(x, ...)
 
   # power.2stage.p()
   if(!is.null(x$test)){
-    cat("CI's based on", ifelse(x$test=="welch","Welch's t-test", x$test),"\n")
+    cat("CIs based on", ifelse(x$test=="welch","Welch's t-test", x$test),"\n")
   }
   if(is.null(x$powerstep)){
     cat("Target power in power monitoring and sample size est. = ",
@@ -248,7 +248,7 @@ print.pwrtsd <- function(x, ...)
   # theta0 may have more then one element
   th0str <- paste(x$theta0, collapse=", ")
   cat("\n", x$nsims," sims at theta0 = ", th0str, sep="")
-  if(any(x$theta0<=x$theta1) | any(x$theta0>=x$theta2)) 
+  if(any(x$theta0<=x$theta1) | any(x$theta0>=x$theta2))
     cat(" (p(BE) = TIE 'alpha').\n") else {
     cat(" (p(BE) = 'power').\n")}
   cat("p(BE)    = ", x$pBE,"\n", sep="")
