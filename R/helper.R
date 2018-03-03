@@ -57,3 +57,37 @@ rWish2 <- function(n, df, Sigma)
   }
   ret
 }
+
+# -----------------------------------------------------------------------------
+# derive n, df and SEM
+get_n_df_sem <- function(n = NULL, df = NULL, mse, sem = NULL) {
+  if (is.null(n)) {
+    if (is.null(df)) {
+      stop("Either n or df must be given.")
+    } else {
+      df <- df
+      n <- df + 2 # only correct if no missing data and balanced
+      sem <- if (is.null(sem)) sqrt(2 / n) * sqrt(mse) else sem
+    }
+  } else {
+    if (length(n) == 1) {
+      n <- if (is.finite(n)) PowerTOST:::nvec(n = n, grps = 2) else 
+        rep(Inf, times = 2)
+      if (n[1] != n[length(n)]) {
+        message("Unbalanced design. n(i)=", paste(n, collapse="/"), " assumed.")
+      } 
+    } else {
+      if (length(n) != 2) {
+        stop("Length of n vector must be ", 2, "!")
+      }
+      if (any(n<1)) stop("All n(i) have to be >0.")
+    }
+    nc <- sum(1/n)
+    n <- sum(n)
+    se.fac <- sqrt(1/2 * nc)
+    df <- if (is.null(df)) n - 2 else df
+    sem <- if (is.null(sem)) se.fac * sqrt(mse) else sem
+  }
+  list(n = n, df = df, sem = sem)
+}
+

@@ -31,13 +31,14 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     If missing, defaults to \verb{0.05}.
   }
   \item{weight}{
-    Weight(s) (information fraction) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
-    This argument will be ignored if \verb{alpha} contains two elements.
-    Otherwise, \verb{weight} must either contain one element (in case
-    of \verb{max.comb.test = FALSE}) or two elements (in case of
+    Weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. Note that using
+    the notation from Maurer et al weight corresponds to information fraction,
+    other literature may refer to sqrt(weight) as being the weight.
+    \verb{weight} must either contain one element (in case of 
+    \verb{max.comb.test = FALSE}) or two elements (in case of
     \verb{max.comb.test = TRUE}).\cr
-    If missing, defaults to \verb{0.5} (for \verb{max.comb.test = FALSE}) or
-    \verb{c(0.5, 0.25)} (for \verb{max.comb.test = TRUE}).
+    If missing, defaults to \verb{0.5} for \verb{max.comb.test = FALSE} and to
+    \verb{c(0.5, 0.25)} for \verb{max.comb.test = TRUE}.
   }
   \item{max.comb.test}{
     Logical; if \verb{TRUE} (default) the maximum combination test will be
@@ -190,23 +191,10 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   If \verb{ssr.conditional = "error_power"}, the design scheme generally 
   calculates the conditional estimated target power of the second stage and 
   uses this value as desired target power in the sample size re-estimation 
-  process. There are two links between this conditional power and the argument 
-  \verb{fCpower}:
-  \itemize{
-  \item If \code{fCpower} > \code{targetpower}, then the conditional power
+  process. If \code{fCpower} > \code{targetpower}, then the conditional power
   may actually be negative. This does not seem sensible. Therefore, for such
   cases the desired target power for the sample size re-calculation will be set 
   to \code{targetpower}.
-  \item If \code{fCpower} \eqn{\le} \code{targetpower}: The futility criterion 
-  \emph{power for stage 1} \eqn{ \ge } \code{fCpower}\verb{ }for cases where
-  BE has not been achieved after stage 1 may be expressed in terms of 
-  the conditional power of the second stage: 
-  The criterion \deqn{conditional power \le x} is equivalent to
-  \deqn{power for stage 1 \ge 1 - \beta/(1 - x),} where
-  \eqn{\beta = 1 - }\code{targetpower} and \eqn{x} in [0, 1).
-  Therefore, \code{fCpower} may be chosen such that the power futility criterion
-  is based on the conditional power being less than some value \eqn{x}.
-  }
 }
 \value{
   Returns an object of class \verb{"pwrtsd"} with all the input arguments and results

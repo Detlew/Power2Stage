@@ -11,8 +11,12 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   if (missing(GMR1)) stop("GMR1 must be given.")
   if (missing(CV1))  stop("CV1 must be given!")
   if (CV1 <= 0)      stop("CV1 must be >0!")
-  if (n1 <= 0)       stop("Number of subjects in stage 1 must be >0!")
-  if (n1 >= max.n)   stop("max.n must be greater than n1.")
+  if (missing(n1)) {
+    n1 <- NULL
+  } else {
+    if (n1 <= 0)     stop("Number of subjects in stage 1 must be >0!")
+    if (n1 >= max.n) stop("max.n must be greater than n1.")
+  }
   if (missing(alpha))
     alpha <- 0.05
   if (length(alpha) > 2) 
@@ -60,8 +64,8 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   if (missing(theta1) && missing(theta2))  theta1 <- 0.8
   if (!missing(theta1) && missing(theta2)) theta2 <- 1/theta1
   if (missing(theta1) && !missing(theta2)) theta1 <- 1/theta2
-  if (GMR <= theta1 || GMR >= theta2) 
-    stop("GMR must be within acceptance range!")
+  if (GMR1 <= theta1 || GMR1 >= theta2 || GMR <= theta1 || GMR >= theta2) 
+    stop("GMRs must be within acceptance range!")
   
   # Check futility criterion
   stopifnot(is.character(fCrit))
@@ -104,27 +108,17 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
       fCNmax <- Inf
     }
   }
-  
   ssr.conditional <- match.arg(ssr.conditional)
   pmethod <- match.arg(pmethod)
   lGMR1   <- log(GMR1)
+  lGMR    <- log(GMR)
   ltheta1 <- log(theta1)
   ltheta2 <- log(theta2)
-  lGMR    <- log(GMR)
   mse     <- CV2mse(CV1)
-  
-  if (missing(n1)) {
-    if (is.null(df1)) {
-      stop("Either n1 or df1 must be given.")
-    } else {
-      df <- df1
-      n1 <- df1 + 2
-      sem <- if (is.null(SEM1)) sqrt(2 / n1) * sqrt(mse) else SEM1
-    }
-  } else {
-    df <- if (is.null(df1)) n1 - 2 else df1
-    sem <- if (is.null(SEM1)) sqrt(2 / n1) * sqrt(mse) else SEM1
-  }
+  des <- get_n_df_sem(n = n1, df = df1, mse = mse, sem = SEM1)
+  n1 <- des$n
+  df <- des$df
+  sem <- des$sem
   
   ### Calculate adjusted critical levels ---------------------------------------
   cl <- if (length(alpha) == 1) critical.value.2stage(alpha, weight) else
@@ -139,14 +133,12 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   # p-values of first stage 1
   p11 <- pt(t1, df = df, lower.tail = FALSE)
   p12 <- pt(t2, df = df, lower.tail = TRUE)
-  
   BE <- (p11 < cl$siglev[1] && p12 < cl$siglev[1])
   
   ## Calculate corresponding exact repeated CI
-  # Root of f gives lower bound
+  # Test inversion for both hypotheses
   f <- function(t)
     pt((lGMR1 - t) / sem, df = df, lower.tail = FALSE) - cl$siglev[1]
-  # Root of g gives upper bound
   g <- function(t)
     pt((lGMR1 - t) / sem, df = df, lower.tail = TRUE) - cl$siglev[1]
   search_int <- lGMR1 + c(-5, 5) * sem
@@ -250,10 +242,10 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   ### Define final output ------------------------------------------------------
   res <- list(
     method = "IN_1st", pmethod = pmethod, GMR1 = GMR1, CV1 = CV1, 
-    df1 = df, SEM1 = sem, alpha1 = cl$siglev[1], 
-    cval1 = cl$cval[1], ssr.conditional = ssr.conditional, fCrit = fCrit, 
-    fCpower = fCpower, fClower = fClower, fCupper = fCupper, fCNmax = fCNmax,
-    futility = fut, t11 = t1, t12 = t2, p11 = p11, p12 = p12, 
+    df1 = df, SEM1 = sem, alpha1 = cl$siglev[1], cval1 = cl$cval[1], 
+    max.comb.test = max.comb.test, ssr.conditional = ssr.conditional, 
+    fCrit = fCrit, fCpower = fCpower, fClower = fClower, fCupper = fCupper, 
+    fCNmax = fCNmax, futility = fut, t11 = t1, t12 = t2, p11 = p11, p12 = p12, 
     eRCI = ci,
     CI90 = list(lower = if (nms_match[1]) exp(lower) else NULL,
                 upper = if (nms_match[1]) exp(upper) else NULL),
