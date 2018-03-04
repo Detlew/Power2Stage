@@ -227,6 +227,10 @@ Stat Med. 2018;1--21. \doi{10.1002/sim.7614}
 
 Kieser M, Rauch G. \emph{Two-stage designs for cross-over bioequivalence trials.}\cr
 Stat Med. 2015; 34(16):2403--16. \doi{10.1002/sim.6487}
+
+Wassmer G, Brannath W. \emph{Group Sequential and Confirmatory Adaptive Designs
+in Clinical Trials.}\cr
+Springer 2016.
 }
 \seealso{
 \code{\link{interim.2stage.in}, \link{final.2stage.in}}

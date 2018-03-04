@@ -123,7 +123,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     stop("fCrit not correctly specified.")
   if (nms_match[4]) { # No futility criterion
     if (sum(nms_match[1:3]) > 0) {
-      message("No futility will be applield.")
+      message("No futility will be applied.")
     }
     fClower <- 0
     fCupper <- Inf

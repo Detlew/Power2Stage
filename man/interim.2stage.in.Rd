@@ -196,7 +196,7 @@ interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
   (due to \acronym{BE} or due to futility).}
   \item{stop_fut}{Logical, indicating whether study will be stopped after \ifelse{html}{\out{stage&nbsp;1}}{stage 1}
   due to futility.}
-  \item{eRCI}{Exact repeated confidence interval for \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
+  \item{RCI}{Exact repeated confidence interval for \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
   \item{BE}{Logical, indicating whether \acronym{BE} can be concluded after 
   \ifelse{html}{\out{stage&nbsp;1}}{stage 1} or not.}
   \item{alpha_ssr}{Only applicable if study continues to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Contains 

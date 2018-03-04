@@ -88,18 +88,19 @@ print.pwrtsd <- function(x, ...)
       cat("CV1 and GMR =", x$GMR, "in sample size est. used\n")
 
     # futility criterion w.r.t. PE or CI or Nmax
-    if(!is.null(x$fCrit)){
-      if(is.finite(x$fCNmax)) {
+    if ("no" %in% x$fCrit) {
+      cat("No futility criterion regarding PE, CI or Nmax\n")
+    } else {
+      if (is.finite(x$fCNmax)) {
         cat("Futility criterion Nmax = ",x$fCNmax,"\n", sep="")
       } else {
         cat("No futility criterion regarding Nmax\n")
       }
-      if(x$fCrange[1L] >0 & is.finite(x$fCrange[2L])){
+      if (x$fCrange[1L] > 0 && is.finite(x$fCrange[2L])) {
         fCrit <- x$fCrit
-        #fCrit <- if ("ci" %in% fCrit) "(1 - 2*alpha_s1) CI" else if ("pe" %in% fCrit) "PE"
         fCrit <- if ("ci" %in% fCrit) "90% CI" else if ("pe" %in% fCrit) "PE"
         cat("Futility criterion ", fCrit," outside ", x$fCrange[1L], " ... ",
-            x$fCrange[2L], "\n", sep="")
+            x$fCrange[2L], "\n", sep = "")
       } else {
         cat("No futility criterion regarding PE or CI\n")
       }

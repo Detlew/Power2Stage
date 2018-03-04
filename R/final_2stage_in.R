@@ -131,11 +131,11 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
   
   ### Define final output ------------------------------------------------------
   res <- list(
-    method = "IN_2nd", alpha = cl$siglev, cval = cl$cval, 
+    stage = 2, alpha = cl$siglev, cval = cl$cval, 
     max.comb.test = max.comb.test, GMR1 = GMR1, CV1 = CV1, n1 = n1, df1 = df1,
     SEM1 = sem1, GMR2 = GMR2, CV2 = CV2, n2 = n2, df2 = df2, SEM2 = sem2,
     theta1 = theta1, theta2 = theta2, 
-    z01 = Z01, z02 = Z02, eRCI = ci, BE = BE
+    z01 = Z01, z02 = Z02, RCI = ci, BE = BE
   )
   #class(res) <- c("evaltsd", "list")
   res

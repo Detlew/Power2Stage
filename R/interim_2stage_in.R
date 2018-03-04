@@ -240,18 +240,18 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
   
   ### Define final output ------------------------------------------------------
   res <- list(
-    method = "IN_1st", alpha = cl$siglev, cval = cl$cval, weight = weight,
+    stage = 1, alpha = cl$siglev, cval = cl$cval, weight = weight,
     max.comb.test = max.comb.test, targetpower = targetpower, GMR1 = GMR1, 
     n1 = n1, CV1 = CV1,  df1 = df, SEM1 = sem, theta1 = theta1, theta2 = theta2,
     GMR = GMR, usePE = usePE, min.n2 = min.n2, max.n = max.n, fCpower = fCpower,
-    fCrit = fCrit, fClower = fClower, fCupper = fCupper, fCNmax = fCNmax, 
+    fCrit = fCrit, fCrange = c(fClower, fCupper), fCNmax = fCNmax, 
     ssr.conditional = ssr.conditional, pmethod = pmethod, futility = fut, 
     t11 = t1, t12 = t2, p11 = p11, p12 = p12, 
     CI90 = list(lower = if (nms_match[1]) exp(lower) else NULL,
                 upper = if (nms_match[1]) exp(upper) else NULL),
     'Power Stage 1' = pwr_s1,
-    n2 = n2, stop_s1 = (n2 == 0), stop_fut = any(fut > 0), eRCI = ci,
-    BE = (n2 == 0 && all(fut == 0)), 
+    n2 = n2, stop_s1 = (n2 == 0), stop_fut = any(fut > 0), 
+    RCI = ci, BE = (n2 == 0 && all(fut == 0)), 
     alpha_ssr = if (n2 == 0) NULL else as.numeric(alpha_ssr),
     GMR_ssr = if (n2 == 0) NULL else exp(lGMR_ssr),
     targetpower_ssr = if (n2 == 0) NULL else pwr_ssr
