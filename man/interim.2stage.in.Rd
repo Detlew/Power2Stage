@@ -15,7 +15,7 @@ interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
                   GMR, usePE = FALSE, min.n2 = 4, max.n = Inf, 
                   fCpower = targetpower, fCrit = "CI", fClower, fCupper, fCNmax, 
                   ssr.conditional = c("error_power", "error", "no"), 
-                  pmethod = c("nct", "exact", "shifted"))
+                  pmethod = c("exact", "nct", "shifted"))
 }
 \arguments{
   \item{alpha}{
@@ -228,7 +228,7 @@ in Clinical Trials.}\cr
 Springer 2016.
 }
 \seealso{
-\code{\link{power.2stage.in, final.2stage.in}}
+\code{\link{power.2stage.in}, \link{final.2stage.in}}
 }
 \examples{
 # Example from Maurer et al

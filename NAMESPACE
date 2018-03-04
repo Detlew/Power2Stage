@@ -8,6 +8,8 @@ export(
     , power.2stage.fC
     , power.2stage.GS
     , power.2stage.in
+    , interim.2stage.in
+    , final.2stage.in
     , power.2stage.p
     , power.2stage.pAF
     , power.2stage.ssr

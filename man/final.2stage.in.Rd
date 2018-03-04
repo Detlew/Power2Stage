@@ -120,7 +120,7 @@ in Clinical Trials.}\cr
 Springer 2016.
 }
 \seealso{
-\code{\link{power.2stage.in, final.2stage.in}}
+\code{\link{power.2stage.in}, \link{interim.2stage.in}}
 }
 \examples{
 final.2stage.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20, 
