@@ -1,6 +1,6 @@
-final.2stage.in <- function(GMR1, GMR2, CV1, CV2, n1, n2, df1 = NULL, 
-                            df2 = NULL, SEM1 = NULL, SEM2 = NULL, alpha, 
-                            weight, max.comb.test = TRUE, theta1, theta2) {
+final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, 
+                            df1 = NULL, SEM1 = NULL, GMR2, CV2, n2, df2 = NULL, 
+                            SEM2 = NULL, theta1, theta2) {
   ### Error handling and default value set-up ----------------------------------
   if (missing(GMR1) || missing(GMR2))
     stop("GMR1 and GMR2 must be given.")
@@ -129,13 +129,15 @@ final.2stage.in <- function(GMR1, GMR2, CV1, CV2, n1, n2, df1 = NULL,
   upper <- min(lu, ru)
   ci <- if (upper < lower) NA else list(lower = exp(lower), upper = exp(upper))
   
+  ### Define final output ------------------------------------------------------
   res <- list(
-    method = "IN_2nd", GMR1 = GMR1, GMR2 = GMR2, CV1 = CV1, CV2 = CV2, n1 = n1,
-    n2 = n2, df1 = df1, df2 = df2, SEM1 = sem1, SEM2 = sem2, alpha = cl$siglev,
-    cval = cl$cval, weight = weight, Z01 = Z01, Z02 = Z02, 
-    eRCI = ci, BE_s2 = BE
+    method = "IN_2nd", alpha = cl$siglev, cval = cl$cval, 
+    max.comb.test = max.comb.test, GMR1 = GMR1, CV1 = CV1, n1 = n1, df1 = df1,
+    SEM1 = sem1, GMR2 = GMR2, CV2 = CV2, n2 = n2, df2 = df2, SEM2 = sem2,
+    theta1 = theta1, theta2 = theta2, 
+    z01 = Z01, z02 = Z02, eRCI = ci, BE = BE
   )
-  #class(res) <- c("eval_tsd_in", "list")
+  #class(res) <- c("evaltsd", "list")
   res
 }  # end of function final.2stage.in
 

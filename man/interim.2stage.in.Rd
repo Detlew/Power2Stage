@@ -1,32 +1,27 @@
 \encoding{utf-8}
-\name{power.2stage.in}
-\alias{power.2stage.in}
+\name{interim.2stage.in}
+\alias{interim.2stage.in}
 \title{
-Power calculation of adaptive 2-stage BE studies with 2x2 crossover design,
-based on the Inverse Normal method
+Interim analysis of first stage data of 2-stage 2x2 crossover designs based on
+the Inverse Normal method
 }
 \description{
-  The function calculates the \sQuote{empirical} power of 2-stage BE studies based
-  on the Inverse-Normal combination method. The main design scheme is according
-  to Maurer \emph{et al.} (Maximum Combination Test), but it may also be used 
-  for other/modified designs, e.g. standard combination method, usage of the 
-  observed treatment difference after \ifelse{html}{\out{stage&nbsp;1}}{stage~1} 
-  in the sample size re-estimation step or different futility criteria.
+  Following the design scheme according to \code{power.2stage.in} the function
+  performs the interim analysis of the first stage data.
 }
 \usage{
-power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
-                theta0, theta1, theta2, GMR, usePE = FALSE, 
-                min.n2 = 4, max.n = Inf, fCpower = targetpower, 
-                fCrit = "CI", fClower, fCupper, fCNmax,
-                ssr.conditional = c("error_power", "error", "no"),
-                pmethod = c("nct", "exact", "shifted"), npct = c(0.05, 0.5, 0.95),
-                nsims, setseed = TRUE, details = FALSE)
+interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
+                  GMR1, n1, CV1, df1 = NULL, SEM1 = NULL, theta1, theta2, 
+                  GMR, usePE = FALSE, min.n2 = 4, max.n = Inf, 
+                  fCpower = targetpower, fCrit = "CI", fClower, fCupper, fCNmax, 
+                  ssr.conditional = c("error_power", "error", "no"), 
+                  pmethod = c("nct", "exact", "shifted"))
 }
 \arguments{
   \item{alpha}{
-    If one element is given, the overall one-sided significance level. If two
-    elements are given, the adjusted one-sided alpha levels for
-    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and
+    If one element is given, the overall one-sided significance level (not
+    the adjusted level for \ifelse{html}{\out{stage&nbsp;1}}{stage 1}). If two elements are given, the adjusted 
+    one-sided alpha levels for \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and
     \ifelse{html}{\out{stage&nbsp;2}}{stage 2}, respectively.\cr
     If missing, defaults to \verb{0.05}.
   }
@@ -44,19 +39,28 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     Logical; if \verb{TRUE} (default) the maximum combination test will be
     used, otherwise the standard combination test.
   }
-  \item{n1}{
-    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
-  }
-  \item{CV}{
-    Coefficient of variation of the intra-subject variability (use \emph{e.g.}, 0.3 for
-    30\%).
-  }
   \item{targetpower}{
     Desired (overall) target power to declare \acronym{BE} at the end of the trial.
   }
-  \item{theta0}{
-    Assumed ratio of geometric means (T/R) for simulations. If missing,
-    defaults to \verb{GMR}.
+  \item{GMR1}{
+    Observed ratio of geometric means (T/R) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} data.
+  }
+  \item{n1}{
+    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
+  }
+  \item{CV1}{
+    Observed coefficient of variation of the intra-subject variability of
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (use \emph{e.g.}, 0.3 for 30\%).
+  }
+  \item{df1}{
+    Optional; Error degrees of freedom of 
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified instead
+    of n1.
+  }
+  \item{SEM1}{
+    Optional; Standard error of the difference of means of 
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified instead
+    of CV1. Must be on additive scale (i.e. usually log-scale).
   }
   \item{theta1}{
     Lower bioequivalence limit. Defaults to 0.8.
@@ -70,7 +74,7 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     for \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.
   }
   \item{usePE}{
-    If \verb{TRUE} the sample size re-estimation and the power of stage 1 
+    If \verb{TRUE} the sample size re-estimation and the power of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} 
     futility inspection is done with the observed point estimate 
     (\acronym{PE}) of the treatment difference in 
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
@@ -156,38 +160,10 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     \emph{t}-distribution, \verb{"exact"} (exact calculations via Owen\enc{’}{'}s Q),
     and \verb{"shifted"} (approximate calculation via shifted central \emph{t}-distribution
     like in the paper of Potvin \emph{et al.})\cr
-    Defaults to \verb{"nct"} as it is a reasonable compromise between speed and
-    accuracy in the sample size estimation step.
-  }
-  \item{npct}{
-    Percentiles to be used for the presentation of the distribution of
-    \verb{n(total)=n1+n2}.\cr
-    Defaults to \verb{c(0.05, 0.5, 0.95)} to obtain the 5\% and 95\% percentiles
-    and the median.
-  }
-  \item{nsims}{
-    Number of studies to simulate.\cr
-    If missing, \verb{nsims} is set to 1E+05 = 100,000 or to 1E+06 = 1 Mio if
-    estimating the empiric Type I Error (\verb{'alpha'}), \emph{i.e.}, with \verb{theta0} at
-    the border of the acceptance range \verb{theta1} \ldots \verb{theta2}.
-  }
-  \item{setseed}{
-    Simulations are dependent on the starting point of the (pseudo) random number
-    generator. To avoid differences in power for different runs a
-    \code{set.seed(1234567)} is issued if \verb{setseed=TRUE}, the default.\cr
-    Set this argument to \verb{FALSE} to view the variation in power between
-    different runs.
-  }
-  \item{details}{
-  If set to \verb{TRUE} the function prints the results of time measurements
-  of the simulation steps. Default to \verb{FALSE}.
+    In contast to \code{power.2stage.in} the default value here is \verb{"exact"}. 
   }
 }
 \details{
-  The underlying subject data are assumed to be evaluated after log-transformation.
-  But instead of simulating subject data, the statistics pe1, mse1 and pe2, mse2 
-  are simulated via their associated distributions (normal and
-  \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distributions).\cr\cr
   If \verb{ssr.conditional = "error_power"}, the design scheme generally 
   calculates the conditional estimated target power of the second stage and 
   uses this value as desired target power in the sample size re-estimation 
@@ -197,22 +173,44 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   to \code{targetpower}.
 }
 \value{
-  Returns an object of class \verb{"pwrtsd"} with all the input arguments and results
+  Returns an object of class \verb{"evaltsd"} with all the input arguments and results
   as components. As part of the input arguments a component \code{cval} is also
-  presented, containing the critical values for stage 1 and 2 according to the
+  presented, containing the critical values for \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and 2 according to the
   input based on \code{alpha}, \code{weight} and \code{max.comb.test}.\cr
-  The class \verb{"pwrtsd"} has an S3 print method.\cr\cr
+  The class \verb{"evaltsd"} has an S3 print method.\cr\cr
   The results are in the components:
-  \item{pBE}{Fraction of studies found BE.}
-  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
-  \item{pct_stop_s1}{Percentage of studies stopped after
-  \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (due to BE or due to futility).}
-  \item{pct_stop_fut}{Percentage of studies stopped after
-  \ifelse{html}{\out{stage&nbsp;1}}{stage 1} due to futility.}
-  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
-  \item{nmean}{Mean of n(total).}
-  \item{nrange}{Range (min, max) of n(total).}
-  \item{nperc}{Vector of percentiles of the distribution of n(total).}
+  \item{futility}{Three dimensional vector with either 0 or 1. The first
+  component represents futility due to Power of first stage > \code{fCpower},
+  the second futility due to \verb{CI} (or \verb{PE}) outside of 
+  \code{fClower ... fCupper}, the third futility due to \code{n1 + n2 > fCNmax}.}
+  \item{t11}{Observed value of test statistic for first hypothesis.}
+  \item{t12}{Observed value of test statistic for second hypothesis.}
+  \item{p11}{Observed p-value for first hypothesis.}
+  \item{p12}{Observed p-value for second hypothesis.}
+  \item{CI90}{List with lower and upper 90\% CI limits for observed ratio
+  of geometric means from \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. If \verb{fCrit != "CI"} results will be \code{NULL}.}
+  \item{Power Stage 1}{Calculated power of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
+  \item{n2}{Required (total) sample size for \ifelse{html}{\out{stage&nbsp;2}}{stage 2} (zero if study does not
+  continue to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}).}
+  \item{stop_s1}{Logical, indicating whether to stop after \ifelse{html}{\out{stage&nbsp;1}}{stage 1} 
+  (due to \acronym{BE} or due to futility).}
+  \item{stop_fut}{Logical, indicating whether study will be stopped after \ifelse{html}{\out{stage&nbsp;1}}{stage 1}
+  due to futility.}
+  \item{eRCI}{Exact repeated confidence interval for \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
+  \item{BE}{Logical, indicating whether \acronym{BE} can be concluded after 
+  \ifelse{html}{\out{stage&nbsp;1}}{stage 1} or not.}
+  \item{alpha_ssr}{Only applicable if study continues to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Contains 
+  alpha values for the two hypotheses required for sample size re-calculation.
+  If \code{ssr.conditional = "no"} the result is equal to \code{alpha},
+  otherwise it contains the conditional error rates for the standard combination
+  test (in case of \code{max.comb.test = FALSE}) or maximum combination test (in
+  case of \code{max.comb.test = TRUE}).}
+  \item{GMR_ssr}{Only applicable if study continues to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Contains the
+  geometric mean ratio used for sample size re-calculation (accounts for
+  adaptive planning step).}
+  \item{targetpower_ssr}{Only applicable if study continues to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. 
+  Contains the target power used for the sample size re-calculation (see also
+  'Details').}
 }
 \author{
 B. Lang
@@ -225,23 +223,14 @@ Maurer W, Jones B, Chen Y. \emph{Controlling the type 1 error rate in two-stage
 sequential designs when testing for average bioequivalence.}\cr
 Stat Med. 2018;1--21. \doi{10.1002/sim.7614}
 
-Kieser M, Rauch G. \emph{Two-stage designs for cross-over bioequivalence trials.}\cr
-Stat Med. 2015; 34(16):2403--16. \doi{10.1002/sim.6487}
+Wassmer G, Brannath W. \emph{Group Sequential and Confirmatory Adaptive Designs
+in Clinical Trials.}\cr
+Springer 2016.
 }
 \seealso{
-\code{\link{interim.2stage.in}, \link{final.2stage.in}}
+\code{\link{power.2stage.in, final.2stage.in}}
 }
 \examples{
-# 12 subjects in stage 1, CV of 20\%, no futility rule, otherwise all defaults
-# This setting resembles values in Table 6.8 and 6.10 in Patterson and Jones.
-power.2stage.in(n1 = 12, CV = 0.2, fCrit = "No")
-
-# Note that actual replication would require the following additional
-# arguments (extremely long run-time)
-\dontrun{
-power.2stage.in(n1 = 12, CV = 0.2, fCrit = "No", max.n = 4000, 
-                pmethod = "exact", nsims = 1E6)}
-
-# Table 8 in Maurer et al
-power.2stage.in(n1 = 36, CV = 0.4, max.n = 4000)
+# Example from Maurer et al
+interim.2stage.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20, max.n = 4000)
 }

@@ -1,8 +1,7 @@
-interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
-                              alpha, weight, max.comb.test = TRUE, 
-                              targetpower = 0.8, theta1, theta2,
-                              GMR, usePE = FALSE, min.n2 = 4, max.n = Inf, 
-                              fCpower = targetpower,
+interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE, 
+                              targetpower = 0.8, GMR1, n1, CV1, df1 = NULL, 
+                              SEM1 = NULL, theta1, theta2, GMR, usePE = FALSE, 
+                              min.n2 = 4, max.n = Inf, fCpower = targetpower,
                               fCrit = "CI", fClower, fCupper, fCNmax, 
                               ssr.conditional = c("error_power", "error", "no"),
                               pmethod = c("exact", "nct", "shifted")) {
@@ -241,22 +240,23 @@ interim.2stage.in <- function(GMR1, CV1, n1, df1 = NULL, SEM1 = NULL,
   
   ### Define final output ------------------------------------------------------
   res <- list(
-    method = "IN_1st", pmethod = pmethod, GMR1 = GMR1, CV1 = CV1, 
-    df1 = df, SEM1 = sem, alpha1 = cl$siglev[1], cval1 = cl$cval[1], 
-    max.comb.test = max.comb.test, ssr.conditional = ssr.conditional, 
-    fCrit = fCrit, fCpower = fCpower, fClower = fClower, fCupper = fCupper, 
-    fCNmax = fCNmax, futility = fut, t11 = t1, t12 = t2, p11 = p11, p12 = p12, 
-    eRCI = ci,
+    method = "IN_1st", alpha = cl$siglev, cval = cl$cval, weight = weight,
+    max.comb.test = max.comb.test, targetpower = targetpower, GMR1 = GMR1, 
+    n1 = n1, CV1 = CV1,  df1 = df, SEM1 = sem, theta1 = theta1, theta2 = theta2,
+    GMR = GMR, usePE = usePE, min.n2 = min.n2, max.n = max.n, fCpower = fCpower,
+    fCrit = fCrit, fClower = fClower, fCupper = fCupper, fCNmax = fCNmax, 
+    ssr.conditional = ssr.conditional, pmethod = pmethod, futility = fut, 
+    t11 = t1, t12 = t2, p11 = p11, p12 = p12, 
     CI90 = list(lower = if (nms_match[1]) exp(lower) else NULL,
                 upper = if (nms_match[1]) exp(upper) else NULL),
     'Power Stage 1' = pwr_s1,
-    n2 = n2, stop_s1 = (n2 == 0), BE_s1 = (n2 == 0 && all(fut == 0)), 
-    stop_fut = any(fut > 0),
+    n2 = n2, stop_s1 = (n2 == 0), stop_fut = any(fut > 0), eRCI = ci,
+    BE = (n2 == 0 && all(fut == 0)), 
     alpha_ssr = if (n2 == 0) NULL else as.numeric(alpha_ssr),
     GMR_ssr = if (n2 == 0) NULL else exp(lGMR_ssr),
     targetpower_ssr = if (n2 == 0) NULL else pwr_ssr
   )
-  #class(res) <- c("eval_tsd_in", "list")
+  #class(res) <- c("evaltsd", "list")
   res
 }  # end function interim.2stage.in
 
