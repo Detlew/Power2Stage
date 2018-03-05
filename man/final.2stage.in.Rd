@@ -86,6 +86,10 @@ final.2stage.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
     Upper bioequivalence limit. Defaults to 1.25.
   }
 }
+\details{
+  The observed values (\code{GMR1}, \code{GMR2} etc.) should be obtained for 
+  each stage separately; this may be done via the usual ANOVA approach.\cr\cr
+}
 \value{
   Returns an object of class \verb{"evaltsd"} with all the input arguments and results
   as components. As part of the input arguments a component \code{cval} is also

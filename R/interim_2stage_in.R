@@ -156,7 +156,7 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
   # Cases with BE == TRUE are clear: early stop due to BE
   # Cases with BE == FALSE are not yet clear:
   # - calculate power for stage 1
-  diffm_s1 <- if (usePE) lGMR1 else lGMR
+  diffm_s1 <- lGMR # if (usePE) lGMR1 else lGMR
   pwr_s1 <- .calc.power(alpha = cl$siglev[1], ltheta1 = ltheta1, 
                         ltheta2 = ltheta2, diffm = diffm_s1, 
                         sem = sem, df = df, method = pmethod)

@@ -70,11 +70,12 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     for \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.
   }
   \item{usePE}{
-    If \verb{TRUE} the sample size re-estimation and the power of stage 1 
-    futility inspection is done with the observed point estimate 
-    (\acronym{PE}) of the treatment difference in 
+    If \verb{TRUE} the sample size re-estimation is done with the observed 
+    point estimate (\acronym{PE}) of the treatment difference in 
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
-    Defaults to \verb{FALSE}.
+    Defaults to \verb{FALSE}.\cr
+    Note: The futility inspection via the power of stage 1 is always done with
+    the planning value \code{GMR}.
   }
   \item{min.n2}{
     Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Defaults to 4.\cr

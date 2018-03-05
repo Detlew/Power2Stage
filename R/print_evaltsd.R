@@ -27,6 +27,7 @@ print.evaltsd <- function(x, ...) {
   ### Derived values -----------------------------------------------------------
   if (x$stage == 1) {
     cat("Interim analysis of first stage\n")
+    ## TO DO
     ## Include t11, p11 etc.
     
     ## Futility regarding PE, CI, Nmax

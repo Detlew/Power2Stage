@@ -74,11 +74,12 @@ interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
     for \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.
   }
   \item{usePE}{
-    If \verb{TRUE} the sample size re-estimation and the power of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} 
-    futility inspection is done with the observed point estimate 
-    (\acronym{PE}) of the treatment difference in 
+    If \verb{TRUE} the sample size re-estimation is done with the observed 
+    point estimate (\acronym{PE}) of the treatment difference in 
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
-    Defaults to \verb{FALSE}.
+    Defaults to \verb{FALSE}.\cr
+    Note: The futility inspection via the power of stage 1 is always done with
+    the planning value \code{GMR}.
   }
   \item{min.n2}{
     Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Defaults to 4.\cr
@@ -164,6 +165,8 @@ interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
   }
 }
 \details{
+  The observed values of stage 1 (e.g. \code{GMR1}, \code{n1}, \code{CV1}) may
+  be obtained based on the first stage data via the usual ANOVA approach.\cr\cr
   If \verb{ssr.conditional = "error_power"}, the design scheme generally 
   calculates the conditional estimated target power of the second stage and 
   uses this value as desired target power in the sample size re-estimation 
