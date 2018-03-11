@@ -18,12 +18,13 @@ export(
 
 # Import all packages listed as Imports or Depends
 import(
-  PowerTOST, stats
+  PowerTOST, stats, cubature
 )
 # good practice would be importFrom
 #importFrom(PowerTOST, CV2se, CV2mse, OwensQ)
 #importFrom(stats, pt, qt, pnorm, qnorm, rnorm, rchisq, quantile)
 importFrom(mvtnorm, pmvt, pmvnorm, GenzBretz, rmvnorm)
+importFrom(cubature, hcubature)
 
 # Define S3 methods for the return value class "pwrtsd"
 # of the power.2stage.xyz() functions

@@ -12,7 +12,7 @@ Authors@R: c(person("Detlew", "Labes", role = c("aut","cre"),
                     "helmut.schuetz@bebac.at"))
 Description: Contains functions to obtain the operational characteristics of 
     bioequivalence studies with 2-stage designs (TSD) via simulations.
-Imports: PowerTOST, stats, mvtnorm
+Imports: PowerTOST, stats, mvtnorm, cubature
 Suggests: graphics
 ByteCompile: yes
 URL:        https://github.com/Detlew/Power2Stage

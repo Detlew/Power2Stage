@@ -102,32 +102,19 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
   BE <- (Z01 > cl$cval[2] & Z02 > cl$cval[2])
   
   ## Calculate corresponding exact repeated CI
-  # Test inversion for both hypotheses
-  f <- function(t) {
-    Z11 <- qnorm(1 - pt((lGMR1 - t) / sem1, df = df1, lower.tail = FALSE))
-    Z21 <- qnorm(1 - pt((lGMR2 - t) / sem2, df = df2, lower.tail = FALSE))
-    pmax.int(
-      sqrt(weight[1]) * Z11 + sqrt(1 - weight[1]) * Z21,
-      sqrt(weight[lw]) * Z11 + sqrt(1 - weight[lw]) * Z21
-    ) - cl$cval[2]
-  }
-  g <- function(t) { 
-    Z12 <- qnorm(1 - pt((lGMR1 - t) / sem1, df = df1, lower.tail = TRUE))
-    Z22 <- qnorm(1 - pt((lGMR2 - t) / sem2, df = df2, lower.tail = TRUE))
-    pmax.int(
-      sqrt(weight[1]) * Z12 + sqrt(1 - weight[1]) * Z22,
-      sqrt(weight[lw]) * Z12 + sqrt(1 - weight[lw]) * Z22
-    ) - cl$cval[2]
-  }
-  search_int <- lGMR2 + c(-5, 5) * sem2
-  ll <- uniroot(f, interval = search_int)$root
-  lu <- ll + 2 * (lGMR2 - ll)  # corresponding upper bound
-  ru <- uniroot(g, interval = search_int)$root
-  rl <- ru - 2 * (ru - lGMR1)  # corresponding lower bound
-  # CI for equivalence problem via intersection
-  lower <- max(ll, rl)
-  upper <- min(lu, ru)
-  ci <- if (upper < lower) NA else list(lower = exp(lower), upper = exp(upper))
+  ci <- repeated_ci(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1, sem2 = sem2, 
+                    df1 = df1, df2 = df2, a1 = cl$siglev[1], a2 = cl$siglev[2],
+                    weight = weight, stage = 2)
+  ci$lower <- exp(ci$lower)
+  ci$upper <- exp(ci$upper)
+  
+  ## Calculate overall point estimate
+  # Several choices available, calculate median unbiased estimate
+  # see section 8.3.3 in Brannath + Wassmer
+  overall_diff <- median_unbiased_pe(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1, 
+                                     sem2 = sem2, df1 = df1, df2 = df2, 
+                                     a1 = cl$siglev[1], a0 = 1, 
+                                     weight = weight, lower_bnd = TRUE)
   
   ### Define final output ------------------------------------------------------
   res <- list(
@@ -135,7 +122,7 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
     max.comb.test = max.comb.test, GMR1 = GMR1, CV1 = CV1, n1 = n1, df1 = df1,
     SEM1 = sem1, GMR2 = GMR2, CV2 = CV2, n2 = n2, df2 = df2, SEM2 = sem2,
     theta1 = theta1, theta2 = theta2, 
-    z01 = Z01, z02 = Z02, RCI = ci, BE = BE
+    z01 = Z01, z02 = Z02, RCI = ci, OverallRatio = exp(overall_diff), BE = BE
   )
   #class(res) <- c("evaltsd", "list")
   res

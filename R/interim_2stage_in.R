@@ -135,20 +135,10 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
   BE <- (p11 < cl$siglev[1] && p12 < cl$siglev[1])
   
   ## Calculate corresponding exact repeated CI
-  # Test inversion for both hypotheses
-  f <- function(t)
-    pt((lGMR1 - t) / sem, df = df, lower.tail = FALSE) - cl$siglev[1]
-  g <- function(t)
-    pt((lGMR1 - t) / sem, df = df, lower.tail = TRUE) - cl$siglev[1]
-  search_int <- lGMR1 + c(-5, 5) * sem
-  ll <- uniroot(f, interval = search_int)$root
-  lu <- ll + 2 * (lGMR1 - ll)  # corresponding upper bound
-  ru <- uniroot(g, interval = search_int)$root
-  rl <- ru - 2 * (ru - lGMR1)  # corresponding lower bound
-  # CI for equivalence problem via intersection
-  lower <- max(ll, rl)
-  upper <- min(lu, ru)
-  ci <- if (upper < lower) NA else list(lower = exp(lower), upper = exp(upper))
+  ci <- repeated_ci(diff1 = lGMR1, sem1 = sem, df1 = df, a1 = cl$siglev[1], 
+                    stage = 1)
+  ci$lower <- exp(ci$lower)
+  ci$upper <- exp(ci$upper)
   
   ## Initialize n2 to be zero (= stop after stage 1)
   n2 <- 0
