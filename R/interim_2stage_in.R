@@ -63,8 +63,6 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
   if (missing(theta1) && missing(theta2))  theta1 <- 0.8
   if (!missing(theta1) && missing(theta2)) theta2 <- 1/theta1
   if (missing(theta1) && !missing(theta2)) theta1 <- 1/theta2
-  if (GMR1 <= theta1 || GMR1 >= theta2 || GMR <= theta1 || GMR >= theta2) 
-    stop("GMRs must be within acceptance range!")
   
   # Check futility criterion
   stopifnot(is.character(fCrit))
@@ -246,7 +244,7 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
     GMR_ssr = if (n2 == 0) NULL else exp(lGMR_ssr),
     targetpower_ssr = if (n2 == 0) NULL else pwr_ssr
   )
-  #class(res) <- c("evaltsd", "list")
+  class(res) <- c("evaltsd", "list")
   res
 }  # end function interim.2stage.in
 

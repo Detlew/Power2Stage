@@ -29,3 +29,5 @@ importFrom(cubature, hcubature)
 # Define S3 methods for the return value class "pwrtsd"
 # of the power.2stage.xyz() functions
 S3method(print, pwrtsd)
+# class "evaltsd"
+S3method(print, evaltsd)

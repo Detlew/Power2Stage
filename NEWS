@@ -1,6 +1,9 @@
 2018-02-24
 on GitHub
-   - Update defaults of power.2stage.in in order to be consistent with 
+   - Added interim.2stage.in() and final.2stage.in() to perform interim and
+     final analysis of 2 stage designs based on the Standard Combination or
+     Maximum Combination Test (also includes a print class)
+   - Update defaults of power.2stage.in() in order to be consistent with 
      Paper from Maurer et al (2018)
    - Aliases power.tsd.xyz introduced (not public yet)
    - Experimental function power.tsd.2m() to deal with 2 PK metrics

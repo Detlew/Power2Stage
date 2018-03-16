@@ -1,7 +1,7 @@
 ### Calculate adaptive confidence interval limits
 ### Functions according to definitions in Wassmer and Brannath
 
-## Define generic combination function
+## Define generic combination function for Inverse Normal and MCT (2-stage)
 comb <- function(x, y, weight) {
   lw <- length(weight)
   1 - pnorm(pmax.int(
@@ -30,9 +30,9 @@ indv <- function(x, d, weight, diff1, diff2, sem1, sem2, df1, df2, lt = FALSE) {
          ncol = ncol(x))
 }
 
-## Define function Qd from (8.8) as function of d
-Qd <- function(d, a1, a0, a, weight, diff1, diff2, sem1, sem2, df1, df2, 
-               lt = FALSE) {
+## Define function Qd from (8.8) as function of d (and subtract a)
+Qd_a <- function(d, a1, a0, a, weight, diff1, diff2, sem1, sem2, df1, df2, 
+                 lt = FALSE) {
   a1 + cubature::hcubature(f = indv, lowerLimit = c(a1, 0), 
                            upperLimit = c(a0, 1), d = d, weight = weight,
                            diff1 = diff1, diff2 = diff2, sem1 = sem1, sem2 = sem2,
@@ -47,11 +47,11 @@ adaptive_ci_limit <- function(diff1, diff2, sem1, sem2, df1, df2,
   # lower_bnd = TRUE creates lower bound l from one-sided interval (l, Inf)
   # lower_bnd = FALSE creates upper bound u from one-sided interval (-Inf, u)
   
-  # Need root of Qd - a
+  # Need root of Qd_a
   diff_tmp <- (df1 * diff1 + df2 * diff2) / (df1 + df2)
   search_int <- diff_tmp + c(-6, 6) * max(sem1, sem2)
   lt <- if (lower_bnd) FALSE else TRUE
-  uniroot(f = Qd, interval = search_int, a1 = a1, a0 = a0, a = a, 
+  uniroot(f = Qd_a, interval = search_int, a1 = a1, a0 = a0, a = a, 
           weight = weight, diff1 = diff1, diff2 = diff2, sem1 = sem1,
           sem2 = sem2, df1 = df1, df2 = df2, lt = lt, tol = 1e-06)$root
 }
