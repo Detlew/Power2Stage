@@ -7,7 +7,7 @@
 # require(PowerTOST)
 
 power.2stage.GS <- function(alpha=c(0.0294,0.0294), n, CV, theta0, theta1, 
-                            theta2,  fCrit=c("PE","CI"), fClower, fCupper, 
+                            theta2,  fCrit=c("CI", "PE"), fClower, fCupper, 
                             nsims, setseed=TRUE, details=FALSE)
 {
   if (missing(CV)) stop("CV must be given!")
@@ -82,12 +82,19 @@ power.2stage.GS <- function(alpha=c(0.0294,0.0294), n, CV, theta0, theta1,
   } else {
     # another possibility is Gould (phi=1):
     # rule out those with CI totally outside acceptance range
+    # to be in line with power.tsd.fC() use the 90% CI
+    # 90% (!) CI outside
+    tval0   <- qt(1-0.05, df)
+    hw      <- tval0*sqrt(Cfact*mses)
+    lower   <- pes - hw
+    upper   <- pes + hw
     s2 <- !(lower>lfC2 | upper<lfC1) & stage==2
     # or not in a prespecified range, f.i. 0.85 ... 1/0.85=1.176471
     # Gould phi=0 reads: CI doesnt contain zero (1 in orginal domain)
   }
   stage[s2==TRUE]  <- 2
   stage[s2==FALSE] <- 1
+  rm(hw, lower, upper)
   
   ns <- rep.int(1, times=length(BE))
   ns[s2==FALSE] <- n[1]

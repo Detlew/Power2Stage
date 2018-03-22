@@ -11,7 +11,7 @@ Power calculation for non-adaptive group sequential (2-stage) BE studies
   }
 \usage{
 power.2stage.GS(alpha = c(0.0294, 0.0294), n, CV, theta0, theta1, theta2,
-                fCrit = c("PE", "CI"), fClower, fCupper, nsims,
+                fCrit = c("CI", "PE"), fClower, fCupper, nsims,
                 setseed = TRUE, details = FALSE)
 }
 \arguments{
@@ -48,10 +48,10 @@ power.2stage.GS(alpha = c(0.0294, 0.0294), n, CV, theta0, theta1, theta2,
     is outside the range defined in the next two  arguments \verb{"fClower"} and
     \verb{"fCupper"}.\cr
     If set to \verb{"CI"} the study stops after \ifelse{html}{\out{stage&nbsp;1}}{stage~1}
-    if not \acronym{BE} and if the confidence interval of
+    if not \acronym{BE} and if the 90\% confidence interval of
     \ifelse{html}{\out{stage&nbsp;1}}{stage~1} evaluation is outside the range
     defined in the next two arguments.\cr
-    Defaults to \verb{"PE"}.
+    Defaults to \verb{"CI"}.
   }
   \item{fClower}{
     Lower limit of the futility criterion. Defaults to \verb{0} if missing,
