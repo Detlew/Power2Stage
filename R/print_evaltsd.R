@@ -34,12 +34,11 @@ print.evaltsd <- function(x, ...) {
         } else if (x$futility[[2]] == 1) {
           fCrit <- x$fCrit
           if ("ci" %in% fCrit) {
-            fCrit <- paste0("90% CI (", round(x$CI90$lower, 4), ", ", 
-                            round(x$CI90$upper, 4), ")")
+            fCrit <- paste("90% CI", sprintf("(%.4f, %.4f)", x$CI90$lower, x$CI90$upper))
           } else if ("pe" %in% fCrit) {
             fCrit <- "PE"
           }
-          cat("  ", fCrit," outside ", round(x$fCrange[1L], 4),  " ... ", 
+          cat("  ", fCrit," outside ", round(x$fCrange[1L], 4),  " ... ",
               round(x$fCrange[2L], 4), "\n", sep = "")
         } else if (x$futility[[3]] == 1) {
           cat("  n2 such that n1 + n2 > ", x$fCNmax, "\n", sep = "")
@@ -47,10 +46,9 @@ print.evaltsd <- function(x, ...) {
       } else {
         cat("- Stop because BE can be concluded\n")
         cat("- Derived key statistics:\n")
-        cat("  p11 = ", round(x$p11, 5), ", p12 = ", round(x$p12, 5), 
-            "\n", sep = "")
-        cat("  Repeated CI = (", round(x$RCI$lower, 4), ", ",
-            round(x$RCI$upper, 4), ")\n", sep = "")
+        cat(sprintf("  p11 = %.5f, p12 = %.5f", x$p11, x$p12), "\n")
+        cat("  Repeated CI = ",
+            sprintf("(%.4f, %.4f)", x$RCI$lower, x$RCI$upper), "\n", sep = "")
       }
     } else {
       cat("- BE not achieved\n")
@@ -65,10 +63,9 @@ print.evaltsd <- function(x, ...) {
       cat("- BE not achieved\n")
     }
     cat("- Derived key statistics:\n")
-    cat("  z01 = ", round(x$z01, 5), ", z02 = ", round(x$z02, 5), 
-        "\n", sep = "")
-    cat("  Repeated CI = (", round(x$RCI$lower, 4), ", ",
-        round(x$RCI$upper, 4), ")\n", sep = "")
-    cat("  Median unbiased estimate = ", round(x$MEUE, 4), "\n", sep = "")
+    cat(sprintf("  z01 = %.5f, z02 = %.5f", x$z01, x$z02), "\n")
+    cat("  Repeated CI = ",
+        sprintf("(%.4f, %.4f)", x$RCI$lower, x$RCI$upper), "\n", sep = "")
+    cat("  Median unbiased estimate = ", sprintf("%.4f", x$MEUE), "\n", sep = "")
   }
 }
