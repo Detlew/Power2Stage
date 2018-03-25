@@ -57,6 +57,7 @@ print.evaltsd <- function(x, ...) {
     }
   } else {
     cat("\nFinal analysis of second stage\n")
+    cat("- BE acceptance range = ", x$theta1," ... ", x$theta2,"\n", sep="")
     if (x$BE) {
       cat("- BE achieved\n")
     } else {
