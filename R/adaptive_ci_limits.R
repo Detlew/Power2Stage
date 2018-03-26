@@ -1,7 +1,7 @@
 ### Calculate adaptive confidence interval limits
 ### Functions according to definitions in Wassmer and Brannath
 
-## Define generic combination function for Inverse Normal and MCT (2-stage)
+## Define generic combination function for Standard and Maximum Comb Test
 comb <- function(x, y, weight) {
   lw <- length(weight)
   1 - pnorm(pmax.int(
@@ -69,11 +69,13 @@ repeated_ci <- function(diff1, diff2 = NULL, sem1, sem2 = NULL, df1, df2 = NULL,
                         a1, a2 = NULL, weight = NULL, stage = 1) {
   tol <- 1e-06
   if (stage == 1) {
-    search_int <- diff1 + c(-6, 6) * sem1
-    l <- uniroot(f = function(d) pd(d, diff1, sem1, df1, lt = FALSE) - a1,
-                 interval = search_int, tol = tol)$root
-    u <- uniroot(f = function(d) pd(d, diff1, sem1, df1, lt = TRUE) - a1,
-                 interval = search_int, tol = tol)$root
+    #search_int <- diff1 + c(-6, 6) * sem1
+    #l <- uniroot(f = function(d) pd(d, diff1, sem1, df1, lt = FALSE) - a1,
+    #             interval = search_int, tol = tol)$root
+    #u <- uniroot(f = function(d) pd(d, diff1, sem1, df1, lt = TRUE) - a1,
+    #             interval = search_int, tol = tol)$root
+    l <- diff1 - sem1 * qt(1 - a1, df1)
+    u <- diff1 + sem1 * qt(1 - a1, df1)
   } else if (stage == 2) {
     stopifnot(!is.null(diff2), !is.null(sem2), !is.null(df2), !is.null(a2),
               !is.null(weight))
@@ -90,5 +92,7 @@ repeated_ci <- function(diff1, diff2 = NULL, sem1, sem2 = NULL, df1, df2 = NULL,
   } else {
     stop("Only stage equal to 1 or 2 implemented.")
   }
-  if (l <= u) list(lower = l, upper = u) else NA
+  res <- c(l, u)
+  names(res) <- c("lower CL", "upper CL")
+  if (l <= u) res else NA
 }

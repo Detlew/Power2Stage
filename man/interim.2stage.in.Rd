@@ -26,10 +26,10 @@ interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
     If missing, defaults to \verb{0.05}.
   }
   \item{weight}{
-    Weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. Note that using
-    the notation from Maurer et al weight corresponds to information fraction,
-    other literature may refer to sqrt(weight) as being the weight.
-    \verb{weight} must either contain one element (in case of 
+    Pre-defined weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. 
+    Note that using the notation from Maurer et al weight corresponds to
+    information fraction, other literature may refer to sqrt(weight) as being
+    the weight. \verb{weight} must either contain one element (in case of 
     \verb{max.comb.test = FALSE}) or two elements (in case of
     \verb{max.comb.test = TRUE}).\cr
     If missing, defaults to \verb{0.5} for \verb{max.comb.test = FALSE} and to
@@ -178,42 +178,49 @@ interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
 \value{
   Returns an object of class \verb{"evaltsd"} with all the input arguments and results
   as components. As part of the input arguments a component \code{cval} is also
-  presented, containing the critical values for \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and 2 according to the
+  presented, containing the critical values for 
+  \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and 2 according to the
   input based on \code{alpha}, \code{weight} and \code{max.comb.test}.\cr
   The class \verb{"evaltsd"} has an S3 print method.\cr\cr
   The results are in the components:
+  %\item{t11}{Observed value of t-test statistic for first hypothesis.}
+  %\item{t12}{Observed value of t-test statistic for second hypothesis.}
+  \item{p11}{Observed p-value for first hypothesis.}
+  \item{p12}{Observed p-value for second hypothesis.}
+  \item{z1}{Observed value of test statistic for first hypothesis.}
+  \item{z2}{Observed value of test statistic for second hypothesis.}
+  \item{RCI}{(Exact) repeated confidence interval for \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
   \item{futility}{Three dimensional vector with either 0 or 1. The first
   component represents futility due to Power of first stage > \code{fCpower},
   the second futility due to \verb{CI} (or \verb{PE}) outside of 
   \code{fClower ... fCupper}, the third futility due to \code{n1 + n2 > fCNmax}.}
-  \item{t11}{Observed value of test statistic for first hypothesis.}
-  \item{t12}{Observed value of test statistic for second hypothesis.}
-  \item{p11}{Observed p-value for first hypothesis.}
-  \item{p12}{Observed p-value for second hypothesis.}
-  \item{CI90}{List with lower and upper 90\% CI limits for observed ratio
-  of geometric means from \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. If \verb{fCrit != "CI"} results will be \code{NULL}.}
+  \item{CI90}{90\% Confidence interval for observed ratio of geometric means 
+  from \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. If \verb{fCrit != "CI"} results will be \code{NULL}.}
   \item{Power Stage 1}{Calculated power of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
-  \item{n2}{Required (total) sample size for \ifelse{html}{\out{stage&nbsp;2}}{stage 2} (zero if study does not
-  continue to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}).}
   \item{stop_s1}{Logical, indicating whether to stop after \ifelse{html}{\out{stage&nbsp;1}}{stage 1} 
   (due to \acronym{BE} or due to futility).}
-  \item{stop_fut}{Logical, indicating whether study will be stopped after \ifelse{html}{\out{stage&nbsp;1}}{stage 1}
+  \item{stop_fut}{Logical, indicating whether study should be stopped after 
+  \ifelse{html}{\out{stage&nbsp;1}}{stage 1}
   due to futility.}
-  \item{RCI}{(Exact) repeated confidence interval for \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
-  \item{BE}{Logical, indicating whether \acronym{BE} can be concluded after 
-  \ifelse{html}{\out{stage&nbsp;1}}{stage 1} or not.}
-  \item{alpha_ssr}{Only applicable if study continues to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Contains 
+  \item{stop_BE}{Logical, indicating whether \acronym{BE} could be concluded after 
+  \ifelse{html}{\out{stage&nbsp;1}}{stage 1} or not (regardless of any
+  futility criterion).}
+  \item{n2}{Required (total) sample size for \ifelse{html}{\out{stage&nbsp;2}}{stage 2} 
+  (will also be populated if a futility criterion is met).}
+  \item{alpha_ssr}{Only applicable if study is to be continued to 
+  \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Contains 
   alpha values for the two hypotheses required for sample size re-calculation.
   If \code{ssr.conditional = "no"} the result is equal to \code{alpha},
   otherwise it contains the conditional error rates for the standard combination
   test (in case of \code{max.comb.test = FALSE}) or maximum combination test (in
   case of \code{max.comb.test = TRUE}).}
-  \item{GMR_ssr}{Only applicable if study continues to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Contains the
+  \item{GMR_ssr}{Only applicable if study is to be continued to 
+  \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Contains the
   geometric mean ratio used for sample size re-calculation (accounts for
   adaptive planning step).}
-  \item{targetpower_ssr}{Only applicable if study continues to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. 
-  Contains the target power used for the sample size re-calculation (see also
-  'Details').}
+  \item{targetpower_ssr}{Only applicable if study is to be continued to 
+  \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Contains the target power used
+  for the sample size re-calculation (see also 'Details').}
 }
 \author{
 B. Lang

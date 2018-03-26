@@ -24,10 +24,10 @@ final.2stage.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
     If missing, defaults to \verb{0.05}.
   }
   \item{weight}{
-    Weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. Note that using
-    the notation from Maurer et al weight corresponds to information fraction,
-    other literature may refer to sqrt(weight) as being the weight.
-    \verb{weight} must either contain one element (in case of 
+    Pre-defined weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. 
+    Note that using the notation from Maurer et al weight corresponds to 
+    information fraction, other literature may refer to sqrt(weight) as 
+    being the weight. \verb{weight} must either contain one element (in case of 
     \verb{max.comb.test = FALSE}) or two elements (in case of
     \verb{max.comb.test = TRUE}).\cr
     If missing, defaults to \verb{0.5} for \verb{max.comb.test = FALSE} and to
@@ -97,17 +97,17 @@ final.2stage.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   input based on \code{alpha}, \code{weight} and \code{max.comb.test}.\cr
   The class \verb{"evaltsd"} has an S3 print method.\cr\cr
   The results are in the components:
-  \item{z01}{Combination test statistic for first nullhypothesis (standard
+  \item{z1}{Combination test statistic for first nullhypothesis (standard
   combination test statistic in case of \code{max.comb.test = FALSE} and
   maximum combination test statistic in case of \code{max.comb.test = TRUE})}
-  \item{z02}{Combination test statistic for second null hypothesis (standard
+  \item{z2}{Combination test statistic for second null hypothesis (standard
   combination test statistic in case of \code{max.comb.test = FALSE} and
   maximum combination test statistic in case of \code{max.comb.test = TRUE})}
   \item{RCI}{(Exact) repeated confidence interval for 
   \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
   \item{MEUE}{Median unbiased estimate as estimate for the overall
   geometric mean ratio}
-  \item{BE}{Logical, indicating whether \acronym{BE} can be concluded after 
+  \item{stop_BE}{Logical, indicating whether \acronym{BE} can be concluded after 
   \ifelse{html}{\out{stage&nbsp;2}}{stage 2} or not.}
 }
 \author{

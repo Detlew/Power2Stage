@@ -31,10 +31,10 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     If missing, defaults to \verb{0.05}.
   }
   \item{weight}{
-    Weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. Note that using
-    the notation from Maurer et al weight corresponds to information fraction,
-    other literature may refer to sqrt(weight) as being the weight.
-    \verb{weight} must either contain one element (in case of 
+    Pre-defined weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. 
+    Note that using the notation from Maurer et al weight corresponds to 
+    information fraction, other literature may refer to sqrt(weight) as being
+    the weight. \verb{weight} must either contain one element (in case of 
     \verb{max.comb.test = FALSE}) or two elements (in case of
     \verb{max.comb.test = TRUE}).\cr
     If missing, defaults to \verb{0.5} for \verb{max.comb.test = FALSE} and to
