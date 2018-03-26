@@ -6,10 +6,15 @@ print.evaltsd <- function(x, ...) {
   cat("Inverse Normal approach\n")
   if (x$max.comb.test) cat(" - maximum") else cat(" - standard")
   cat(" combination test\n")
+  if (x$max.comb.test) {
+    cat(" - weights (s1/s2) =", round(x$weight, 5), "\n")
+  } else {
+    cat(" - weight (s1) =", round(x$weight[[1]], 5), "\n")
+  }
   cat(" - significance levels (s1/s2) =", round(x$alpha, 5), "\n")
   cat(" - critical values (s1/s2) =", round(x$cval, 5), "\n")
   cat(" - BE acceptance range = ", x$theta1," ... ", x$theta2, "\n", sep = "")
-  
+
   ### Derived values -----------------------------------------------------------
   if (x$stage == 1) {
     not_pe <- if (x$usePE) "" else "not "
@@ -33,18 +38,18 @@ print.evaltsd <- function(x, ...) {
     cat(sprintf("  z1 = %.5f, z2 = %.5f", x$z1, x$z2), ",\n", sep = "")
     cat("  Repeated CI = ",
         sprintf("(%.4f, %.4f)", x$RCI[[1]], x$RCI[[2]]), "\n", sep = "")
-    
+
     if (x$stop_fut) {
       cat("- Futility criterion met:\n")
       if (x$futility[[1]] == 1) {
         cat("  * BE not declared and Power of first stage ",
-            sprintf("(%.4f)", x$`Power Stage 1`), " > ", 
+            sprintf("(%.4f)", x$`Power Stage 1`), " > ",
             sprintf("%.4f", x$fCpower), "\n", sep = "")
       }
       if (x$futility[[2]] == 1) {
         fCrit <- x$fCrit
         if ("ci" %in% fCrit) {
-          fCrit <- paste("90% CI", sprintf("(%.4f, %.4f)", x$CI90[[1]], 
+          fCrit <- paste("90% CI", sprintf("(%.4f, %.4f)", x$CI90[[1]],
                                            x$CI90[[2]]))
         } else if ("pe" %in% fCrit) {
           fCrit <- "PE"
@@ -79,7 +84,7 @@ print.evaltsd <- function(x, ...) {
     cat(sprintf("  z1 = %.5f, z2 = %.5f", x$z1, x$z2), ",\n", sep = "")
     cat("  Repeated CI = ",
         sprintf("(%.4f, %.4f)", x$RCI[[1]], x$RCI[[2]]), "\n", sep = "")
-    cat("  Median unbiased estimate = ", sprintf("%.4f", x$MEUE), "\n", 
+    cat("  Median unbiased estimate = ", sprintf("%.4f", x$MEUE), "\n",
         sep = "")
     cat("- Decision: ")
     if (x$stop_BE) {
