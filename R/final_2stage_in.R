@@ -47,7 +47,7 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
     stop("Weight(s) not properly specified, must be > 0 and < 1.")
   if (any(alpha <= 0) || any(alpha >= 1))
     stop("Alpha(s) not properly specified, must be > 0 and < 1.")
-  
+
   if (missing(theta1) && missing(theta2))  theta1 <- 0.8
   if (!missing(theta1) && missing(theta2)) theta2 <- 1/theta1
   if (missing(theta1) && !missing(theta2)) theta1 <- 1/theta2
@@ -67,27 +67,27 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
   n2 <- des$n
   df2 <- des$df
   sem2 <- des$sem
-  
+
   ### Calculate adjusted critical levels ---------------------------------------
   cl <- if (length(alpha) == 1) critical.value.2stage(alpha, weight) else
     list(cval = qnorm(1 - alpha), siglev = alpha)
-  
+
   ### Evaluation of Stage 2 ----------------------------------------------------
   t11 <- (lGMR1 - ltheta1) / sem1
   t12 <- (lGMR1 - ltheta2) / sem1
   p11 <- pt(t11, df = df1, lower.tail = FALSE)
   p12 <- pt(t12, df = df1, lower.tail = TRUE)
-  
+
   t21 <- (lGMR2 - ltheta1) / sem2
   t22 <- (lGMR2 - ltheta2) / sem2
   p21 <- pt(t21, df = df2, lower.tail = FALSE)
   p22 <- pt(t22, df = df2, lower.tail = TRUE)
-  
+
   Z11 <- qnorm(1 - p11)
   Z12 <- qnorm(1 - p12)
   Z21 <- qnorm(1 - p21)
   Z22 <- qnorm(1 - p22)
-  
+
   # For H01, test statistic at the end of second stage:
   Z01 <- pmax.int(
     sqrt(weight[1]) * Z11 + sqrt(1 - weight[1]) * Z21,
@@ -100,12 +100,12 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
   )
   ## Bioequivalence after stage 2?
   BE <- (Z01 > cl$cval[2] & Z02 > cl$cval[2])
-  
+
   ## Calculate corresponding exact repeated CI
   rci <- repeated_ci(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1, sem2 = sem2,
                      df1 = df1, df2 = df2, a1 = cl$siglev[1], a2 = cl$siglev[2],
                      weight = weight, stage = 2)
-  
+
   ## Calculate overall point estimate
   # Several choices available, calculate median unbiased estimate
   # see section 8.3.3 in Brannath + Wassmer
@@ -113,14 +113,15 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
                              sem2 = sem2, df1 = df1, df2 = df2,
                              a1 = cl$siglev[1], a0 = 1,
                              weight = weight, lower_bnd = TRUE)
-  
+
   ### Define final output ------------------------------------------------------
   res <- list(
     stage = 2L, alpha = cl$siglev, cval = cl$cval,
     max.comb.test = max.comb.test, GMR1 = GMR1, CV1 = CV1, n1 = as.integer(n1),
     df1 = df1, SEM1 = sem1, GMR2 = GMR2, CV2 = CV2, n2 = as.integer(n2),
     df2 = df2, SEM2 = sem2, theta1 = theta1, theta2 = theta2,
-    z1 = Z01, z2 = Z02, RCI = exp(rci), MEUE = exp(meue), stop_BE = BE
+    z1 = Z01, z2 = Z02, RCI = exp(rci), MEUE = exp(meue), stop_BE = BE,
+    weight = weight
   )
   class(res) <- c("evaltsd", "list")
   res
