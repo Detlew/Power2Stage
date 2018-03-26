@@ -7,9 +7,9 @@ print.evaltsd <- function(x, ...) {
   if (x$max.comb.test) cat(" - maximum") else cat(" - standard")
   cat(" combination test\n")
   if (x$max.comb.test) {
-    cat(" - weights (s1/s2) =", round(x$weight, 5), "\n")
+    cat(" - weights for stage 1 =", round(x$weight, 5), "\n")
   } else {
-    cat(" - weight (s1) =", round(x$weight[[1]], 5), "\n")
+    cat(" - weight for stage 1 =", round(x$weight, 5), "\n")
   }
   cat(" - significance levels (s1/s2) =", round(x$alpha, 5), "\n")
   cat(" - critical values (s1/s2) =", round(x$cval, 5), "\n")
