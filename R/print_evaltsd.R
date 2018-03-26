@@ -6,6 +6,7 @@ print.evaltsd <- function(x, ...) {
   cat("Inverse Normal approach\n")
   if (x$max.comb.test) cat(" - maximum") else cat(" - standard")
   cat(" combination test\n")
+  cat(" - weights (s1/s2) =", round(x$weight, 5), "\n")
   cat(" - significance levels (s1/s2) =", round(x$alpha, 5), "\n")
   cat(" - critical values (s1/s2) =", round(x$cval, 5), "\n")
   ### Derived values -----------------------------------------------------------

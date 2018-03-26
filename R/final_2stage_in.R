@@ -123,7 +123,8 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
     max.comb.test = max.comb.test, GMR1 = GMR1, CV1 = CV1, n1 = as.integer(n1),
     df1 = df1, SEM1 = sem1, GMR2 = GMR2, CV2 = CV2, n2 = as.integer(n2),
     df2 = df2, SEM2 = sem2, theta1 = theta1, theta2 = theta2,
-    z01 = Z01, z02 = Z02, RCI = ci, MEUE = exp(overall_diff), BE = BE
+    z01 = Z01, z02 = Z02, RCI = ci, MEUE = exp(overall_diff), BE = BE,
+    weight = weight
   )
   class(res) <- c("evaltsd", "list")
   res
