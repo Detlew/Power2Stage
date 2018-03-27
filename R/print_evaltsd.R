@@ -60,7 +60,13 @@ print.evaltsd <- function(x, ...) {
       cat("- Test for BE ", not_be,
           "positive (not considering any futility rule)\n", sep = "")
       cat("- Calculated n2 = ", x$n2, "\n", sep = "")
-      cat("- Decision: Recommend to stop due to futility.\n")
+      if (x$stop_BE) {
+        # Such a case (futility met and BE met) is rather an artefact
+        # Give recommendation to ignore futility criterion and to stop
+        cat("- Decision: Recommend to stop due to BE.\n")
+      } else {
+        cat("- Decision: Recommend to stop due to futility.\n")
+      }
     } else {
       cat("- No futility criterion met\n")
       not_be <- if (x$stop_BE) "" else "not "
