@@ -193,13 +193,15 @@ interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
   \item{futility}{Three dimensional vector with either 0 or 1. The first
   component represents futility due to Power of first stage > \code{fCpower},
   the second futility due to \verb{CI} (or \verb{PE}) outside of 
-  \code{fClower ... fCupper}, the third futility due to \code{n1 + n2 > fCNmax}.}
+  \code{fClower ... fCupper}, the third futility due to 
+  \code{n1 + n2 > fCNmax}.\cr
+  Note that the futility rules can be applied in a non-binding manner.}
   \item{CI90}{90\% Confidence interval for observed ratio of geometric means 
   from \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. If \verb{fCrit != "CI"} results will be \code{NULL}.}
   \item{Power Stage 1}{Calculated power of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
   \item{stop_s1}{Logical, indicating whether to stop after \ifelse{html}{\out{stage&nbsp;1}}{stage 1} 
   (due to \acronym{BE} or due to futility).}
-  \item{stop_fut}{Logical, indicating whether study should be stopped after 
+  \item{stop_fut}{Logical, indicating whether study is recommended to be stopped after 
   \ifelse{html}{\out{stage&nbsp;1}}{stage 1}
   due to futility.}
   \item{stop_BE}{Logical, indicating whether \acronym{BE} could be concluded after 

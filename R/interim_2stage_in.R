@@ -139,20 +139,14 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
   rci <- repeated_ci(diff1 = lGMR1, sem1 = sem, df1 = df, a1 = cl$siglev[1],
                      stage = 1)
   
-  # Cases with BE == TRUE are clear: early stop due to BE
-  # Cases with BE == FALSE are not yet clear:
-  # - calculate power for stage 1
+  # Calculate power for stage 1
   diffm_s1 <- lGMR # if (usePE) lGMR1 else lGMR
   pwr_s1 <- .calc.power(alpha = cl$siglev[1], ltheta1 = ltheta1, 
                         ltheta2 = ltheta2, diffm = diffm_s1, 
                         sem = sem, df = df, method = pmethod)
-  # - if result is FALSE and power for stage 1 is 'sufficiently high', then
-  #   the result will be considered a fail (ie leave FALSE)
-  #   otherwise (power not high) we leave it open (ie set to NA)
   fut <- vector("integer", 3)
   fut[1] <- (BE == FALSE && pwr_s1 >= fCpower)
   
-  # If NA may still consider it as failure due to futility:
   # Futility check - here only regarding PE or CI (fCNmax comes later)
   if (fCrit != "no" && sum(nms_match[1:2]) > 0) {
     lfClower <- log(fClower)
@@ -172,7 +166,6 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
   }
   
   ### Sample size re-estimation ------------------------------------------------
-  # We need stage 2 (or at least need further information regarding fCNmax)
   if (ssr.conditional == "no") {
     alpha_ssr <- cl$siglev[2]
     pwr_ssr <- targetpower
