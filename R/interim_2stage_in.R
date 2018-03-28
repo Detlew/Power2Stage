@@ -130,7 +130,7 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
   Z11 <- qnorm(1 - p11) 
   Z12 <- qnorm(1 - p12)
   # BE yes/no
-  BE <- (p11 < cl$siglev[1] && p12 < cl$siglev[1])
+  BE <- (p11 <= cl$siglev[1] && p12 <= cl$siglev[1])
   
   ## Calculate corresponding exact repeated CI
   rci <- repeated_ci(diff1 = lGMR1, sem1 = sem, df1 = df, a1 = cl$siglev[1],

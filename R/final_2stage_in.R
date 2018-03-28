@@ -93,7 +93,7 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
     sqrt(weight[lw]) * Z12 + sqrt(1 - weight[lw]) * Z22
   )
   ## Bioequivalence after stage 2?
-  BE <- (Z01 > cl$cval[2] & Z02 > cl$cval[2])
+  BE <- (Z01 > cl$cval[2] && Z02 > cl$cval[2])
 
   ## Calculate corresponding exact repeated CI
   rci <- repeated_ci(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1, sem2 = sem2,
@@ -107,7 +107,7 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
                              sem2 = sem2, df1 = df1, df2 = df2,
                              a1 = cl$siglev[1], a0 = 1,
                              weight = weight, lower_bnd = TRUE)
-
+  
   ### Define final output ------------------------------------------------------
   res <- list(
     stage = 2L, alpha = cl$siglev, cval = cl$cval, weight = weight,
