@@ -187,8 +187,8 @@ power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
 \details{
   The underlying subject data are assumed to be evaluated after log-transformation.
   But instead of simulating subject data, the statistics pe1, mse1 and pe2, mse2 
-  are simulated via their associated distributions (normal and
-  \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distributions).\cr\cr
+  are simulated via their associated distributions (Normal and
+  \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distribution).\cr\cr
   If \verb{ssr.conditional = "error_power"}, the design scheme generally 
   calculates the conditional estimated target power of the second stage and 
   uses this value as desired target power in the sample size re-estimation 
@@ -249,4 +249,8 @@ power.2stage.in(n1 = 12, CV = 0.2, fCrit = "No", max.n = 4000,
 
 # Table 8 in Maurer et al
 power.2stage.in(n1 = 36, CV = 0.4, max.n = 4000)
+
+# Same example as before but with additional futility criterion regarding
+# maximum sample size (using the default 4*n1 as maximum bound)
+power.2stage.in(n1 = 36, CV = 0.4, max.n = 4000, fCrit = c("CI", "Nmax"))
 }

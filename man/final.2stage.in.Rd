@@ -97,11 +97,11 @@ final.2stage.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   input based on \code{alpha}, \code{weight} and \code{max.comb.test}.\cr
   The class \verb{"evaltsd"} has an S3 print method.\cr\cr
   The results are in the components:
-  \item{z1}{Combination test statistic for first nullhypothesis (standard
-  combination test statistic in case of \code{max.comb.test = FALSE} and
+  \item{z1}{Combination test statistic for first null hypothesis (standard
+  combination test statistic in case of \code{max.comb.test = FALSE} or
   maximum combination test statistic in case of \code{max.comb.test = TRUE})}
   \item{z2}{Combination test statistic for second null hypothesis (standard
-  combination test statistic in case of \code{max.comb.test = FALSE} and
+  combination test statistic in case of \code{max.comb.test = FALSE} or
   maximum combination test statistic in case of \code{max.comb.test = TRUE})}
   \item{RCI}{(Exact) repeated confidence interval for 
   \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
@@ -129,6 +129,7 @@ Springer 2016.
 \code{\link{power.2stage.in}, \link{interim.2stage.in}}
 }
 \examples{
+# Example from Maurer et al
 final.2stage.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20, 
                 GMR2 = exp(-0.0134), CV2 = 0.3644, n2 = 36)
 }

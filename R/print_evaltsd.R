@@ -34,7 +34,7 @@ print.evaltsd <- function(x, ...) {
     cat("- Derived key statistics:\n")
     cat(sprintf("  z1 = %.5f, z2 = %.5f", x$z1, x$z2), ",\n", sep = "")
     cat("  Repeated CI = ",
-        sprintf("(%.4f, %.4f)", x$RCI[[1]], x$RCI[[2]]), "\n", sep = "")
+        sprintf("(%.5f, %.5f)", x$RCI[[1]], x$RCI[[2]]), "\n", sep = "")
 
     if (x$stop_fut) {
       cat("- Futility criterion met:\n")
@@ -59,12 +59,11 @@ print.evaltsd <- function(x, ...) {
       not_be <- if (x$stop_BE) "" else "not "
       cat("- Test for BE ", not_be,
           "positive (not considering any futility rule)\n", sep = "")
-      cat("- Calculated n2 = ", x$n2, "\n", sep = "")
       if (x$stop_BE) {
-        # Such a case (futility met and BE met) is rather an artefact
         # Give recommendation to ignore futility criterion and to stop
         cat("- Decision: Recommend to stop due to BE.\n")
       } else {
+        cat("- Calculated n2 = ", x$n2, "\n", sep = "")
         cat("- Decision: Recommend to stop due to futility.\n")
       }
     } else {
@@ -72,13 +71,12 @@ print.evaltsd <- function(x, ...) {
       not_be <- if (x$stop_BE) "" else "not "
       cat("- Test for BE ", not_be,
           "positive (not considering any futility rule)\n", sep = "")
-      if (!x$stop_BE)
-        cat("- Calculated n2 = ", x$n2, "\n", sep = "")
-      cat("- Decision: ")
       if (x$stop_BE) {
-        cat("Stop due to BE\n")
+        cat("- Decision: Stop due to BE\n")
       } else {
-        cat("Continue to stage 2 with ", x$n2, " subjects\n", sep = "")
+        cat("- Calculated n2 = ", x$n2, "\n", sep = "")
+        cat("- Decision: Continue to stage 2 with ", x$n2, " subjects\n", 
+            sep = "")
       }
     }
   } else {
@@ -86,7 +84,7 @@ print.evaltsd <- function(x, ...) {
     cat("- Derived key statistics:\n")
     cat(sprintf("  z1 = %.5f, z2 = %.5f", x$z1, x$z2), ",\n", sep = "")
     cat("  Repeated CI = ",
-        sprintf("(%.4f, %.4f)", x$RCI[[1]], x$RCI[[2]]), "\n", sep = "")
+        sprintf("(%.5f, %.5f)", x$RCI[[1]], x$RCI[[2]]), "\n", sep = "")
     cat("  Median unbiased estimate = ", sprintf("%.4f", x$MEUE), "\n",
         sep = "")
     cat("- Decision: ")
