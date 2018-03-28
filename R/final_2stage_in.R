@@ -45,8 +45,6 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
   if (missing(theta1) && missing(theta2))  theta1 <- 0.8
   if (!missing(theta1) && missing(theta2)) theta2 <- 1/theta1
   if (missing(theta1) && !missing(theta2)) theta1 <- 1/theta2
-  if (GMR1 <= theta1 || GMR1 >= theta2 || GMR2 <= theta1 || GMR2 >= theta2)
-    stop("GMRs must be within acceptance range!")
   lGMR1   <- log(GMR1)
   lGMR2   <- log(GMR2)
   ltheta1 <- log(theta1)
@@ -100,9 +98,7 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
                      df1 = df1, df2 = df2, a1 = cl$siglev[1], a2 = cl$siglev[2],
                      weight = weight, stage = 2)
 
-  ## Calculate overall point estimate
-  # Several choices available, calculate median unbiased estimate
-  # see section 8.3.3 in Brannath + Wassmer
+  ## Calculate overall point estimate as median unbiased estimate
   meue <- median_unbiased_pe(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1,
                              sem2 = sem2, df1 = df1, df2 = df2,
                              a1 = cl$siglev[1], a0 = 1,
