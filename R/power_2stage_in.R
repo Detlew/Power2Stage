@@ -208,7 +208,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   rm(t1, t2)
   
   ## Evaluation of stage 1
-  BE <- (p11 < cl$siglev[1] & p12 < cl$siglev[1])
+  BE <- (p11 <= cl$siglev[1] & p12 <= cl$siglev[1])
   
   # Cases with BE == TRUE are clear: early stop due to BE
   # Cases with BE == FALSE are not yet clear:
