@@ -50,13 +50,13 @@ final.2stage.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   }
   \item{df1}{
     Optional; Error degrees of freedom of 
-    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified instead
-    of n1.
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified in
+    addition to \code{n1}.
   }
   \item{SEM1}{
     Optional; Standard error of the difference of means of 
-    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified instead
-    of CV1. Must be on additive scale (i.e. usually log-scale).
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified in
+    addition to \code{CV1}. Must be on additive scale (i.e. usually log-scale).
   }
   \item{GMR2}{
     Observed ratio of geometric means (T/R) of (only) 
@@ -71,13 +71,13 @@ final.2stage.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   }
   \item{df2}{
     Optional; Error degrees of freedom of (only)
-    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} that can be specified instead
-    of n2.
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} that can be specified in
+    addition to \code{n2}.
   }
   \item{SEM2}{
     Optional; Standard error of the difference of means of (only)
-    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} that can be specified instead
-    of CV2. Must be on additive scale (i.e. usually log-scale).
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} that can be specified in
+    addition to \code{CV2}. Must be on additive scale (i.e. usually log-scale).
   }
   \item{theta1}{
     Lower bioequivalence limit. Defaults to 0.8.

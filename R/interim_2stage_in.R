@@ -8,14 +8,11 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
   
   ### Error handling and default value set-up ----------------------------------
   if (missing(GMR1)) stop("GMR1 must be given.")
-  if (missing(CV1))  stop("CV1 must be given!")
-  if (CV1 <= 0)      stop("CV1 must be >0!")
-  if (missing(n1)) {
-    n1 <- NULL
-  } else {
-    if (n1 <= 0)     stop("Number of subjects in stage 1 must be >0!")
-    if (n1 >= max.n) stop("max.n must be greater than n1.")
-  }
+  if (missing(CV1))  stop("CV1 must be given.")
+  if (CV1 <= 0)      stop("CV1 must be >0.")
+  if (missing(n1))   stop("n1 must be given.")
+  if (n1 <= 0)       stop("Number of subjects in stage 1 must be >0.")
+  if (n1 >= max.n)   stop("max.n must be greater than n1.")
   if (missing(alpha))
     alpha <- 0.05
   if (length(alpha) > 2) 
@@ -219,7 +216,7 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
   res <- list(
     stage = 1L, alpha = cl$siglev, cval = cl$cval, weight = weight,
     max.comb.test = max.comb.test, targetpower = targetpower, GMR1 = GMR1, 
-    n1 = as.integer(n1), CV1 = CV1,  df1 = df, SEM1 = sem, theta1 = theta1, 
+    n1 = as.integer(n1), CV1 = CV1, df1 = df, SEM1 = sem, theta1 = theta1, 
     theta2 = theta2, GMR = GMR, usePE = usePE, min.n2 = as.integer(min.n2),
     max.n = if (is.infinite(max.n)) Inf else as.integer(max.n), 
     fCpower = fCpower, fCrit = fCrit, fCrange = c(fClower, fCupper), 

@@ -54,13 +54,13 @@ interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
   }
   \item{df1}{
     Optional; Error degrees of freedom of 
-    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified instead
-    of n1.
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified in
+    addition to \code{n1}.
   }
   \item{SEM1}{
     Optional; Standard error of the difference of means of 
-    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified instead
-    of CV1. Must be on additive scale (i.e. usually log-scale).
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified in
+    addition to \code{CV1}. Must be on additive scale (i.e. usually log-scale).
   }
   \item{theta1}{
     Lower bioequivalence limit. Defaults to 0.8.

@@ -8,16 +8,10 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
     stop("CV1 and CV2 must be given.")
   if (CV1 <= 0 || CV2 <= 0)
     stop("CV1 and CV2 must be > 0.")
-  if (missing(n1)) {
-    n1 <- NULL
-  } else {
-    if (n1 <= 0) stop("n1 must be > 0.")
-  }
-  if (missing(n2)) {
-    n2 <- NULL
-  } else {
-    if (n2 <= 0) stop("n2 must be > 0.")
-  }
+  if (missing(n1) || missing(n2))
+    stop("n1 and n2 must be given.")
+  if (n1 <= 0 || n2 <= 0) 
+    stop("n1 and n2 must be > 0.")
   if (missing(alpha))
     alpha <- 0.05
   if (length(alpha) > 2)
