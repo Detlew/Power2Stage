@@ -59,7 +59,7 @@ rWish2 <- function(n, df, Sigma)
 }
 
 # -----------------------------------------------------------------------------
-# derive n, df and SEM
+# derive n, df and SEM (2x2x2 crossover setting)
 get_n_df_sem <- function(n = NULL, df = NULL, mse, sem = NULL) {
   if (is.null(n)) {
     if (is.null(df)) {
