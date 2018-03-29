@@ -167,6 +167,13 @@ interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
 \details{
   The observed values of stage 1 (e.g. \code{GMR1}, \code{n1}, \code{CV1}) may
   be obtained based on the first stage data via the usual ANOVA approach.\cr\cr
+  The optional arguments \code{df1} and \code{SEM1} require a somewhat
+  advanced knowledge (provided in the raw output from for example the software 
+  \acronym{SAS}, or may be obtained via \code{emmeans::emmeans}). 
+  However, it has the advantage that if there were missing data the exact 
+  degrees of freedom and standard error of the difference can be used, 
+  the former possibly being non-integer valued (e.g. if the 
+  Kenward-Roger method was used).\cr\cr
   If \verb{ssr.conditional = "error_power"}, the design scheme generally 
   calculates the conditional estimated target power of the second stage and 
   uses this value as desired target power in the sample size re-estimation 

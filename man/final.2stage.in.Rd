@@ -89,6 +89,13 @@ final.2stage.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
 \details{
   The observed values (\code{GMR1}, \code{GMR2} etc.) should be obtained for 
   each stage separately; this may be done via the usual ANOVA approach.\cr\cr
+  The optional arguments \code{df1}, \code{SEM1}, \code{df2} and \code{SEM2} 
+  require a somewhat advanced knowledge (provided in the raw output from for 
+  example the software \acronym{SAS}, or may be obtained via \code{emmeans::emmeans}). 
+  However, it has the advantage that if there were missing data the exact 
+  degrees of freedom and standard error of the difference can be used, 
+  the former possibly being non-integer valued (e.g. if the 
+  Kenward-Roger method was used).\cr\cr
 }
 \value{
   Returns an object of class \verb{"evaltsd"} with all the input arguments and results
