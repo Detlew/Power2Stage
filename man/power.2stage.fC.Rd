@@ -1,6 +1,7 @@
 \encoding{utf-8}
 \name{power.2stage.fC}
 \alias{power.2stage.fC}
+\alias{power.tsd.fC}
 \title{
 Power calculation of adaptive 2-stage BE studies (2x2 crossover) with a
 futility criterion for the point estimate of T/R or its 90\% CI

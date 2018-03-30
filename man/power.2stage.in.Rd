@@ -1,6 +1,7 @@
 \encoding{utf-8}
 \name{power.2stage.in}
 \alias{power.2stage.in}
+\alias{power.tsd.in}
 \title{
 Power calculation of adaptive 2-stage BE studies with 2x2 crossover design,
 based on the Inverse Normal method

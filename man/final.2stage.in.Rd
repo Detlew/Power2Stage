@@ -1,6 +1,7 @@
 \encoding{utf-8}
 \name{final.2stage.in}
 \alias{final.2stage.in}
+\alias{final.tsd.in}
 \title{
 Analysis of second stage data of 2-stage 2x2 crossover designs based on
 the Inverse Normal method

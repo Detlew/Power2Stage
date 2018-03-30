@@ -1,6 +1,7 @@
 \encoding{utf-8}
 \name{power.2stage.ssr}
 \alias{power.2stage.ssr}
+\alias{power.tsd.ssr}
 \title{
 Power of 2-stage BE studies in 2x2 crossover designs with interim
 sample size re-estimation

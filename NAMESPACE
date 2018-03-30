@@ -14,11 +14,21 @@ export(
     , power.2stage.pAF
     , power.2stage.ssr
     , sampleN2.TOST
+    , power.tsd
+    , power.tsd.KM
+    , power.tsd.fC
+    , power.tsd.GS
+    , power.tsd.in
+    , interim.tsd.in
+    , final.tsd.in
+    , power.tsd.p
+    , power.tsd.pAF
+    , power.tsd.ssr
 )
 
 # Import all packages listed as Imports or Depends
 import(
-  PowerTOST, stats, cubature
+  PowerTOST, stats
 )
 # good practice would be importFrom
 #importFrom(PowerTOST, CV2se, CV2mse, OwensQ)

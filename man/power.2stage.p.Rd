@@ -2,6 +2,8 @@
 \name{power.2stage.p}
 \alias{power.2stage.p}
 \alias{power.2stage.pAF}
+\alias{power.tsd.p}
+\alias{power.tsd.pAF}
 \title{
 Power calculation of adaptive 2-stage BE studies in 2-group parallel designs
 }

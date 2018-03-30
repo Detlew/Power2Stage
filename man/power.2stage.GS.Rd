@@ -1,6 +1,7 @@
 \encoding{utf-8}
 \name{power.2stage.GS}
 \alias{power.2stage.GS}
+\alias{power.tsd.GS}
 \title{
 Power calculation for non-adaptive group sequential (2-stage) BE studies
 }

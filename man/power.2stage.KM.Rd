@@ -1,6 +1,7 @@
 \encoding{utf-8}
 \name{power.2stage.KM}
 \alias{power.2stage.KM}
+\alias{power.tsd.KM}
 \title{
 Power calculation of adaptive 2-stage BE studies (2x2 crossover)
 (variant of power.2stage to obtain the results of Karalis / Macheras)

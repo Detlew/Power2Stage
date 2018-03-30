@@ -1,6 +1,7 @@
 \encoding{utf-8}
 \name{power.2stage}
 \alias{power.2stage}
+\alias{power.tsd}
 \title{
 Power calculation of adaptive 2-stage BE studies in a 2x2 crossover design
 }

@@ -1,6 +1,7 @@
 \encoding{utf-8}
 \name{interim.2stage.in}
 \alias{interim.2stage.in}
+\alias{interim.tsd.in}
 \title{
 Interim analysis of first stage data of 2-stage 2x2 crossover designs based on
 the Inverse Normal method
