@@ -24,7 +24,11 @@ power.2stage.ssr <- function(alpha=0.05, n1, GMR, CV, targetpower=0.8,
                              blind=FALSE, usePE=FALSE, min.n=0, max.n=Inf, 
                              theta0, theta1, theta2, npct=c(0.05, 0.5, 0.95), 
                              nsims, setseed=TRUE, details=FALSE)
-{ # seems to give errors if alpha is a vector
+{ 
+  # Check if called with .2stage. version
+  check2stage(fname=as.character(sys.call())[1])
+  
+  # seems to give errors if alpha is a vector
   alpha <- alpha[1L]
   
   if (missing(CV)) stop("CV must be given!")

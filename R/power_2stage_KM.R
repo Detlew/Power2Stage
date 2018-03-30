@@ -14,6 +14,8 @@ power.2stage.KM <- function(method=c("C","B"), alpha0=0.05, alpha=c(0.0294,0.029
                             npct=c(0.05, 0.5, 0.95), nsims, setseed=TRUE,
                             details=FALSE)
 {
+  check2stage(fname=as.character(sys.call())[1])
+  
   if (missing(CV)) stop("CV must be given!")
   if (CV<=0)       stop("CV must be >0!")
 

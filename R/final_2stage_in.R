@@ -1,6 +1,10 @@
 final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
                             df1 = NULL, SEM1 = NULL, GMR2, CV2, n2, df2 = NULL,
                             SEM2 = NULL, theta1, theta2) {
+  
+  # Check if called with .2stage. version
+  check2stage(fname=as.character(sys.call())[1])
+  
   ### Error handling and default value set-up ----------------------------------
   if (missing(GMR1) || missing(GMR2))
     stop("GMR1 and GMR2 must be given.")

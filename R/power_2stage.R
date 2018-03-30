@@ -12,6 +12,8 @@ power.2stage <- function(method=c("B","C","B0"), alpha0=0.05, alpha=c(0.0294,0.0
                          usePE=FALSE, Nmax=Inf, min.n2=0, theta0, theta1, theta2,
                          npct=c(0.05, 0.5, 0.95), nsims, setseed=TRUE, details=FALSE)
 {
+  check2stage(fname=as.character(sys.call())[1])
+  
   if (missing(CV)) stop("CV must be given.")
   if (CV<=0)       stop("CV must be >0.")
 

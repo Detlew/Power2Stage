@@ -11,6 +11,11 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
                             pmethod = c("nct", "exact", "shifted"), 
                             npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, 
                             details = FALSE) {
+  
+  # Check if called with .2stage. version
+  check2stage(fname=as.character(sys.call())[1])
+  
+  
   # Computes Power or Type I Error rate for the two-stage design scheme
   # based on the inverse normal method. Several design schemes are possible:
   # main scheme is according to Maurer et al

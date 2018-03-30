@@ -10,6 +10,9 @@ power.2stage.GS <- function(alpha=c(0.0294,0.0294), n, CV, theta0, theta1,
                             theta2,  fCrit=c("CI", "PE"), fClower, fCupper, 
                             nsims, setseed=TRUE, details=FALSE)
 {
+  # Check if called with .2stage. version
+  check2stage(fname=as.character(sys.call())[1])
+
   if (missing(CV)) stop("CV must be given!")
   if (CV<=0)       stop("CV must be >0!")
   

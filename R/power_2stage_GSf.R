@@ -108,12 +108,12 @@ power.2stage.GSf <- function(alpha=c(0.05,0.05), n, CV, theta0, theta1,
     # pool according to Potvin et al.
     ntot <- sum(n)
     # including stage? 
-    # df2  <- ntot-3 
-    df2  <- ntot-2 
-    
-    tval2 <- qt(1-alpha[2], df2)
     # The Canada guidance talks: "This method precludes the need for 
-    # a stage effect in the model" -> setting SSmean to zero?
+    # a stage effect in the model" -> setting SSmean to zero and df2=not-2?
+    # if we do that we obtain an alpha inflation with both alphas 0.05! why ???
+    df2  <- ntot-3 
+    #df2  <- ntot-2 
+    tval2 <- qt(1-alpha[2], df2)
     SSmean <- (m1-m2)^2/(2/n[1]+2/n[2])
     #SSmean <- 0
     # mean stage 1 + stage 2

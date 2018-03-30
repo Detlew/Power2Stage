@@ -14,6 +14,9 @@ power.2stage.fC <- function(method=c("B", "C", "B0"), alpha0=0.05,
                             theta2, npct=c(0.05, 0.5, 0.95), nsims, setseed=TRUE,
                             details=FALSE)
 {
+  # Check if called with .2stage. version
+  check2stage(fname=as.character(sys.call())[1])
+  
   # chek method, check futility criterion
   method <- match.arg(method)
   fCrit  <- match.arg(fCrit)

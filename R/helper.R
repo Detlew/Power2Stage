@@ -91,3 +91,11 @@ get_n_df_sem <- function(n = NULL, df = NULL, mse, sem = NULL) {
   list(n = n, df = df, sem = sem)
 }
 
+#------------------------------------------------------------------------------
+# function to check if function is called with .2stage. in its name
+check2stage <- function(fname)
+{
+  if(grepl(".2stage.", fname)) 
+    message("Function ", fname, " is deprecated.\n",
+             "Use version with .tsd. in its name.")
+}

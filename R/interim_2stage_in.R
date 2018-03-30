@@ -6,6 +6,9 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
                               ssr.conditional = c("error_power", "error", "no"),
                               pmethod = c("exact", "nct", "shifted")) {
   
+  # Check if called with .2stage. version
+  check2stage(fname=as.character(sys.call())[1])
+    
   ### Error handling and default value set-up ----------------------------------
   if (missing(GMR1)) stop("GMR1 must be given.")
   if (missing(CV1))  stop("CV1 must be given.")
