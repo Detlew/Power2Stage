@@ -1,8 +1,8 @@
-2018-03-22
-on GitHub
+Version 0.5-1
+2018-03-30
    - The futility rule for a CI in power.2stage.GS() now based on 90% CI
      to be in line with the other functions using such a futility rule.
-   - Default fCrit in power.2stage.GS()  is changed to "CI".
+   - Default fCrit in power.2stage.GS() changed to "CI".
    - Added interim.2stage.in() and final.2stage.in() to perform interim and
      final analysis of 2 stage designs based on the Standard Combination or
      Maximum Combination Test (also includes a print class)
