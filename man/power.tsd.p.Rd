@@ -1,9 +1,9 @@
 \encoding{utf-8}
-\name{power.2stage.p}
-\alias{power.2stage.p}
-\alias{power.2stage.pAF}
+\name{power.tsd.p}
 \alias{power.tsd.p}
 \alias{power.tsd.pAF}
+\alias{power.2stage.p}
+\alias{power.2stage.pAF}
 \title{
 Power calculation of adaptive 2-stage BE studies in 2-group parallel designs
 }
@@ -13,22 +13,22 @@ Power calculation of adaptive 2-stage BE studies in 2-group parallel designs
   schemes are modified to include a futility criterion Nmax and to allow the
   sample size estimation step to be done with point estimate and variabilities
   from \ifelse{html}{\out{stage&nbsp;1}}{stage~1} (fully adaptive).\cr\cr
-  Function \verb{power.2stage.pAF()} performes exactly as described in
+  Function \verb{power.tsd.pAF()} performes exactly as described in
   Fuglsang\enc{’}{'}s paper, namely the power monitoring steps and the sample
   size estimation are based always on the pooled \emph{t}-test.\cr
-  Function \code{power.2stage.p()} with argument \verb{test="welch"} on the
+  Function \code{power.tsd.p()} with argument \verb{test="welch"} on the
   other hand uses the genuine power of Welch\enc{’}{'}s test. Moreover it
   accepts unequal \ifelse{html}{\out{stage&nbsp;1}}{stage~1} treatment groups.
   }
 \usage{
-power.2stage.p(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
+power.tsd.p(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
                n1, GMR, CV, targetpower = 0.8,
                pmethod = c("nct", "exact", "shifted"),
                usePE = FALSE, Nmax = Inf, test = c("welch", "t-test", "anova"),
                theta0, theta1, theta2, npct = c(0.05, 0.5, 0.95), nsims,
                setseed = TRUE, details = FALSE)
 
-power.2stage.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
+power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
                  n1, GMR, CV, targetpower = 0.8,
                  pmethod = c("shifted", "nct", "exact"),
                  usePE = FALSE, Nmax = Inf, test = c("welch", "t-test", "anova"),
@@ -52,7 +52,7 @@ power.2stage.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   }
   \item{n1}{
     (Total) sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
-    Function \verb{power.2stage.p()} accepts also a vector of length 2 with
+    Function \verb{power.tsd.p()} accepts also a vector of length 2 with
     the numbers in treatment groups of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
     If given as a scalar the total \verb{n1} should be even.
   }
@@ -78,10 +78,10 @@ power.2stage.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
     \emph{t}-distribution, \verb{"exact"} (exact calculations via Owen\enc{’}{'}s Q),
     and \verb{"shifted"} (approximate calculation via shifted central
     \emph{t}-distribution\cr
-    Defaults to \verb{"nct"} for speed reasons in function \verb{power.2stage.p()}
+    Defaults to \verb{"nct"} for speed reasons in function \verb{power.tsd.p()}
     as a reasonable compromise between speed and accuracy in the sample size
     estimation step.\cr
-    Defaults to \verb{"shifted"} in function \verb{power.2stage.pAF()} for
+    Defaults to \verb{"shifted"} in function \verb{power.tsd.pAF()} for
     consistancy with Fuglsang.\cr
   }
   \item{usePE}{
@@ -187,5 +187,5 @@ Pharm Stat. 2008; 7(4):245--62. \doi{10.1002/pst.294}
 }
 \examples{
 # using all the defaults
-power.2stage.p(n1=48, CV=0.25)
+power.tsd.p(n1=48, CV=0.25)
 }

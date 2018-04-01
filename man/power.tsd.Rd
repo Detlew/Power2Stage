@@ -1,5 +1,5 @@
 \encoding{utf-8}
-\name{power.2stage}
+\name{power.tsd}
 \alias{power.2stage}
 \alias{power.tsd}
 \title{
@@ -13,11 +13,10 @@ Power calculation of adaptive 2-stage BE studies in a 2x2 crossover design
   of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
   }
 \usage{
-power.2stage(method = c("B", "C", "B0"), alpha0 = 0.05,
-             alpha = c(0.0294, 0.0294), n1, GMR, CV, targetpower = 0.8,
-             pmethod = c("nct", "exact", "shifted"),
-             usePE = FALSE, Nmax = Inf, min.n2 = 0, theta0, theta1, theta2,
-             npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, details = FALSE)
+power.tsd(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294), 
+          n1, GMR, CV, targetpower = 0.8, pmethod = c("nct", "exact", "shifted"),
+          usePE = FALSE, Nmax = Inf, min.n2 = 0, theta0, theta1, theta2,
+          npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, details = FALSE)
 }
 \arguments{
   \item{method}{
@@ -184,18 +183,18 @@ Pharm Stat. 2015; 14(3):180--8. \doi{10.1002/pst.1672}
 
 }
 \seealso{
-\code{\link{power.2stage.p}} for analogous calculations for 2-group parallel
+\code{\link{power.tsd.p}} for analogous calculations for 2-group parallel
 design.\cr
-\code{\link{power.2stage.fC}} for analogous calculations with futility check
+\code{\link{power.tsd.fC}} for analogous calculations with futility check
 based on point estimate of stage 1.
 }
 \examples{
 # using all the defaults and 24 subjects in stage 1, CV of 25\%
-power.2stage(n1=24, CV=0.25)
+power.tsd(n1=24, CV=0.25)
 # computation time ~ 1 sec
 #
 # as above, but save results for further use
-res <- power.2stage(n1=24, CV=0.25)
+res <- power.tsd(n1=24, CV=0.25)
 \dontrun{
 # representation of the discrete distribution of n(total)
 # via plot method of object with class "table" which creates a

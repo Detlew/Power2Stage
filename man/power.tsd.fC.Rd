@@ -1,7 +1,7 @@
 \encoding{utf-8}
-\name{power.2stage.fC}
-\alias{power.2stage.fC}
+\name{power.tsd.fC}
 \alias{power.tsd.fC}
+\alias{power.2stage.fC}
 \title{
 Power calculation of adaptive 2-stage BE studies (2x2 crossover) with a
 futility criterion for the point estimate of T/R or its 90\% CI
@@ -14,9 +14,8 @@ futility criterion for the point estimate of T/R or its 90\% CI
   estimate (\acronym{PE}) and \acronym{MSE} of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
   }
 \usage{
-power.2stage.fC(method = c("B", "C", "B0"), alpha0 = 0.05,
-                alpha = c(0.0294, 0.0294), n1, CV, GMR, targetpower = 0.8,
-                pmethod = c("nct", "exact", "shifted"),
+power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294), 
+             n1, CV, GMR, targetpower = 0.8, pmethod = c("nct", "exact", "shifted"),
                 usePE = FALSE, powerstep = TRUE, min.n2=0, max.n=Inf,
                 fCrit=c("CI", "PE"), fClower, fCupper, theta0, theta1, theta2,
                 npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, details = FALSE)
@@ -228,11 +227,11 @@ Pharm Stat. 2016;15(1):15--27. \doi{10.1002/pst.1721}
 }
 \examples{
 # using all the defaults
-power.2stage.fC(CV=0.25, n1=24)
+power.tsd.fC(CV=0.25, n1=24)
 # run-time ~1 sec
 \dontrun{
 # as above but storing the results
-res <- power.2stage.fC(CV=0.25, n1=24)
+res <- power.tsd.fC(CV=0.25, n1=24)
 # representation of the discrete distribution of n(total)
 # via plot method of object with class "table" which creates a
 # 'needle' plot

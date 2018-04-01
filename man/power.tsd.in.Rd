@@ -1,5 +1,5 @@
 \encoding{utf-8}
-\name{power.2stage.in}
+\name{power.tsd.in}
 \alias{power.2stage.in}
 \alias{power.tsd.in}
 \title{
@@ -15,13 +15,12 @@ based on the Inverse Normal method
   in the sample size re-estimation step or different futility criteria.
 }
 \usage{
-power.2stage.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
-                theta0, theta1, theta2, GMR, usePE = FALSE, 
-                min.n2 = 4, max.n = Inf, fCpower = targetpower, 
-                fCrit = "CI", fClower, fCupper, fCNmax,
-                ssr.conditional = c("error_power", "error", "no"),
-                pmethod = c("nct", "exact", "shifted"), npct = c(0.05, 0.5, 0.95),
-                nsims, setseed = TRUE, details = FALSE)
+power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
+             theta0, theta1, theta2, GMR, usePE = FALSE, min.n2 = 4, max.n = Inf, 
+             fCpower = targetpower, fCrit = "CI", fClower, fCupper, fCNmax,
+             ssr.conditional = c("error_power", "error", "no"),
+             pmethod = c("nct", "exact", "shifted"), npct = c(0.05, 0.5, 0.95),
+             nsims, setseed = TRUE, details = FALSE)
 }
 \arguments{
   \item{alpha}{
@@ -235,23 +234,23 @@ in Clinical Trials.}\cr
 Springer 2016.
 }
 \seealso{
-\code{\link{interim.2stage.in}, \link{final.2stage.in}}
+\code{\link{interim.tsd.in}, \link{final.tsd.in}}
 }
 \examples{
 # 12 subjects in stage 1, CV of 20\%, no futility rule, otherwise all defaults
 # This setting resembles values in Table 6.8 and 6.10 in Patterson and Jones.
-power.2stage.in(n1 = 12, CV = 0.2, fCrit = "No")
+power.tsd.in(n1 = 12, CV = 0.2, fCrit = "No")
 
 # Note that actual replication would require the following additional
 # arguments (extremely long run-time)
 \dontrun{
-power.2stage.in(n1 = 12, CV = 0.2, fCrit = "No", max.n = 4000, 
-                pmethod = "exact", nsims = 1E6)}
+power.tsd.in(n1 = 12, CV = 0.2, fCrit = "No", max.n = 4000, 
+             pmethod = "exact", nsims = 1E6)}
 
 # Table 8 in Maurer et al
-power.2stage.in(n1 = 36, CV = 0.4, max.n = 4000)
+power.tsd.in(n1 = 36, CV = 0.4, max.n = 4000)
 
 # Same example as before but with additional futility criterion regarding
 # maximum sample size (using the default 4*n1 as maximum bound)
-power.2stage.in(n1 = 36, CV = 0.4, max.n = 4000, fCrit = c("CI", "Nmax"))
+power.tsd.in(n1 = 36, CV = 0.4, max.n = 4000, fCrit = c("CI", "Nmax"))
 }

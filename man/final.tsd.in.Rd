@@ -1,17 +1,17 @@
 \encoding{utf-8}
-\name{final.2stage.in}
-\alias{final.2stage.in}
+\name{final.tsd.in}
 \alias{final.tsd.in}
+\alias{final.2stage.in}
 \title{
 Analysis of second stage data of 2-stage 2x2 crossover designs based on
 the Inverse Normal method
 }
 \description{
-  Following the design scheme according to \code{power.2stage.in} the function
+  Following the design scheme according to \code{power.tsd.in} the function
   performs the analysis after the second stage has been performed.
 }
 \usage{
-final.2stage.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
+final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
                 SEM1 = NULL, GMR2, CV2, n2, df2 = NULL, SEM2 = NULL, 
                 theta1, theta2)
 }
@@ -134,10 +134,10 @@ in Clinical Trials.}\cr
 Springer 2016.
 }
 \seealso{
-\code{\link{power.2stage.in}, \link{interim.2stage.in}}
+\code{\link{power.tsd.in}, \link{interim.tsd.in}}
 }
 \examples{
 # Example from Maurer et al
-final.2stage.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20, 
+final.tsd.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20, 
                 GMR2 = exp(-0.0134), CV2 = 0.3644, n2 = 36)
 }

@@ -1,5 +1,5 @@
 \encoding{utf-8}
-\name{interim.2stage.in}
+\name{interim.tsd.in}
 \alias{interim.2stage.in}
 \alias{interim.tsd.in}
 \title{
@@ -7,11 +7,11 @@ Interim analysis of first stage data of 2-stage 2x2 crossover designs based on
 the Inverse Normal method
 }
 \description{
-  Following the design scheme according to \code{power.2stage.in} the function
+  Following the design scheme according to \code{power.tsd.in} the function
   performs the interim analysis of the first stage data.
 }
 \usage{
-interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
+interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
                   GMR1, n1, CV1, df1 = NULL, SEM1 = NULL, theta1, theta2, 
                   GMR, usePE = FALSE, min.n2 = 4, max.n = Inf, 
                   fCpower = targetpower, fCrit = "CI", fClower, fCupper, fCNmax, 
@@ -162,7 +162,7 @@ interim.2stage.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
     \emph{t}-distribution, \verb{"exact"} (exact calculations via Owen\enc{’}{'}s Q),
     and \verb{"shifted"} (approximate calculation via shifted central \emph{t}-distribution
     like in the paper of Potvin \emph{et al.})\cr
-    In contast to \code{power.2stage.in} the default value here is \verb{"exact"}. 
+    In contast to \code{power.tsd.in} the default value here is \verb{"exact"}. 
   }
 }
 \details{
@@ -247,9 +247,9 @@ in Clinical Trials.}\cr
 Springer 2016.
 }
 \seealso{
-\code{\link{power.2stage.in}, \link{final.2stage.in}}
+\code{\link{power.tsd.in}, \link{final.tsd.in}}
 }
 \examples{
 # Example from Maurer et al
-interim.2stage.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20, max.n = 4000)
+interim.tsd.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20, max.n = 4000)
 }

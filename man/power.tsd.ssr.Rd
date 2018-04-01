@@ -1,5 +1,5 @@
 \encoding{utf-8}
-\name{power.2stage.ssr}
+\name{power.tsd.ssr}
 \alias{power.2stage.ssr}
 \alias{power.tsd.ssr}
 \title{
@@ -13,10 +13,10 @@ sample size re-estimation
   The sample size re-estimation can be done blinded or unblinded.
   }
 \usage{
-power.2stage.ssr(alpha = 0.05, n1, GMR, CV, targetpower = 0.8,
-                pmethod = c("nct", "exact", "shifted", "ls"), blind = FALSE,
-                usePE = FALSE, min.n = 0, max.n = Inf, theta0, theta1, theta2,
-                npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, details = FALSE)
+power.tsd.ssr(alpha = 0.05, n1, GMR, CV, targetpower = 0.8,
+              pmethod = c("nct", "exact", "shifted", "ls"), blind = FALSE,
+              usePE = FALSE, min.n = 0, max.n = Inf, theta0, theta1, theta2,
+              npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, details = FALSE)
 }
 \arguments{
   \item{alpha}{
@@ -154,22 +154,22 @@ Pharm Stat. 2008; 7(4):245--62. \doi{10.1002/pst.294}
 }
 
 \seealso{
-\code{\link{power.2stage}} for 2-stage studies with interim BE decision.
+\code{\link{power.tsd}} for 2-stage studies with interim BE decision.
 }
 \examples{
 # Not run to comply with CRAN policy about examples' run-time;
 # minimum number of sim's should be 1E5 for 'power', 1E6 sim's for 'alpha'
 \dontrun{
-power.2stage.ssr(alpha=0.05, n1=10, GMR=1, CV=0.239, targetpower=0.9,
-                 pmethod="ls", blind=TRUE, theta0=1.25)
+power.tsd.ssr(alpha=0.05, n1=10, GMR=1, CV=0.239, targetpower=0.9,
+              pmethod="ls", blind=TRUE, theta0=1.25)
 # should give an alpha-inflation 0.072359 (run time <5 seconds)
 # repeated with noncentral t-approximation
-power.2stage.ssr(alpha=0.05, n1=10, GMR=1, CV=0.239, targetpower=0.9,
-                 pmethod="nct", blind=TRUE, theta0=1.25)
+power.tsd.ssr(alpha=0.05, n1=10, GMR=1, CV=0.239, targetpower=0.9,
+              pmethod="nct", blind=TRUE, theta0=1.25)
 # should give an alpha-inflation 0.069789 (run time ~20 seconds)
 #
 # adjusted alpha to control the Type I Error, noncentral t-approx.
-power.2stage.ssr(alpha=0.03505, n1=10, GMR=1, CV=0.239, targetpower=0.9,
-                 pmethod="nct", blind=TRUE, theta0=1.25)
+power.tsd.ssr(alpha=0.03505, n1=10, GMR=1, CV=0.239, targetpower=0.9,
+              pmethod="nct", blind=TRUE, theta0=1.25)
 # should control the TIE with 0.049877}
 }

@@ -1,5 +1,5 @@
 \encoding{utf-8}
-\name{power.2stage.KM}
+\name{power.tsd.KM}
 \alias{power.2stage.KM}
 \alias{power.tsd.KM}
 \title{
@@ -15,7 +15,7 @@ Power calculation of adaptive 2-stage BE studies (2x2 crossover)
   the point estimate (\acronym{PE}) of T/R from \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
   }
 \usage{
-power.2stage.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
+power.tsd.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
                 n1, CV, targetpower = 0.8, pmethod = c("nct", "exact"),
                 Nmax = 150, theta0, theta1, theta2, npct = c(0.05, 0.5, 0.95),
                 nsims, setseed = TRUE, details = FALSE)
@@ -153,6 +153,6 @@ Eur J Clin Pharmacol. 2015; 71(3):271--81. \doi{10.1007/s00228-015-1806-2}
 # but too low number of sims to complain with the CRAN policy:
 # "check time only a few seconds per example"
 # minimum number of sims should be 1E5 for power, 1E6 sims for 'alpha'
-power.2stage.KM(n1=16, CV=0.2, nsims=1E4)
+power.tsd.KM(n1=16, CV=0.2, nsims=1E4)
 # ~3 sec if nsims=1E5
 }
