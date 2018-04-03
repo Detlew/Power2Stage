@@ -2,13 +2,13 @@ Version 0.5-1 (belated easter egg)
 2018-04-03
    - All functions xyz.2stage.ab() now have an alias xyz.tsd.ab(), e.g. instead
      of power.2stage.fC() one may use power.tsd.fC().
-     The versions vis .2stage. will be removed in later versions.
+     The versions with .2stage. in their names will be removed in later versions.
    - The futility rule for a CI in power.2stage.GS() now based on 90% CI
      to be in line with the other functions using such a futility rule.
    - Default fCrit in power.2stage.GS() changed to "CI".
    - Added interim.2stage.in() and final.2stage.in() to perform interim and
      final analysis of 2 stage designs based on the Standard Combination or
-     Maximum Combination Test (also includes a print class)
+     Maximum Combination Test (also includes a print class).
    - Update defaults of power.2stage.in() in order to be consistent with 
      Paper from Maurer et al (2018).
    - Aliases power.tsd.xyz introduced (not public yet).

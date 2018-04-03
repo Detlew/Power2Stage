@@ -244,7 +244,7 @@ Stat Med. 2018;1--21. \doi{10.1002/sim.7614}
 
 Wassmer G, Brannath W. \emph{Group Sequential and Confirmatory Adaptive Designs
 in Clinical Trials.}\cr
-Springer 2016.
+Springer 2016. \doi{10.1007/978-3-319-32562-0}
 }
 \seealso{
 \code{\link{power.tsd.in}, \link{final.tsd.in}}

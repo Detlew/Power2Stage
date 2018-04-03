@@ -9,7 +9,7 @@ sample size re-estimation
 \description{
   This function calculates the \sQuote{empiric} power (via simulations) of
   2-stage BE studies with interim sample size re-estimation (\emph{i.e.},
-  no BE decision after \ifelse{html}{\out{stage&nbsp;1}}{stage~1}).
+  but no BE decision after \ifelse{html}{\out{stage&nbsp;1}}{stage~1}).
   The sample size re-estimation can be done blinded or unblinded.
   }
 \usage{

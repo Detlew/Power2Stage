@@ -231,15 +231,17 @@ Stat Med. 2015; 34(16):2403--16. \doi{10.1002/sim.6487}
 
 Wassmer G, Brannath W. \emph{Group Sequential and Confirmatory Adaptive Designs
 in Clinical Trials.}\cr
-Springer 2016.
+Springer 2016. \doi{10.1007/978-3-319-32562-0}
 }
 \seealso{
 \code{\link{interim.tsd.in}, \link{final.tsd.in}}
 }
 \examples{
 # 12 subjects in stage 1, CV of 20\%, no futility rule, otherwise all defaults
-# This setting resembles values in Table 6.8 and 6.10 in Patterson and Jones.
-power.tsd.in(n1 = 12, CV = 0.2, fCrit = "No")
+# except too low number of sims due to CRAN policy for run-time of examples
+# This setting resembles values in Table 6.8 and 6.10 in Patterson and Jones
+# if nsims=1e5 (default)
+power.tsd.in(n1 = 12, CV = 0.2, fCrit = "No", nsims=1e4)
 
 # Note that actual replication would require the following additional
 # arguments (extremely long run-time)
