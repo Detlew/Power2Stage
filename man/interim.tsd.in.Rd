@@ -12,11 +12,11 @@ the Inverse Normal method
 }
 \usage{
 interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
-                  GMR1, n1, CV1, df1 = NULL, SEM1 = NULL, theta1, theta2, 
-                  GMR, usePE = FALSE, min.n2 = 4, max.n = Inf, 
-                  fCpower = targetpower, fCrit = "CI", fClower, fCupper, fCNmax, 
-                  ssr.conditional = c("error_power", "error", "no"), 
-                  pmethod = c("exact", "nct", "shifted"))
+               GMR1, n1, CV1, df1 = NULL, SEM1 = NULL, theta1, theta2, 
+               GMR, usePE = FALSE, min.n2 = 4, max.n = Inf, 
+               fCpower = targetpower, fCrit = "CI", fClower, fCupper, fCNmax, 
+               ssr.conditional = c("error_power", "error", "no"), 
+               pmethod = c("exact", "nct", "shifted"))
 }
 \arguments{
   \item{alpha}{
@@ -27,8 +27,8 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
     If missing, defaults to \verb{0.05}.
   }
   \item{weight}{
-    Pre-defined weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. 
-    Note that using the notation from Maurer et al weight corresponds to
+    Pre-defined weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. Note
+    that using the notation from Maurer et al weight corresponds to
     information fraction, other literature may refer to sqrt(weight) as being
     the weight. \verb{weight} must either contain one element (in case of 
     \verb{max.comb.test = FALSE}) or two elements (in case of
@@ -44,7 +44,7 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
     Desired (overall) target power to declare \acronym{BE} at the end of the trial.
   }
   \item{GMR1}{
-    Observed ratio of geometric means (T/R) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} data.
+    Observed ratio of geometric means (T/R) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} data (use \emph{e.g.}, 0.95 for 95\%).
   }
   \item{n1}{
     Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
@@ -103,7 +103,7 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
     \acronym{BE} has not been achieved after
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1}: If \acronym{BE} has not been
     achieved after \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and the power for
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} is greater than or equal to
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} is greater than or equal to
     \verb{fCpower}, then the study will be considered a failure.\cr\cr
     See \sQuote{Details} for more information on the choice of
     \verb{fCpower}.
@@ -112,22 +112,22 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
     Futility criterion to use: \verb{"No"} (no futility criterion regarding
     observed point estimate, confidence interval and maximum sample size), 
     \verb{"PE"} (observed point estimate of the geometric mean ratio from 
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}), 
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}), 
     \verb{"CI"} (90\% confidence interval of the geometric mean ratio from
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}), \code{"Nmax"} (overall maximum
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}), \code{"Nmax"} (overall maximum
     sample size); or a combination thereof (concatenate abbreviations). 
     Defaults to "CI".
   }
   \item{fClower}{
     Lower futility limit for the \acronym{PE} or \acronym{CI} of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     If the \acronym{PE} or \acronym{CI} is completely outside of \verb{fClower}
     \ldots \verb{fCupper} the study is to be stopped due to futility (not \acronym{BE}).\cr
     May be missing. If \verb{"PE"} or \verb{"CI"} is specified within \verb{fCrit},
     the default will be set to 0.8 for \verb{fCrit = "PE"} or 0.95 for \verb{fCrit = "CI"}.
     If neither \verb{"PE"} nor \verb{"CI"} is specified within \verb{fCrit}, there
     will be no futility constraint regarding point estimate or confidence interval
-    from \ifelse{html}{\out{stage&nbsp;1}}{stage~1} (regardless of any 
+    from \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (regardless of any 
     specification of \verb{fClower} and/or \verb{fCupper}).
   }
   \item{fCupper}{

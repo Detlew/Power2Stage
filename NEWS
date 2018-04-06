@@ -1,3 +1,7 @@
+Version 0.5.1.9000
+XXXX-XX-XX
+   - Formatting issues corrected in x.tsd.in man pages
+
 Version 0.5-1 (belated easter egg)
 2018-04-03
    - All functions xyz.2stage.ab() now have an alias xyz.tsd.ab(), e.g. instead

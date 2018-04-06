@@ -12,8 +12,8 @@ the Inverse Normal method
 }
 \usage{
 final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
-                SEM1 = NULL, GMR2, CV2, n2, df2 = NULL, SEM2 = NULL, 
-                theta1, theta2)
+             SEM1 = NULL, GMR2, CV2, n2, df2 = NULL, SEM2 = NULL, 
+             theta1, theta2)
 }
 \arguments{
   \item{alpha}{
@@ -40,7 +40,8 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   }
   \item{GMR1}{
     Observed ratio of geometric means (T/R) of 
-    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} data.
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} data 
+    (use \emph{e.g.}, 0.95 for 95\%).
   }
   \item{CV1}{
     Observed coefficient of variation of the intra-subject variability of
@@ -61,7 +62,8 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   }
   \item{GMR2}{
     Observed ratio of geometric means (T/R) of (only) 
-    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} data.
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} data
+    (use \emph{e.g.}, 0.95 for 95\%).
   }
   \item{CV2}{
     Observed coefficient of variation of the intra-subject variability of (only)

@@ -11,12 +11,12 @@ based on the Inverse Normal method
   on the Inverse-Normal combination method. The main design scheme is according
   to Maurer \emph{et al.} (Maximum Combination Test), but it may also be used 
   for other/modified designs, e.g. standard combination method, usage of the 
-  observed treatment difference after \ifelse{html}{\out{stage&nbsp;1}}{stage~1} 
+  observed treatment difference after \ifelse{html}{\out{stage&nbsp;1}}{stage 1} 
   in the sample size re-estimation step or different futility criteria.
 }
 \usage{
 power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
-             theta0, theta1, theta2, GMR, usePE = FALSE, min.n2 = 4, max.n = Inf, 
+             theta0, theta1, theta2, GMR, usePE = FALSE, min.n2 = 4, max.n = Inf,
              fCpower = targetpower, fCrit = "CI", fClower, fCupper, fCNmax,
              ssr.conditional = c("error_power", "error", "no"),
              pmethod = c("nct", "exact", "shifted"), npct = c(0.05, 0.5, 0.95),
@@ -98,7 +98,7 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     \acronym{BE} has not been achieved after
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1}: If \acronym{BE} has not been
     achieved after \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and the power for
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} is greater than or equal to
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} is greater than or equal to
     \verb{fCpower}, then the study will be considered a failure.\cr\cr
     See \sQuote{Details} for more information on the choice of
     \verb{fCpower}.
@@ -107,22 +107,22 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     Futility criterion to use: \verb{"No"} (no futility criterion regarding
     observed point estimate, confidence interval and maximum sample size), 
     \verb{"PE"} (observed point estimate of the geometric mean ratio from 
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}), 
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}), 
     \verb{"CI"} (90\% confidence interval of the geometric mean ratio from
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}), \code{"Nmax"} (overall maximum
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}), \code{"Nmax"} (overall maximum
     sample size); or a combination thereof (concatenate abbreviations; see
     \sQuote{Examples}). Defaults to "CI".
   }
   \item{fClower}{
     Lower futility limit for the \acronym{PE} or \acronym{CI} of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     If the \acronym{PE} or \acronym{CI} is completely outside of \verb{fClower}
     \ldots \verb{fCupper} the study is stopped due to futility (not \acronym{BE}).\cr
     May be missing. If \verb{"PE"} or \verb{"CI"} is specified within \verb{fCrit},
     the default will be set to 0.8 for \verb{fCrit = "PE"} or 0.95 for \verb{fCrit = "CI"}.
     If neither \verb{"PE"} nor \verb{"CI"} is specified within \verb{fCrit}, there
     will be no futility constraint regarding point estimate or confidence interval
-    from \ifelse{html}{\out{stage&nbsp;1}}{stage~1} (regardless of any 
+    from \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (regardless of any 
     specification of \verb{fClower} and/or \verb{fCupper}).
   }
   \item{fCupper}{
