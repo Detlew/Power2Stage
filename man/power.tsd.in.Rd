@@ -219,15 +219,20 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
 B. Lang
 }
 \references{
+König F, Wolfsegger M, Jaki T, Schütz H, Wassmer G. \cr
+\emph{Adaptive two-stage bioequivalence trials with early stopping and sample size re-estimation.}\cr
+Vienna: 2014; 35th Annual Conference of the International Society for Clinical Biostatistics. Poster P1.2.88 \cr 
+\doi{10.13140/RG.2.1.5190.0967}.
+
 Patterson SD, Jones B. \emph{Bioequivalence and Statistics in Clinical Pharmacology.}\cr
 Boca Raton: CRC Press; 2\ifelse{html}{\out{<sup>nd</sup>}}{\eqn{^{nd}}} edition 2017.
+
+Kieser M, Rauch G. \emph{Two-stage designs for cross-over bioequivalence trials.}\cr
+Stat Med. 2015; 34(16):2403--16. \doi{10.1002/sim.6487}
 
 Maurer W, Jones B, Chen Y. \emph{Controlling the type 1 error rate in two-stage
 sequential designs when testing for average bioequivalence.}\cr
 Stat Med. 2018;1--21. \doi{10.1002/sim.7614}
-
-Kieser M, Rauch G. \emph{Two-stage designs for cross-over bioequivalence trials.}\cr
-Stat Med. 2015; 34(16):2403--16. \doi{10.1002/sim.6487}
 
 Wassmer G, Brannath W. \emph{Group Sequential and Confirmatory Adaptive Designs
 in Clinical Trials.}\cr

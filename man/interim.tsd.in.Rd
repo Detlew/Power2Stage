@@ -235,6 +235,11 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
 B. Lang
 }
 \references{
+König F, Wolfsegger M, Jaki T, Schütz H, Wassmer G. \cr
+\emph{Adaptive two-stage bioequivalence trials with early stopping and sample size re-estimation.}\cr
+Vienna: 2014; 35th Annual Conference of the International Society for Clinical Biostatistics. Poster P1.2.88 \cr 
+\doi{10.13140/RG.2.1.5190.0967}.
+
 Patterson SD, Jones B. \emph{Bioequivalence and Statistics in Clinical Pharmacology.}\cr
 Boca Raton: CRC Press; 2\ifelse{html}{\out{<sup>nd</sup>}}{\eqn{^{nd}}} edition 2017.
 
