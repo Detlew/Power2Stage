@@ -4,12 +4,12 @@ print.evaltsd <- function(x, ...) {
   ### General information ------------------------------------------------------
   cat("TSD with 2x2 crossover\n")
   cat("Inverse Normal approach\n")
-  if (x$max.comb.test) cat(" - maximum") else cat(" - standard")
+  if (x$max.comb.test) cat(" - Maximum") else cat(" - Standard")
   cat(" combination test with weight")
   cat(if (x$max.comb.test) "s" else "")
   cat(" for stage 1 =", round(x$weight, 5), "\n")
-  cat(" - significance levels (s1/s2) =", round(x$alpha, 5), "\n")
-  cat(" - critical values (s1/s2) =", round(x$cval, 5), "\n")
+  cat(" - Significance levels (s1/s2) =", round(x$alpha, 5), "\n")
+  cat(" - Critical values (s1/s2) =", round(x$cval, 5), "\n")
   cat(" - BE acceptance range = ", x$theta1," ... ", x$theta2, "\n", sep = "")
 
   ### Derived values -----------------------------------------------------------
@@ -18,9 +18,9 @@ print.evaltsd <- function(x, ...) {
     cat(" - Observed point estimate from stage 1 is ", not_pe, "used for SSR\n",
         sep = "")
     if (x$ssr.conditional == "no") {
-      cat(" - without conditional error rates and conditional (estimated target) power\n")
+      cat(" - Without conditional error rates and conditional (estimated target) power\n")
     } else {
-      cat(" - with ")
+      cat(" - With ")
       if (x$ssr.conditional == "error") {
         cat("conditional error rates\n")
       } else {
