@@ -24,15 +24,17 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
 }
 \arguments{
   \item{alpha}{
-    If one element is given, the overall one-sided significance level. If two
-    elements are given, the adjusted one-sided alpha levels for
-    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and
+    If one element is given, the overall one-sided significance level. In this
+    case the adjusted alpha levels will be calculated internally. If two
+    elements are given, the argument refers to the two adjusted one-sided alpha 
+    levels for \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and
     \ifelse{html}{\out{stage&nbsp;2}}{stage 2}, respectively.\cr
     If missing, defaults to \verb{0.05}.
   }
   \item{weight}{
-    Pre-defined weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. 
-    Note that using the notation from Maurer et al weight corresponds to 
+    Pre-defined weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}, see
+    'Details' for more information.
+    Note that using the notation from Maurer et al, weight corresponds to 
     information fraction, other literature may refer to sqrt(weight) as being
     the weight. \verb{weight} must either contain one element (in case of 
     \verb{max.comb.test = FALSE}) or two elements (in case of
@@ -189,6 +191,13 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   But instead of simulating subject data, the statistics pe1, mse1 and pe2, mse2 
   are simulated via their associated distributions (Normal and
   \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distribution).\cr\cr
+  The \code{weight} argument always refers to the first weight of a pair of
+  weights. For example, in case of \code{max.comb.test = FALSE} the standard
+  combination test requires two weights (w, 1-w) but only the first one, w,
+  is required as input argument here because the second weight is
+  automatically specified once the first is given. Similarly for 
+  \code{max.comb.test = TRUE}, w and w* need to be specified, which in turn
+  define the two pairs of weights (w, 1-w) and (w*, 1-w*).\cr\cr
   If \verb{ssr.conditional = "error_power"}, the design scheme generally 
   calculates the conditional estimated target power of the second stage and 
   uses this value as desired target power in the sample size re-estimation 
