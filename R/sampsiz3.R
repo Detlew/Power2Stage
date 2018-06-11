@@ -43,8 +43,7 @@
   
   # return 'Inf' if ltheta0 not between or very near to ltheta1, ltheta2
   #ns <- ifelse((ltheta0-ltheta1)<1.25e-5 | (ltheta2-ltheta0)<1.25e-5, Inf, 0)
-  # For run-time reasons we use 10^(-3) as threshold
-  ns <- ifelse((ltheta0-ltheta1)<1e-03 | (ltheta2-ltheta0)<1e-03, Inf, 0)
+  ns <- ifelse((ltheta0-ltheta1)<1e-04 | (ltheta2-ltheta0)<1e-04, Inf, 0)
 
   # design characteristics for 2-group parallel and 2x2 crossover design
   steps <- 2     # stepsize for sample size search
