@@ -173,44 +173,58 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
       pwr_ssr <- targetpower
       lGMR_ssr <- if (usePE) lGMR1 else lGMR
     } else {
-      # Derive conditional error rates
-      alpha_ssr <- 1 - pnorm(pmin(
-        (cl$cval[2] - sqrt(weight[1])*cbind(Z11, Z12)) / sqrt(1 - weight[1]),
-        (cl$cval[2] - sqrt(weight[lw])*cbind(Z11, Z12)) / sqrt(1 - weight[lw])
-      ))
-    
-      # Define target power for ssr
-      pwr_ssr <- targetpower
-      if ((ssr.conditional == "error_power") && (fCpower <= targetpower)) {
-        # Use conditional power
-        pwr_ssr <- 1 - (1 - targetpower) / (1 - pwr_s1)
-      }
-    
-      if (usePE) {
-        lGMR_ssr <- lGMR1
-        if (GMR1 <= theta1 || GMR1 >= theta2) {
-          message(paste0("SSR using observed GMR being outside of ", 
-                         "theta1 ... theta2 not possible, use planned GMR."))
-          lGMR_ssr <- lGMR
-        }
+      # If pwr_s1 > fCpower then we have futility and should stop with FAIL
+      # (it would also not be possible to proceed because conditional estimated
+      # target power would be negative)
+      if (fut[1]) {
+        alpha_ssr <- NA
+        lGMR_ssr <- NA
+        pwr_ssr <- NA
+        n2 <- NA
       } else {
-        # Set sign of lGMR to the sign of estimated point estimate
-        # (Maurer et al call this 'adaptive planning step')
-        sgn_pe <- if (lGMR1 >= 0) 1 else -1
-        lGMR_ssr <- abs(lGMR) * sgn_pe
+        # Derive conditional error rates
+        alpha_ssr <- 1 - pnorm(pmin(
+          (cl$cval[2] - sqrt(weight[1])*cbind(Z11, Z12)) / sqrt(1 - weight[1]),
+          (cl$cval[2] - sqrt(weight[lw])*cbind(Z11, Z12)) / sqrt(1 - weight[lw])
+        ))
+    
+        # Define target power for ssr
+        pwr_ssr <- targetpower
+        if ((ssr.conditional == "error_power") && (fCpower <= targetpower)) {
+          # Use conditional power
+          pwr_ssr <- 1 - (1 - targetpower) / (1 - pwr_s1)
+        }
+    
+        if (usePE) {
+          lGMR_ssr <- lGMR1
+          if (GMR1 <= theta1 || GMR1 >= theta2) {
+            message(paste0("SSR using observed GMR being outside of ", 
+                           "theta1 ... theta2 not possible, use planned GMR."))
+            lGMR_ssr <- lGMR
+          }
+        } else {
+          # Set sign of lGMR to the sign of estimated point estimate
+          # (Maurer et al call this 'adaptive planning step')
+          sgn_pe <- if (lGMR1 >= 0) 1 else -1
+          lGMR_ssr <- abs(lGMR) * sgn_pe
+        }
       }
     }
   
     # Sample size for stage 2
-    n2 <- .sampleN3(alpha = alpha_ssr, targetpower = pwr_ssr, 
-                    ltheta0 = lGMR_ssr, mse = mse, 
-                    ltheta1 = ltheta1, ltheta2 = ltheta2, method = pmethod)
-    if (ssr.conditional == "no")
-      n2 <- n2 - n1
-    n2 <- max(min(n2, max.n - n1), min.n2)
+    if (!is.na(n2)) {
+      n2 <- .sampleN3(alpha = alpha_ssr, targetpower = pwr_ssr, 
+                      ltheta0 = lGMR_ssr, mse = mse, 
+                      ltheta1 = ltheta1, ltheta2 = ltheta2, method = pmethod)
+      if (ssr.conditional == "no")
+        n2 <- n2 - n1
+      n2 <- max(min(n2, max.n - n1), min.n2)
     
-    # Futility check regarding maximum overall sample size
-    fut[3] <- (n1 + n2 > fCNmax) || is.infinite(n2)
+      # Futility check regarding maximum overall sample size
+      fut[3] <- (n1 + n2 > fCNmax) || is.infinite(n2)
+    } else {
+      fut[3] <- NA
+    }
   }
   
   ### Define final output ------------------------------------------------------

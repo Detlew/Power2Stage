@@ -53,7 +53,7 @@ print.evaltsd <- function(x, ...) {
         }
         cat("  * ", fCrit," outside ", sprintf("%.4f", x$fCrange[1L]), " ... ", sprintf("%.4f", x$fCrange[2L]), "\n", sep = "")
       }
-      if (x$futility[[3]] == 1) {
+      if (x$futility[[1]] != 1 && x$futility[[3]] == 1) {
         cat("  * n2 = ", x$n2, " such that n1 + n2 > ", x$fCNmax, "\n", sep = "")
       }
       not_be <- if (x$stop_BE) "" else "not "
@@ -63,7 +63,7 @@ print.evaltsd <- function(x, ...) {
         # Give recommendation to ignore futility criterion and to stop
         cat("- Decision: Recommend to stop due to BE.\n")
       } else {
-        cat("- Calculated n2 = ", x$n2, "\n", sep = "")
+        if (!is.na(x$n2)) cat("- Calculated n2 = ", x$n2, "\n", sep = "")
         cat("- Decision: Recommend to stop due to futility.\n")
       }
     } else {
