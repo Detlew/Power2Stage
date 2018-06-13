@@ -176,7 +176,7 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
       # If pwr_s1 > fCpower then we have futility and should stop with FAIL
       # (it would also not be possible to proceed because conditional estimated
       # target power would be negative)
-      if (fut[1]) {
+      if (fut[1] && ssr.conditional == "error_power") {
         alpha_ssr <- NA
         lGMR_ssr <- NA
         pwr_ssr <- NA
