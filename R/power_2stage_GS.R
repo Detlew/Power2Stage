@@ -94,10 +94,11 @@ power.2stage.GS <- function(alpha=c(0.0294,0.0294), n, CV, theta0, theta1,
     s2 <- !(lower>lfC2 | upper<lfC1) & stage==2
     # or not in a prespecified range, f.i. 0.85 ... 1/0.85=1.176471
     # Gould phi=0 reads: CI doesnt contain zero (1 in orginal domain)
+    rm(hw)
   }
   stage[s2==TRUE]  <- 2
   stage[s2==FALSE] <- 1
-  rm(hw, lower, upper)
+  rm(lower, upper)
   
   ns <- rep.int(1, times=length(BE))
   ns[s2==FALSE] <- n[1]
