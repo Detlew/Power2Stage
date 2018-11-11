@@ -202,8 +202,8 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
   The results are in the components:
   \item{p11}{Observed p-value for first hypothesis.}
   \item{p12}{Observed p-value for second hypothesis.}
-  \item{z1}{Test statistic value for first null hypothesis.}
-  \item{z2}{Test statistic value for second null hypothesis.}
+  \item{z1}{z statistic value for first null hypothesis.}
+  \item{z2}{z statistic value for second null hypothesis.}
   \item{RCI}{(Exact) repeated confidence interval for \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
   \item{futility}{Three dimensional vector with either 0 or 1. The first
   component represents futility due to Power of first stage > \code{fCpower},
