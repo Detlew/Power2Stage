@@ -7,7 +7,7 @@ Date: 2018-04-03
 Authors@R: c(person("Detlew", "Labes", role = c("aut","cre"), 
                     email = "DetlewLabes@gmx.de"),
              person("Benjamin", "Lang", role = c("aut", "ctb"), 
-                    email = "BenjaminL@gmx.de"),
+                    email = "lang.be@icloud.com"),
              person("Helmut", "Schütz", role = c("aut", "ctb"), email =
                     "helmut.schuetz@bebac.at"))
 Description: Contains functions to obtain the operational characteristics of 
