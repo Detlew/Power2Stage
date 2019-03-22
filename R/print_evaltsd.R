@@ -27,10 +27,10 @@ print.evaltsd <- function(x, ...) {
         if (x$fCpower > x$targetpower)
           cat("conditional error rates\n")
         else
-          cat("conditional error rates and conditional (estimated target) power\n")
+          cat("conditional error rates and conditional estimated target power\n")
       }
     }
-    cat("\nInterim analysis of first stage\n")
+    cat("\nInterim analysis after first stage\n")
     cat("- Derived key statistics:\n")
     cat(sprintf("  z1 = %.5f, z2 = %.5f", x$z1, x$z2), ",\n", sep = "")
     cat("  Repeated CI = ",
@@ -39,7 +39,7 @@ print.evaltsd <- function(x, ...) {
     if (x$stop_fut) {
       cat("- Futility criterion met:\n")
       if (x$futility[[1]] == 1) {
-        cat("  * BE not declared and Power of first stage ",
+        cat("  - BE not declared and Power of first stage ",
             sprintf("(%.4f)", x$`Power Stage 1`), " > ",
             sprintf("%.4f", x$fCpower), "\n", sep = "")
       }
@@ -51,10 +51,10 @@ print.evaltsd <- function(x, ...) {
         } else if ("pe" %in% fCrit) {
           fCrit <- "PE"
         }
-        cat("  * ", fCrit," outside ", sprintf("%.4f", x$fCrange[1L]), " ... ", sprintf("%.4f", x$fCrange[2L]), "\n", sep = "")
+        cat("  - ", fCrit," outside ", sprintf("%.4f", x$fCrange[1L]), " ... ", sprintf("%.4f", x$fCrange[2L]), "\n", sep = "")
       }
       if (x$futility[[1]] != 1 && x$futility[[3]] == 1) {
-        cat("  * n2 = ", x$n2, " such that n1 + n2 > ", x$fCNmax, "\n", sep = "")
+        cat("  - n2 = ", x$n2, " such that n1 + n2 > ", x$fCNmax, "\n", sep = "")
       }
       not_be <- if (x$stop_BE) "" else "not "
       cat("- Test for BE ", not_be,
@@ -80,7 +80,7 @@ print.evaltsd <- function(x, ...) {
       }
     }
   } else {
-    cat("\nFinal analysis of second stage\n")
+    cat("\nFinal analysis after second stage\n")
     cat("- Derived key statistics:\n")
     cat(sprintf("  z1 = %.5f, z2 = %.5f", x$z1, x$z2), ",\n", sep = "")
     cat("  Repeated CI = ",

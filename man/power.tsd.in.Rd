@@ -145,10 +145,10 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   }
   \item{ssr.conditional}{
     Method for sample size re-estimation step: \verb{"no"} does not use
-    conditional error rates nor the conditional estimated target power for 
+    conditional error rates nor the estimated conditional target power for 
     the second stage, \verb{"error"} uses conditional error rates for the 
     second stage, and \verb{"error_power"} uses both conditional error rates 
-    and the conditonal estimated target power for the second stage.\cr
+    and the estimated conditional target power for the second stage.\cr
     Defaults to \verb{"error_power"}.\cr\cr
     See also \sQuote{Details}.
   }
@@ -199,9 +199,9 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   \code{max.comb.test = TRUE}, w and w* need to be specified, which in turn
   define the two pairs of weights (w, 1-w) and (w*, 1-w*).\cr\cr
   If \verb{ssr.conditional = "error_power"}, the design scheme generally 
-  calculates the conditional estimated target power of the second stage and 
-  uses this value as desired target power in the sample size re-estimation 
-  process. If \code{fCpower} > \code{targetpower}, then the conditional power
+  calculates the estimated conditional target power of the second stage and 
+  uses this value as desired target power in the sample size re-estimation process. 
+  If \code{fCpower} > \code{targetpower}, then the conditional power
   may actually be negative. This does not seem sensible. Therefore, for such
   cases the desired target power for the sample size re-calculation will be set 
   to \code{targetpower}.

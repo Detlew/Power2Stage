@@ -1,5 +1,7 @@
 Version 0.5.1.9000
 XXXX-XX-XX
+   - Typos and minor improvements regarding wording for x.tsd.in
+   - Bug fix in power.tsd.GS (regarding variable hw)
    - Bug in interim.tsd.in() w.r.t to power > target triggering
      futulity fixed (THX to mittyri).
    - Formatting issues corrected in x.tsd.in man pages
