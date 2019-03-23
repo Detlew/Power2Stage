@@ -11,14 +11,14 @@ futility criterion for the point estimate of T/R or its 90\% CI
   to Potvin \emph{et al.} \sQuote{method B/C} via simulations. The Potvin methods are
   modified to include a futility criterion for the point estimate or for its
   90\%CI and to allow the sample size estimation step to be done with the point
-  estimate (\acronym{PE}) and \acronym{MSE} of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+  estimate (\acronym{PE}) and \acronym{MSE} of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
 \usage{
 power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294), 
              n1, CV, GMR, targetpower = 0.8, pmethod = c("nct", "exact", "shifted"),
-                usePE = FALSE, powerstep = TRUE, min.n2=0, max.n=Inf,
-                fCrit=c("CI", "PE"), fClower, fCupper, theta0, theta1, theta2,
-                npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, details = FALSE)
+             usePE = FALSE, powerstep = TRUE, min.n2=0, max.n=Inf,
+             fCrit=c("CI", "PE"), fClower, fCupper, theta0, theta1, theta2,
+             npct = c(0.05, 0.5, 0.95), nsims, setseed = TRUE, details = FALSE)
 }
 \arguments{
   \item{method}{
@@ -56,7 +56,7 @@ power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294
     \verb{c(0.0259, 0.0349)}: Xu \emph{et al.} \sQuote{Method F} for CV 30--55\% \verb{(method="C", fCrit="CI", fClower=0.9305, max.n=180)}
   }
   \item{n1}{
-    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}. For Xu\enc{’}{'}s
+    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. For Xu\enc{’}{'}s
     methods the recommended sample size should be at least 18 (if CV 10--30\%) or
     48 (if CV 30--55\%).
   }
@@ -66,8 +66,8 @@ power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294
   }
   \item{GMR}{
     Ratio T/R to be used in decision scheme (power calculations in
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} and sample size estimation for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}).
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and sample size estimation for
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2}).
   }
   \item{targetpower}{
     Power threshold in the power monitoring steps and
@@ -75,7 +75,7 @@ power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294
   }
   \item{pmethod}{
     Power calculation method, also to be used in the sample size estimation for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.\cr
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.\cr
     Implemented are \verb{"nct"} (approximate calculations via non-central
     \emph{t}-distribution, \verb{"exact"} (exact calculations via Owen\enc{’}{'}s Q),
     and \verb{"shifted"} (approximate calculation via shifted central \emph{t}-distribution
@@ -85,22 +85,22 @@ power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294
   }
   \item{usePE}{
     If \verb{TRUE} the sample size estimation step is done with \acronym{MSE}
-    \bold{and} PE of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+    \bold{and} PE of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     Defaults to \verb{FALSE}, \emph{i.e.}, the sample size is estimated with anticipated
     (fixed) \verb{GMR} given as argument and \acronym{MSE} of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} (analogous to Potvin \emph{et. al.}).
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (analogous to Potvin \emph{et. al.}).
   }
   \item{powerstep}{
     If \verb{TRUE} (the default) the interim power monitoring step in
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} evaluation of \sQuote{method B}
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} evaluation of \sQuote{method B}
     will be done as described in Potvin \emph{et.al.}\cr
     Setting this argument to \verb{FALSE} will omit this step.\cr
     Has no effect if \verb{method="C"} is choosen.
   }
   \item{min.n2}{
-    Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage~2}. Defaults to zero.\cr
+    Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Defaults to zero.\cr
     If the sample size estimation step gives \verb{N < n1} the sample size for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2} will be forced to \verb{min.n2},
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} will be forced to \verb{min.n2},
     \emph{i.e.}, the total sample size to \code{n1+min.n2}.
   }
   \item{max.n}{
@@ -113,20 +113,20 @@ power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294
   \item{fCrit}{
     Futility criterion.\cr
     If set to \verb{"PE"} the study stops after
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} if not \acronym{BE} and if the point
-    estimate (\acronym{PE}) of \ifelse{html}{\out{stage&nbsp;1}}{stage~1} evaluation
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} if not \acronym{BE} and if the point
+    estimate (\acronym{PE}) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} evaluation
     is outside the range defined in the next two  arguments \verb{"fClower"} and
     \verb{"fCupper"}.\cr
-    If set to \verb{"CI"} the study stops after \ifelse{html}{\out{stage&nbsp;1}}{stage~1}
+    If set to \verb{"CI"} the study stops after \ifelse{html}{\out{stage&nbsp;1}}{stage 1}
     if not \acronym{BE} and if the confidence interval of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} evaluation is outside the range
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} evaluation is outside the range
     defined in the next two arguments.\cr
     Defaults to \verb{"PE"}.
     Futility criterion to use for \verb{PE} or \verb{CI}.
   }
   \item{fClower}{
     Lower futility limit for the \verb{PE} or \verb{CI} of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     If the \verb{PE} or \verb{CI} is outside \verb{fClower} \ldots \verb{fCupper}
     the study is stopped in the interim with the result FAIL (not BE).\cr
     May be missing. Defaults then to 0.8 if \verb{fCrit="PE"} or 0.925 if
@@ -134,7 +134,7 @@ power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294
   }
   \item{fCupper}{
     Upper futility limit for the \verb{PE} or \verb{CI} of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     Will be set to \verb{1/fClower} if missing.
   }
   \item{theta0}{
@@ -185,8 +185,8 @@ power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294
   The class \verb{"pwrtsd"} has an S3 print method.\cr
   The results are in the components:
   \item{pBE}{Fraction of studies found BE.}
-  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.}
-  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.}
+  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
+  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
   \item{nmean}{Mean of n(total), aka average total sample size (\acronym{ASN}).}
   \item{nrange}{Range (min, max) of n(total).}
   \item{nperc}{Percentiles of the distribution of n(total).}
@@ -223,7 +223,7 @@ Xu J, Audet C, DiLiberti CE, Hauck WW, Montague TH, Parr TH, Potvin D, Schuirman
 Pharm Stat. 2016;15(1):15--27. \doi{10.1002/pst.1721}
 }
 \seealso{
-\code{\link{power.2stage}}
+\code{\link{power.tsd}}
 }
 \examples{
 # using all the defaults

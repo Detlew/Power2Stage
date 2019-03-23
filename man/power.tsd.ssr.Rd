@@ -9,7 +9,7 @@ sample size re-estimation
 \description{
   This function calculates the \sQuote{empiric} power (via simulations) of
   2-stage BE studies with interim sample size re-estimation (\emph{i.e.},
-  but no BE decision after \ifelse{html}{\out{stage&nbsp;1}}{stage~1}).
+  but no BE decision after \ifelse{html}{\out{stage&nbsp;1}}{stage 1}).
   The sample size re-estimation can be done blinded or unblinded.
   }
 \usage{
@@ -24,7 +24,7 @@ power.tsd.ssr(alpha = 0.05, n1, GMR, CV, targetpower = 0.8,
     the Type I Error.
   }
   \item{n1}{
-    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
   \item{GMR}{
     Ratio T/R to be used in the sample size re-estimation.\cr
@@ -40,7 +40,7 @@ power.tsd.ssr(alpha = 0.05, n1, GMR, CV, targetpower = 0.8,
   }
   \item{pmethod}{
     Power calculation method to be used in the sample size re-estimation for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.\cr
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.\cr
     Implemented are \verb{"nct"} (approximate calculations via non-central
     \emph{t}-distribution, \verb{"exact"} (exact calculations via Owen\enc{’}{'}s
     Q), and \verb{"shifted"} (approximate calculation via shifted central
@@ -52,7 +52,7 @@ power.tsd.ssr(alpha = 0.05, n1, GMR, CV, targetpower = 0.8,
   \item{blind}{
     If \verb{TRUE} the blinded estimate of the intra-subject variance, \emph{i.e.},
     the estimate from the period differences, is used in sample size estimation.\cr
-    If \verb{FALSE} the usual \acronym{MSE} from \ifelse{html}{\out{stage&nbsp;1}}{stage~1}
+    If \verb{FALSE} the usual \acronym{MSE} from \ifelse{html}{\out{stage&nbsp;1}}{stage 1}
     is used.\cr
     Defaults to \verb{FALSE} since most \acronym{BE} studies are open.
   }
@@ -123,7 +123,7 @@ power.tsd.ssr(alpha = 0.05, n1, GMR, CV, targetpower = 0.8,
   The class class \verb{"pwrtsd"} has a S3 print method.\cr
   The results are in the components:
   \item{pBE}{Fraction of studies found BE.}
-  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.}
+  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
   \item{nmean}{Mean of n(total).}
   \item{nrange}{Range (min, max) of n(total).}
   \item{nperc}{Percentiles of the distribution of n(total).}

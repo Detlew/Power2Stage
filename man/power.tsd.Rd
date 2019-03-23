@@ -10,7 +10,7 @@ Power calculation of adaptive 2-stage BE studies in a 2x2 crossover design
   to Potvin \emph{et al.} via simulations. The Potvin methods are modified to include
   a futility criterion Nmax and to allow the sample size estimation step to be
   done with the point estimate (\acronym{PE}) and \acronym{MSE} (calculated from CV)
-  of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+  of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
 \usage{
 power.tsd(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294), 
@@ -48,12 +48,12 @@ power.tsd(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
     \verb{c(0.01, 0.04)}: Zheng \emph{et al.} \sQuote{MSDBE} \verb{(method="B0")}
   }
   \item{n1}{
-    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
   \item{GMR}{
     Ratio T/R to be used in decision scheme (power calculations in
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} and sample size estimation for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}).
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and sample size estimation for
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2}).
   }
   \item{CV}{
     Coefficient of variation of the intra-subject variability
@@ -65,7 +65,7 @@ power.tsd(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   }
   \item{pmethod}{
     Power calculation method, also to be used in the sample size estimation for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.\cr
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.\cr
     Implemented are \verb{"nct"} (approximate calculations via non-central
     \emph{t}-distribution, \verb{"exact"} (exact calculations via Owen\enc{’}{'}s Q),
     and \verb{"shifted"} (approximate calculation via shifted central \emph{t}-distribution
@@ -75,13 +75,13 @@ power.tsd(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   }
   \item{usePE}{
     If \verb{TRUE} the sample size estimation step is done with \acronym{MSE}
-    \bold{and} \acronym{PE} of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+    \bold{and} \acronym{PE} of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     Defaults to \code{FALSE} \emph{i.e.}, the sample size is estimated with
     \verb{GMR} and \acronym{MSE} (calculated from \verb{CV}) of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} analogous to Potvin \emph{et. al}.\cr
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} analogous to Potvin \emph{et. al}.\cr
     NB: The power inspection steps in the Potvin methods are always done with the
     \verb{GMR} argument and \acronym{MSE} (\verb{CV}) of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
   \item{Nmax}{
     Futility criterion. If set to a finite value, all studies simulated in which a
@@ -90,9 +90,9 @@ power.tsd(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
     criterion.
   }
   \item{min.n2}{
-    Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage~2}. Defaults to zero.\cr
+    Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Defaults to zero.\cr
     If the sample size estimation step gives \verb{N < n1} the sample size for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2} will be forced to \verb{min.n2},
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} will be forced to \verb{min.n2},
     \emph{i.e.}, the total sample size to \code{n1+min.n2}.
   }
   \item{theta0}{
@@ -142,8 +142,8 @@ power.tsd(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   The class \verb{"pwrtsd"}" has an S3 print method.\cr
   The results are in the components:
   \item{pBE}{Fraction of studies found BE.}
-  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.}
-  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.}
+  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
+  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
   \item{nmean}{Mean of n(total), aka average total sample size (\acronym{ASN}).}
   \item{nrange}{Range (min, max) of n(total).}
   \item{nperc}{Vector of percentiles of the distribution of n(total).}

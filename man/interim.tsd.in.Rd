@@ -164,7 +164,7 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
     \emph{t}-distribution, \verb{"exact"} (exact calculations via Owen\enc{’}{'}s Q),
     and \verb{"shifted"} (approximate calculation via shifted central \emph{t}-distribution
     like in the paper of Potvin \emph{et al.})\cr
-    In contast to \code{power.tsd.in} the default value here is \verb{"exact"}. 
+    In contrast to \code{power.tsd.in} the default value here is \verb{"exact"}. 
   }
 }
 \details{

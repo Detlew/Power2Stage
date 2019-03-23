@@ -12,34 +12,34 @@ Power calculation of adaptive 2-stage BE studies in 2-group parallel designs
   with 2 parallel groups according to Fuglsang via simulations. The Potvin decision
   schemes are modified to include a futility criterion Nmax and to allow the
   sample size estimation step to be done with point estimate and variabilities
-  from \ifelse{html}{\out{stage&nbsp;1}}{stage~1} (fully adaptive).\cr\cr
+  from \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (fully adaptive).\cr\cr
   Function \verb{power.tsd.pAF()} performes exactly as described in
   Fuglsang\enc{’}{'}s paper, namely the power monitoring steps and the sample
   size estimation are based always on the pooled \emph{t}-test.\cr
   Function \code{power.tsd.p()} with argument \verb{test="welch"} on the
   other hand uses the genuine power of Welch\enc{’}{'}s test. Moreover it
-  accepts unequal \ifelse{html}{\out{stage&nbsp;1}}{stage~1} treatment groups.
+  accepts unequal \ifelse{html}{\out{stage&nbsp;1}}{stage 1} treatment groups.
   }
 \usage{
 power.tsd.p(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
-               n1, GMR, CV, targetpower = 0.8,
-               pmethod = c("nct", "exact", "shifted"),
-               usePE = FALSE, Nmax = Inf, test = c("welch", "t-test", "anova"),
-               theta0, theta1, theta2, npct = c(0.05, 0.5, 0.95), nsims,
-               setseed = TRUE, details = FALSE)
+            n1, GMR, CV, targetpower = 0.8,
+            pmethod = c("nct", "exact", "shifted"),
+            usePE = FALSE, Nmax = Inf, test = c("welch", "t-test", "anova"),
+            theta0, theta1, theta2, npct = c(0.05, 0.5, 0.95), nsims,
+            setseed = TRUE, details = FALSE)
 
 power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
-                 n1, GMR, CV, targetpower = 0.8,
-                 pmethod = c("shifted", "nct", "exact"),
-                 usePE = FALSE, Nmax = Inf, test = c("welch", "t-test", "anova"),
-                 theta0, theta1, theta2, npct = c(0.05, 0.5, 0.95), nsims,
-                 setseed = TRUE, details = FALSE)
+              n1, GMR, CV, targetpower = 0.8,
+              pmethod = c("shifted", "nct", "exact"),
+              usePE = FALSE, Nmax = Inf, test = c("welch", "t-test", "anova"),
+              theta0, theta1, theta2, npct = c(0.05, 0.5, 0.95), nsims,
+              setseed = TRUE, details = FALSE)
 }
 \arguments{
   \item{method}{
     Decision schemes according to Potvin \emph{et.al.} (defaults to \verb{"B"}).\cr
     Potvin\enc{’}{'}s \sQuote{method D} can be obtained by choosing \verb{"C"} but
-    setting \verb{alpha=c(0.028, 0.028)}..
+    setting \verb{alpha=c(0.028, 0.028)}.
   }
   \item{alpha0}{
     Alpha value for the first step(s) in Potvin \verb{"C"}, the power inspection
@@ -51,15 +51,15 @@ power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
     Defaults to Pocock\enc{’}{'}s alpha setting \verb{alpha=c(0.0294, 0.0294)}.
   }
   \item{n1}{
-    (Total) sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+    (Total) sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     Function \verb{power.tsd.p()} accepts also a vector of length 2 with
-    the numbers in treatment groups of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+    the numbers in treatment groups of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     If given as a scalar the total \verb{n1} should be even.
   }
   \item{GMR}{
     Ratio T/R to be used in decision scheme (power calculations in
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} and sample size estimation for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}).
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and sample size estimation for
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2}).
   }
   \item{CV}{
     Coefficient of variation of the total variability
@@ -73,7 +73,7 @@ power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   }
   \item{pmethod}{
     Power calculation method, also to be used in the sample size estimation for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.\cr
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.\cr
     Implemented are \verb{"nct"} (approximate calculations via non-central
     \emph{t}-distribution, \verb{"exact"} (exact calculations via Owen\enc{’}{'}s Q),
     and \verb{"shifted"} (approximate calculation via shifted central
@@ -86,13 +86,13 @@ power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   }
   \item{usePE}{
     If \verb{TRUE} the sample size estimation step is done with \acronym{MSE}
-    \bold{and} \acronym{PE} of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+    \bold{and} \acronym{PE} of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     Defaults to \code{FALSE} \emph{i.e.}, the sample size is estimated with
     \verb{GMR} and \acronym{MSE} (calculated from \verb{CV}) of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} analogous to Potvin \emph{et. al}.\cr
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} analogous to Potvin \emph{et. al}.\cr
     NB: The power inspection steps in the Potvin methods are always done with the
     \verb{GMR} argument and \acronym{MSE} (\verb{CV}) of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
   \item{Nmax}{
     Futility criterion. If set to a finite value, all studies simulated in which a
@@ -152,8 +152,8 @@ power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   The calculations follow in principle the simulations as described by Fuglsang.\cr
   The underlying subject data are assumed to be evaluated after log-transformation.
   But instead of simulating subject data the statistics (mean and variance of Test
-  and Reference of \ifelse{html}{\out{stage&nbsp;1}}{stage~1} and
-  \ifelse{html}{\out{stage&nbsp;2}}{stage~2}) are simulated via their associated
+  and Reference of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and
+  \ifelse{html}{\out{stage&nbsp;2}}{stage 2}) are simulated via their associated
   distributions (normal and \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}}).
 }
 \value{
@@ -162,8 +162,8 @@ power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   The class \verb{"pwrtsd"} has an S3 print method.\cr
   The results are in the components:
   \item{pBE}{Fraction of studies found BE.}
-  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.}
-  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.}
+  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
+  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
   \item{nmean}{Mean of n(total).}
   \item{nrange}{Range (min, max) of n(total).}
   \item{nperc}{Percentiles of the distribution of n(total).}

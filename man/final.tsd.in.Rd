@@ -3,7 +3,7 @@
 \alias{final.tsd.in}
 \alias{final.2stage.in}
 \title{
-Analysis of second stage data of 2-stage 2x2 crossover designs based on
+Analysis after second stage of 2-stage 2x2 crossover design based on
 the Inverse Normal method
 }
 \description{
@@ -25,7 +25,7 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
     If missing, defaults to \verb{0.05}.
   }
   \item{weight}{
-    Pre-defined weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. 
+    Pre-defined weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
     Note that using the notation from Maurer et al weight corresponds to 
     information fraction, other literature may refer to sqrt(weight) as 
     being the weight. \verb{weight} must either contain one element (in case of 
@@ -98,7 +98,7 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   However, it has the advantage that if there were missing data the exact 
   degrees of freedom and standard error of the difference can be used, 
   the former possibly being non-integer valued (e.g. if the 
-  Kenward-Roger method was used).\cr\cr
+  Kenward-Roger method was used).
 }
 \value{
   Returns an object of class \verb{"evaltsd"} with all the input arguments and results

@@ -6,7 +6,7 @@ Sample size re-estimation of adaptive 2-stage BE studies in 2x2 crossover and pa
 }
 \description{
   This function estimates the necessary sample size of
-  \ifelse{html}{\out{stage&nbsp;2}}{stage~2} to have at least a given power.
+  \ifelse{html}{\out{stage&nbsp;2}}{stage 2} to have at least a given power.
   }
 \usage{
 sampleN2.TOST(alpha = 0.0294, CV, n1, theta0 = 0.95,
@@ -22,7 +22,7 @@ sampleN2.TOST(alpha = 0.0294, CV, n1, theta0 = 0.95,
     Coefficient of variation of the intra-subject variability as ratio.
   }
   \item{n1}{
-    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
   \item{theta0}{
     True ratio of T/R for simulating. Defaults to 0.95 argument if missing.
@@ -65,7 +65,7 @@ sampleN2.TOST(alpha = 0.0294, CV, n1, theta0 = 0.95,
   }
 \note{
   Since in the final analysis one degree of freedom less than in a fixed sample
-  design (or in \ifelse{html}{\out{stage&nbsp;1}}{stage~1}) is used, power will
+  design (or in \ifelse{html}{\out{stage&nbsp;1}}{stage 1}) is used, power will
   be slightly lower than the one obtained with function \verb{sampleN.TOST} of
   package \verb{PowerTOST}. However, different \emph{sample sizes} are extremely
   unlikely.

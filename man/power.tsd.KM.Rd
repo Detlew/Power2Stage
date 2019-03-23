@@ -12,13 +12,13 @@ Power calculation of adaptive 2-stage BE studies (2x2 crossover)
   described by Karalis & Macheras to include a futility criterion Nmax and to
   perform the power calculation steps and the sample size estimation step in
   the decision schemes with the \acronym{MSE} (calculated from CV) \strong{and}
-  the point estimate (\acronym{PE}) of T/R from \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+  the point estimate (\acronym{PE}) of T/R from \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
 \usage{
 power.tsd.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
-                n1, CV, targetpower = 0.8, pmethod = c("nct", "exact"),
-                Nmax = 150, theta0, theta1, theta2, npct = c(0.05, 0.5, 0.95),
-                nsims, setseed = TRUE, details = FALSE)
+             n1, CV, targetpower = 0.8, pmethod = c("nct", "exact"),
+             Nmax = 150, theta0, theta1, theta2, npct = c(0.05, 0.5, 0.95),
+             nsims, setseed = TRUE, details = FALSE)
 }
 \arguments{
   \item{method}{
@@ -42,7 +42,7 @@ power.tsd.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
     as in \acronym{TSD} of Karalis & Macheras.
   }
   \item{n1}{
-    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.
+    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
   \item{CV}{
     Coefficient of variation of the intra-subject variability
@@ -54,7 +54,7 @@ power.tsd.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   }
   \item{pmethod}{
     Power calculation method, also to be used in the sample size estimation for
-    \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.\cr
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.\cr
     Implemented are "\verb{"nct"} (approximate calculations via non-central
     \emph{t}-distribution and \verb{"exact"} (exact calculations via Owen\enc{’}{'}s Q).\cr
     Defaults to \verb{"nct"} as a reasonable compromise between speed and
@@ -111,7 +111,7 @@ power.tsd.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   In contrast to Potvin \emph{et al.} the power calculation steps as well as the
   sample size adaption step of the decision schemes are done using the \acronym{MSE}
   (calculated from CV) \bold{and} the point estimate from
-  \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.\cr
+  \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
   This resembles the methods described in Karalis & Macheras and Karalis.
   }
 \value{
@@ -120,8 +120,8 @@ power.tsd.KM(method = c("C", "B"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   The class \verb{"pwrtsd"} has a S3 print method.\cr
   The results are in the components:
   \item{pBE}{Fraction of studies found BE.}
-  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.}
-  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.}
+  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
+  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
   \item{nmean}{Mean of n(total).}
   \item{nrange}{Range (min, max) of n(total).}
   \item{nperc}{Percentiles of the distribution of n(total).}
