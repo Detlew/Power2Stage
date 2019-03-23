@@ -11,9 +11,9 @@ Power calculation for non-adaptive group sequential (2-stage) BE studies
   The number of subjects in both stages has to be prespecified (non-adaptive).
   }
 \usage{
-power.tsd.GS(alpha = c(0.0294, 0.0294), n, CV, theta0, theta1, theta2,
-                fCrit = c("CI", "PE"), fClower, fCupper, nsims,
-                setseed = TRUE, details = FALSE)
+power.tsd.GS(alpha = c(0.0304, 0.0304), n, CV, theta0, theta1, theta2,
+             fCrit = c("CI", "PE"), fClower, fCupper, nsims, setseed = TRUE, 
+             details = FALSE)
 }
 \arguments{
   \item{alpha}{
@@ -23,8 +23,8 @@ power.tsd.GS(alpha = c(0.0294, 0.0294), n, CV, theta0, theta1, theta2,
     Use something like package \verb{ldbounds} for choosing the nominal alphas.
   }
   \item{n}{
-    Vector of the two sample sizes in \ifelse{html}{\out{stage&nbsp;1}}{stage~1}
-    and \ifelse{html}{\out{stage&nbsp;2}}{stage~2}. \verb{n(total)} is \verb{n[1]+n[2]}
+    Vector of the two sample sizes in \ifelse{html}{\out{stage&nbsp;1}}{stage 1}
+    and \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. \verb{n(total)} is \verb{n[1]+n[2]}
     if a second stage is necessary. Otherwise it is \verb{n[1]}.
   }
   \item{CV}{
@@ -44,13 +44,13 @@ power.tsd.GS(alpha = c(0.0294, 0.0294), n, CV, theta0, theta1, theta2,
   \item{fCrit}{
     Futility criterion.\cr
     If set to \verb{"PE"} the study stops after
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} if not \acronym{BE} and if the point
-    estimate (\acronym{PE}) of \ifelse{html}{\out{stage&nbsp;1}}{stage~1} evaluation
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} if not \acronym{BE} and if the point
+    estimate (\acronym{PE}) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} evaluation
     is outside the range defined in the next two  arguments \verb{"fClower"} and
     \verb{"fCupper"}.\cr
-    If set to \verb{"CI"} the study stops after \ifelse{html}{\out{stage&nbsp;1}}{stage~1}
+    If set to \verb{"CI"} the study stops after \ifelse{html}{\out{stage&nbsp;1}}{stage 1}
     if not \acronym{BE} and if the 90\% confidence interval of
-    \ifelse{html}{\out{stage&nbsp;1}}{stage~1} evaluation is outside the range
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} evaluation is outside the range
     defined in the next two arguments.\cr
     Defaults to \verb{"CI"}.
   }
@@ -82,7 +82,7 @@ power.tsd.GS(alpha = c(0.0294, 0.0294), n, CV, theta0, theta1, theta2,
 \details{
   The calculations follow in principle the simulations as described in Potvin
   \emph{et al.} for adaptive designs, but with no interim power inspection and
-  pre-specified (fixed) number of subjects in \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.\cr
+  pre-specified (fixed) number of subjects in \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.\cr
   The underlying subject data are assumed to be evaluated after log-transformation.
   But instead of simulating subject data, the statistics pe1, mse1 and pe2, SS2 are
   simulated via their associated distributions (normal and
@@ -94,8 +94,8 @@ power.tsd.GS(alpha = c(0.0294, 0.0294), n, CV, theta0, theta1, theta2,
   The class \verb{"pwrtsd"} has a S3 print method.\cr
   The results are in the components:
   \item{pBE}{Fraction of studies found BE.}
-  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage~1}.}
-  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage~2}.}
+  \item{pBE_s1}{Fraction of studies found BE in \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
+  \item{pct_s2}{Percentage of studies continuing to \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
   }
 \note{
 The code is reasonable fast. 1E6 sims take ~ 1 sec on my machine.
