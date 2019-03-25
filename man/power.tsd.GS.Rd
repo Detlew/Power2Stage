@@ -11,7 +11,7 @@ Power calculation for non-adaptive group sequential (2-stage) BE studies
   The number of subjects in both stages has to be prespecified (non-adaptive).
   }
 \usage{
-power.tsd.GS(alpha = c(0.0304, 0.0304), n, CV, theta0, theta1, theta2,
+power.tsd.GS(alpha = c(0.0294, 0.0294), n, CV, theta0, theta1, theta2,
              fCrit = c("CI", "PE"), fClower, fCupper, nsims, setseed = TRUE, 
              details = FALSE)
 }
