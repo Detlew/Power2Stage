@@ -12,12 +12,12 @@ the Inverse Normal method
 }
 \usage{
 final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
-             SEM1 = NULL, GMR2, CV2, n2, df2 = NULL, SEM2 = NULL, 
+             SEM1 = NULL, GMR2, CV2, n2, df2 = NULL, SEM2 = NULL,
              theta1, theta2)
 }
 \arguments{
   \item{alpha}{
-    If one element is given, the overall one-sided significance level (not the 
+    If one element is given, the overall one-sided significance level (not the
     adjusted level for \ifelse{html}{\out{stage&nbsp;2}}{stage 2}). If two
     elements are given, the adjusted one-sided alpha levels for
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and
@@ -26,9 +26,9 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   }
   \item{weight}{
     Pre-defined weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
-    Note that using the notation from Maurer et al weight corresponds to 
-    information fraction, other literature may refer to sqrt(weight) as 
-    being the weight. \verb{weight} must either contain one element (in case of 
+    Note that using the notation from Maurer et al weight corresponds to
+    information fraction, other literature may refer to sqrt(weight) as
+    being the weight. \verb{weight} must either contain one element (in case of
     \verb{max.comb.test = FALSE}) or two elements (in case of
     \verb{max.comb.test = TRUE}).\cr
     If missing, defaults to \verb{0.5} for \verb{max.comb.test = FALSE} and to
@@ -39,8 +39,8 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
     used, otherwise the standard combination test.
   }
   \item{GMR1}{
-    Observed ratio of geometric means (T/R) of 
-    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} data 
+    Observed ratio of geometric means (T/R) of
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} data
     (use \emph{e.g.}, 0.95 for 95\%).
   }
   \item{CV1}{
@@ -51,17 +51,17 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
     Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
   \item{df1}{
-    Optional; Error degrees of freedom of 
+    Optional; Error degrees of freedom of
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified in
     addition to \code{n1}.
   }
   \item{SEM1}{
-    Optional; Standard error of the difference of means of 
+    Optional; Standard error of the difference of means of
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1} that can be specified in
     addition to \code{CV1}. Must be on additive scale (i.e. usually log-scale).
   }
   \item{GMR2}{
-    Observed ratio of geometric means (T/R) of (only) 
+    Observed ratio of geometric means (T/R) of (only)
     \ifelse{html}{\out{stage&nbsp;2}}{stage 2} data
     (use \emph{e.g.}, 0.95 for 95\%).
   }
@@ -90,14 +90,14 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   }
 }
 \details{
-  The observed values (\code{GMR1}, \code{GMR2} etc.) should be obtained for 
+  The observed values (\code{GMR1}, \code{GMR2} etc.) should be obtained for
   each stage separately; this may be done via the usual ANOVA approach.\cr\cr
-  The optional arguments \code{df1}, \code{SEM1}, \code{df2} and \code{SEM2} 
-  require a somewhat advanced knowledge (provided in the raw output from for 
-  example the software \acronym{SAS}, or may be obtained via \code{emmeans::emmeans}). 
-  However, it has the advantage that if there were missing data the exact 
-  degrees of freedom and standard error of the difference can be used, 
-  the former possibly being non-integer valued (e.g. if the 
+  The optional arguments \code{df1}, \code{SEM1}, \code{df2} and \code{SEM2}
+  require a somewhat advanced knowledge (provided in the raw output from for
+  example the software \acronym{SAS}, or may be obtained via \code{emmeans::emmeans}).
+  However, it has the advantage that if there were missing data the exact
+  degrees of freedom and standard error of the difference can be used,
+  the former possibly being non-integer valued (e.g. if the
   Kenward-Roger method was used).
 }
 \value{
@@ -113,20 +113,20 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   \item{z2}{Combination test statistic for second null hypothesis (standard
   combination test statistic in case of \code{max.comb.test = FALSE} or
   maximum combination test statistic in case of \code{max.comb.test = TRUE})}
-  \item{RCI}{(Exact) repeated confidence interval for 
+  \item{RCI}{(Exact) repeated confidence interval for
   \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
   \item{MEUE}{Median unbiased estimate as estimate for the overall
   geometric mean ratio}
-  \item{stop_BE}{Logical, indicating whether \acronym{BE} can be concluded after 
+  \item{stop_BE}{Logical, indicating whether \acronym{BE} can be concluded after
   \ifelse{html}{\out{stage&nbsp;2}}{stage 2} or not.}
 }
 \author{
 B. Lang
 }
 \references{
-König F, Wolfsegger M, Jaki T, Schütz H, Wassmer G. \cr
+König F, Wolfsegger M, Jaki T, \enc{Schütz}{Schuetz} H, Wassmer G.\cr
 \emph{Adaptive two-stage bioequivalence trials with early stopping and sample size re-estimation.}\cr
-Vienna: 2014; 35th Annual Conference of the International Society for Clinical Biostatistics. Poster P1.2.88 \cr 
+Vienna: 2014; 35\ifelse{html}{\out{<sup>th</sup>}}{\eqn{^{th}}} Annual Conference of the International Society for Clinical Biostatistics. Poster P1.2.88 \cr
 \doi{10.13140/RG.2.1.5190.0967}.
 
 Patterson SD, Jones B. \emph{Bioequivalence and Statistics in Clinical Pharmacology.}\cr
@@ -134,11 +134,11 @@ Boca Raton: CRC Press; 2\ifelse{html}{\out{<sup>nd</sup>}}{\eqn{^{nd}}} edition 
 
 Maurer W, Jones B, Chen Y. \emph{Controlling the type 1 error rate in two-stage
 sequential designs when testing for average bioequivalence.}\cr
-Stat Med. 2018;1--21. \doi{10.1002/sim.7614}
+Stat Med. 2018;1--21. \doi{10.1002/sim.7614}.
 
 Wassmer G, Brannath W. \emph{Group Sequential and Confirmatory Adaptive Designs
 in Clinical Trials.}\cr
-Springer 2016. \doi{10.1007/978-3-319-32562-0}
+Springer 2016. \doi{10.1007/978-3-319-32562-0}.
 }
 \seealso{
 \code{\link{power.tsd.in}, \link{interim.tsd.in}}
@@ -147,6 +147,6 @@ Springer 2016. \doi{10.1007/978-3-319-32562-0}
 # Example from Maurer et al.
 \dontrun{
 # Not run due to CRAN policy for run-time of examples
-final.tsd.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20, 
+final.tsd.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20,
              GMR2 = exp(-0.0134), CV2 = 0.3644, n2 = 36)}
 }

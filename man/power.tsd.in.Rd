@@ -9,9 +9,9 @@ based on the Inverse Normal method
 \description{
   The function calculates the \sQuote{empirical} power of 2-stage BE studies based
   on the Inverse-Normal combination method. The main design scheme is according
-  to Maurer \emph{et al.} (Maximum Combination Test), but it may also be used 
-  for other/modified designs, e.g. standard combination method, usage of the 
-  observed treatment difference after \ifelse{html}{\out{stage&nbsp;1}}{stage 1} 
+  to Maurer \emph{et al.} (Maximum Combination Test), but it may also be used
+  for other/modified designs, e.g. standard combination method, usage of the
+  observed treatment difference after \ifelse{html}{\out{stage&nbsp;1}}{stage 1}
   in the sample size re-estimation step or different futility criteria.
 }
 \usage{
@@ -26,7 +26,7 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   \item{alpha}{
     If one element is given, the overall one-sided significance level. In this
     case the adjusted alpha levels will be calculated internally. If two
-    elements are given, the argument refers to the two adjusted one-sided alpha 
+    elements are given, the argument refers to the two adjusted one-sided alpha
     levels for \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and
     \ifelse{html}{\out{stage&nbsp;2}}{stage 2}, respectively.\cr
     If missing, defaults to \verb{0.05}.
@@ -34,9 +34,9 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   \item{weight}{
     Pre-defined weight(s) of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}, see
     'Details' for more information.
-    Note that using the notation from Maurer et al, weight corresponds to 
+    Note that using the notation from Maurer et al, weight corresponds to
     information fraction, other literature may refer to sqrt(weight) as being
-    the weight. \verb{weight} must either contain one element (in case of 
+    the weight. \verb{weight} must either contain one element (in case of
     \verb{max.comb.test = FALSE}) or two elements (in case of
     \verb{max.comb.test = TRUE}).\cr
     If missing, defaults to \verb{0.5} for \verb{max.comb.test = FALSE} and to
@@ -72,8 +72,8 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     for \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. If missing, defaults to 0.95.
   }
   \item{usePE}{
-    If \verb{TRUE} the sample size re-estimation is done with the observed 
-    point estimate (\acronym{PE}) of the treatment difference in 
+    If \verb{TRUE} the sample size re-estimation is done with the observed
+    point estimate (\acronym{PE}) of the treatment difference in
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     Defaults to \verb{FALSE}.\cr
     Note: The futility inspection via the power of stage 1 is always done with
@@ -107,9 +107,9 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   }
   \item{fCrit}{
     Futility criterion to use: \verb{"No"} (no futility criterion regarding
-    observed point estimate, confidence interval and maximum sample size), 
-    \verb{"PE"} (observed point estimate of the geometric mean ratio from 
-    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}), 
+    observed point estimate, confidence interval and maximum sample size),
+    \verb{"PE"} (observed point estimate of the geometric mean ratio from
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1}),
     \verb{"CI"} (90\% confidence interval of the geometric mean ratio from
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1}), \code{"Nmax"} (overall maximum
     sample size); or a combination thereof (concatenate abbreviations; see
@@ -124,7 +124,7 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     the default will be set to 0.8 for \verb{fCrit = "PE"} or 0.95 for \verb{fCrit = "CI"}.
     If neither \verb{"PE"} nor \verb{"CI"} is specified within \verb{fCrit}, there
     will be no futility constraint regarding point estimate or confidence interval
-    from \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (regardless of any 
+    from \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (regardless of any
     specification of \verb{fClower} and/or \verb{fCupper}).
   }
   \item{fCupper}{
@@ -145,9 +145,9 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   }
   \item{ssr.conditional}{
     Method for sample size re-estimation step: \verb{"no"} does not use
-    conditional error rates nor the estimated conditional target power for 
-    the second stage, \verb{"error"} uses conditional error rates for the 
-    second stage, and \verb{"error_power"} uses both conditional error rates 
+    conditional error rates nor the estimated conditional target power for
+    the second stage, \verb{"error"} uses conditional error rates for the
+    second stage, and \verb{"error_power"} uses both conditional error rates
     and the estimated conditional target power for the second stage.\cr
     Defaults to \verb{"error_power"}.\cr\cr
     See also \sQuote{Details}.
@@ -188,22 +188,22 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
 }
 \details{
   The underlying subject data are assumed to be evaluated after log-transformation.
-  But instead of simulating subject data, the statistics pe1, mse1 and pe2, mse2 
+  But instead of simulating subject data, the statistics pe1, mse1 and pe2, mse2
   are simulated via their associated distributions (Normal and
   \ifelse{html}{\out{&chi;<sup>2</sup>}}{\eqn{\chi^{2}}} distribution).\cr\cr
   The \code{weight} argument always refers to the first weight of a pair of
   weights. For example, in case of \code{max.comb.test = FALSE} the standard
   combination test requires two weights (w, 1-w) but only the first one, w,
   is required as input argument here because the second weight is
-  automatically specified once the first is given. Similarly for 
+  automatically specified once the first is given. Similarly for
   \code{max.comb.test = TRUE}, w and w* need to be specified, which in turn
   define the two pairs of weights (w, 1-w) and (w*, 1-w*).\cr\cr
-  If \verb{ssr.conditional = "error_power"}, the design scheme generally 
-  calculates the estimated conditional target power of the second stage and 
-  uses this value as desired target power in the sample size re-estimation process. 
+  If \verb{ssr.conditional = "error_power"}, the design scheme generally
+  calculates the estimated conditional target power of the second stage and
+  uses this value as desired target power in the sample size re-estimation process.
   If \code{fCpower} > \code{targetpower}, then the conditional power
   may actually be negative. This does not seem sensible. Therefore, for such
-  cases the desired target power for the sample size re-calculation will be set 
+  cases the desired target power for the sample size re-calculation will be set
   to \code{targetpower}.
 }
 \value{
@@ -228,24 +228,24 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
 B. Lang
 }
 \references{
-König F, Wolfsegger M, Jaki T, Schütz H, Wassmer G. \cr
+König F, Wolfsegger M, Jaki T, \enc{Schütz}{Schuetz} H, Wassmer G.\cr
 \emph{Adaptive two-stage bioequivalence trials with early stopping and sample size re-estimation.}\cr
-Vienna: 2014; 35th Annual Conference of the International Society for Clinical Biostatistics. Poster P1.2.88 \cr 
+Vienna: 2014; 35\ifelse{html}{\out{<sup>th</sup>}}{\eqn{^{th}}} Annual Conference of the International Society for Clinical Biostatistics. Poster P1.2.88 \cr
 \doi{10.13140/RG.2.1.5190.0967}.
 
 Patterson SD, Jones B. \emph{Bioequivalence and Statistics in Clinical Pharmacology.}\cr
 Boca Raton: CRC Press; 2\ifelse{html}{\out{<sup>nd</sup>}}{\eqn{^{nd}}} edition 2017.
 
 Kieser M, Rauch G. \emph{Two-stage designs for cross-over bioequivalence trials.}\cr
-Stat Med. 2015; 34(16):2403--16. \doi{10.1002/sim.6487}
+Stat Med. 2015; 34(16):2403--16. \doi{10.1002/sim.6487}.
 
 Maurer W, Jones B, Chen Y. \emph{Controlling the type 1 error rate in two-stage
 sequential designs when testing for average bioequivalence.}\cr
-Stat Med. 2018;1--21. \doi{10.1002/sim.7614}
+Stat Med. 2018;1--21. \doi{10.1002/sim.7614}.
 
 Wassmer G, Brannath W. \emph{Group Sequential and Confirmatory Adaptive Designs
 in Clinical Trials.}\cr
-Springer 2016. \doi{10.1007/978-3-319-32562-0}
+Springer 2016. \doi{10.1007/978-3-319-32562-0}.
 }
 \seealso{
 \code{\link{interim.tsd.in}, \link{final.tsd.in}}
@@ -260,7 +260,7 @@ power.tsd.in(n1 = 12, CV = 0.2, fCrit = "No", nsims=1e4)
 # Note that actual replication would require the following additional
 # arguments (extremely long run-time)
 \dontrun{
-power.tsd.in(n1 = 12, CV = 0.2, fCrit = "No", max.n = 4000, 
+power.tsd.in(n1 = 12, CV = 0.2, fCrit = "No", max.n = 4000,
              pmethod = "exact", nsims = 1E6)}
 
 # Table 8 in Maurer et al
