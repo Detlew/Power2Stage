@@ -90,8 +90,10 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   }
 }
 \details{
-  The observed values (\code{GMR1}, \code{GMR2} etc.) should be obtained for
-  each stage separately; this may be done via the usual ANOVA approach.\cr\cr
+  The observed values \code{GMR1}, \code{CV1}, \code{n1} must be obtained
+  using data from stage 1 only, and \code{GMR2}, \code{CV2}, \code{n2} must
+  be obtained using data from stage 2 only. This may be done via the usual 
+  ANOVA approach.\cr\cr
   The optional arguments \code{df1}, \code{SEM1}, \code{df2} and \code{SEM2}
   require a somewhat advanced knowledge (provided in the raw output from for
   example the software \acronym{SAS}, or may be obtained via \code{emmeans::emmeans}).
