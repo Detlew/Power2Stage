@@ -51,10 +51,11 @@ power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
     Defaults to Pocock\enc{’}{'}s alpha setting \verb{alpha=c(0.0294, 0.0294)}.
   }
   \item{n1}{
-    (Total) sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
-    Function \verb{power.tsd.p()} accepts also a vector of length 2 with
-    the numbers in treatment groups of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
-    If given as a scalar the total \verb{n1} should be even.
+    Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
+    Function \verb{power.tsd.p()} accepts also a vector of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} sample sizes with two elements, where the number of subjects in the in treatment group \emph{T} should be
+    given in the first element and the number of subjects in the threatment
+    group \emph{R} in the second.\cr
+    If given with one element, the total \verb{n1} should be even.
   }
   \item{GMR}{
     Ratio T/R to be used in decision scheme (power calculations in

@@ -15,7 +15,7 @@ power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294
 {
   # Check if called with .2stage. version
   check2stage(fname=as.character(sys.call())[1])
-  
+
   if (missing(CV)) stop("CV(s) must be given!")
   if (any(CV<=0))  stop("CV(s) must be >0!")
   # equal CV's
@@ -29,8 +29,13 @@ power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294
   varR <- CV2mse(CVR)
 
   if (missing(n1))  stop("Number of subjects in stage 1 must be given!")
-  if (length(n1)>2) stop("Length of n1 has to be 1 (scalar) or 2")
-  if (any(n1<=0))   stop("Number of subjects in stage 1 must be >0!")
+  if (length(n1) > 2) {
+    msg <- "n1 has to be given either with one element (i.e., total number of subjects)"
+    msg <- paste0(msg, "\nor with two, where the 1st gives the number of subjects under T and")
+    msg <- paste0(msg, "\nthe 2nd the number of subjects under R.")
+    stop(msg)
+  }
+  if (any(n1<=0))  stop("Number of subjects in stage 1 must be >0!")
   if (length(n1)==1) {
     # total number given
     if (n1%%2!=0)  warning("Number of subjects in stage 1 should be even.\n",
