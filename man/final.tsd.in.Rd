@@ -147,8 +147,6 @@ Springer 2016. \doi{10.1007/978-3-319-32562-0}.
 }
 \examples{
 # Example from Maurer et al.
-\dontrun{
-# Not run due to CRAN policy for run-time of examples
 final.tsd.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20,
-             GMR2 = exp(-0.0134), CV2 = 0.3644, n2 = 36)}
+             GMR2 = exp(-0.0134), CV2 = 0.3644, n2 = 36)
 }

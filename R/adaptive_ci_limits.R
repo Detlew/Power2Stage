@@ -30,14 +30,19 @@ indv <- function(x, d, weight, diff1, diff2, sem1, sem2, df1, df2, lt = FALSE) {
          ncol = ncol(x))
 }
 
-## Define function Qd from (8.8) as function of d (and subtract a)
+## Define function Qd from (8.8) as a function in d (and subtract a)
 Qd_a <- function(d, a1, a0, a, weight, diff1, diff2, sem1, sem2, df1, df2, 
                  lt = FALSE) {
-  a1 + cubature::hcubature(f = indv, lowerLimit = c(a1, 0), 
-                           upperLimit = c(a0, 1), d = d, weight = weight,
-                           diff1 = diff1, diff2 = diff2, sem1 = sem1, sem2 = sem2,
-                           df1 = df1, df2 = df2, lt = lt, maxEval = 10000, 
-                           vectorInterface = TRUE)$integral - a
+  sgn <- if (lt) 1 else -1 # direction of H0 (>= 0 vs. <= 0)
+  a1d <- if (a1 == 0) 0 else 1 - pnorm(qnorm(1 - a1) + sgn * d / sem1)
+  a0d <- if (a0 == 1) 1 else 1 - pnorm(qnorm(1 - a0) + sgn * d / sem1)
+  # Only define the case where we continue to second stage
+  a1d + cubature::hcubature(f = indv, 
+                            lowerLimit = c(a1d, 0), upperLimit = c(a0d, 1), 
+                            d = d, weight = weight, diff1 = diff1, 
+                            diff2 = diff2, sem1 = sem1, sem2 = sem2, 
+                            df1 = df1, df2 = df2, lt = lt, maxEval = 1000, 
+                            vectorInterface = TRUE)$integral - a
 }
 
 ## Define function to calculate adaptive (1 - a) confidence region

@@ -1,5 +1,6 @@
 Version 0.5.1.9000
 XXXX-XX-XX
+   - Bug fix in calculation of median unbiased estimate within final.tsd.in()
    - Typos and minor wording and formatting corrections (man pages and x.tds.in())
    - Bug fix in power.tsd.GS (regarding variable hw)
    - Bug in interim.tsd.in() w.r.t to power > target triggering
