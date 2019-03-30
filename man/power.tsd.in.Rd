@@ -201,7 +201,7 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   If \verb{ssr.conditional = "error_power"}, the design scheme generally
   calculates the estimated conditional target power of the second stage and
   uses this value as desired target power in the sample size re-estimation process.
-  If \code{fCpower} > \code{targetpower}, then the conditional power
+  If \code{fCpower} > \code{targetpower}, then the conditional target power
   may actually be negative. This does not seem sensible. Therefore, for such
   cases the desired target power for the sample size re-calculation will be set
   to \code{targetpower}.
