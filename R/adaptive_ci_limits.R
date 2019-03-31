@@ -25,8 +25,10 @@ ind <- function(x, y, d, weight, diff1, diff2, sem1, sem2, df1, df2, lt = FALSE)
 indv <- function(x, d, weight, diff1, diff2, sem1, sem2, df1, df2, lt = FALSE) {
   matrix(apply(x, 2, 
                function(z) comb(z[1], z[2], weight) <= 
-                 comb(pd(d, diff1, sem1, df1, lt), pd(d, diff2, sem2, df2, lt), 
-                      weight)), 
+                 comb(pd(d, diff1, sem1, df1, lt), 
+                      pd(d, diff2, sem2, df2, lt), 
+                      weight)
+               ),
          ncol = ncol(x))
 }
 
@@ -72,16 +74,11 @@ median_unbiased_pe <- function(diff1, diff2, sem1, sem2, df1, df2,
 ## Repeated confidence bounds for combination tests according to Section 8.2.2
 repeated_ci <- function(diff1, diff2 = NULL, sem1, sem2 = NULL, df1, df2 = NULL,
                         a1, a2 = NULL, weight = NULL, stage = 1) {
-  tol <- 1e-06
   if (stage == 1) {
-    #search_int <- diff1 + c(-6, 6) * sem1
-    #l <- uniroot(f = function(d) pd(d, diff1, sem1, df1, lt = FALSE) - a1,
-    #             interval = search_int, tol = tol)$root
-    #u <- uniroot(f = function(d) pd(d, diff1, sem1, df1, lt = TRUE) - a1,
-    #             interval = search_int, tol = tol)$root
     l <- diff1 - sem1 * qt(1 - a1, df1)
     u <- diff1 + sem1 * qt(1 - a1, df1)
   } else if (stage == 2) {
+    tol <- 1e-06
     stopifnot(!is.null(diff2), !is.null(sem2), !is.null(df2), !is.null(a2),
               !is.null(weight))
     diff_tmp <- (df1 * diff1 + df2 * diff2) / (df1 + df2)
