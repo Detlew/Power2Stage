@@ -55,7 +55,8 @@ adaptive_ci_limit <- function(diff1, diff2, sem1, sem2, df1, df2,
   # lower_bnd = FALSE creates upper bound u from one-sided interval (-Inf, u)
   
   # Need root of Qd_a
-  diff_tmp <- (df1 * diff1 + df2 * diff2) / (df1 + df2)
+  diff_tmp <- (min(df1, 1e+06) * diff1 + min(df2, 1e+06) * diff2) / 
+    (min(df1, 1e+06) + min(df2, 1e+06))
   search_int <- diff_tmp + c(-6, 6) * max(sem1, sem2)
   lt <- if (lower_bnd) FALSE else TRUE
   uniroot(f = Qd_a, interval = search_int, a1 = a1, a0 = a0, a = a, 
@@ -81,7 +82,8 @@ repeated_ci <- function(diff1, diff2 = NULL, sem1, sem2 = NULL, df1, df2 = NULL,
     tol <- 1e-06
     stopifnot(!is.null(diff2), !is.null(sem2), !is.null(df2), !is.null(a2),
               !is.null(weight))
-    diff_tmp <- (df1 * diff1 + df2 * diff2) / (df1 + df2)
+    diff_tmp <- (min(df1, 1e+06) * diff1 + min(df2, 1e+06) * diff2) / 
+      (min(df1, 1e+06) + min(df2, 1e+06))
     search_int <- diff_tmp + c(-6, 6) * max(sem1, sem2)
     l <- uniroot(f = function(d) comb(pd(d, diff1, sem1, df1, lt = FALSE), 
                                       pd(d, diff2, sem2, df2, lt = FALSE), 
@@ -95,6 +97,6 @@ repeated_ci <- function(diff1, diff2 = NULL, sem1, sem2 = NULL, df1, df2 = NULL,
     stop("Only stage equal to 1 or 2 implemented.")
   }
   res <- c(l, u)
-  names(res) <- c("lower CL", "upper CL")
+  names(res) <- c("lower RCL", "upper RCL")
   if (l <= u) res else NA
 }
