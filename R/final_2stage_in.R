@@ -102,11 +102,22 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
                      df1 = df1, df2 = df2, a1 = cl$siglev[1], a2 = cl$siglev[2],
                      weight = weight, stage = 2)
 
-  ## Calculate overall point estimate as median unbiased estimate
-  meue <- median_unbiased_pe(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1,
-                             sem2 = sem2, df1 = df1, df2 = df2,
-                             a1 = cl$siglev[1], a0 = 1,
-                             weight = weight, lower_bnd = TRUE)
+  ## Calculate median unbiased estimate (Section 8.3.3 in Wassmer & Brannath)
+  # Calculate conservative estimate: For an equivalence setting this means
+  # to calculate lower and upper bound, and then take the worst case
+  meue <- vector("numeric", 2)
+  meue[[1]] <- median_unbiased_pe(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1, 
+                                  sem2 = sem2, df1 = df1, df2 = df2, 
+                                  a1 = cl$siglev[1], a0 = 1, 
+                                  weight = weight, lower_bnd = TRUE)
+  
+  meue[[2]] <- median_unbiased_pe(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1, 
+                                  sem2 = sem2, df1 = df1, df2 = df2,
+                                  a1 = cl$siglev[1], a0 = 1,
+                                  weight = weight, lower_bnd = FALSE)
+  
+  idx_max <- which.max(abs(meue))
+  exp_meue <- exp(meue[[idx_max]])
   
   ### Define final output ------------------------------------------------------
   res <- list(
@@ -114,7 +125,7 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
     max.comb.test = max.comb.test, GMR1 = GMR1, CV1 = CV1, n1 = as.integer(n1),
     df1 = df1, SEM1 = sem1, GMR2 = GMR2, CV2 = CV2, n2 = as.integer(n2),
     df2 = df2, SEM2 = sem2, theta1 = theta1, theta2 = theta2,
-    z1 = Z01, z2 = Z02, RCI = exp(rci), MEUE = exp(meue), stop_BE = BE
+    z1 = Z01, z2 = Z02, RCI = exp(rci), MEUE = exp_meue, stop_BE = BE
   )
   class(res) <- c("evaltsd", "list")
   res
