@@ -117,8 +117,8 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   maximum combination test statistic in case of \code{max.comb.test = TRUE})}
   \item{RCI}{(Exact) repeated confidence interval for
   \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
-  \item{MEUE}{Median unbiased estimate as estimate for the overall
-  geometric mean ratio}
+  \item{MEUE}{Median unbiased point estimate as estimate for the final 
+  geometric mean ratio after stage 2.}
   \item{stop_BE}{Logical, indicating whether \acronym{BE} can be concluded after
   \ifelse{html}{\out{stage&nbsp;2}}{stage 2} or not.}
 }

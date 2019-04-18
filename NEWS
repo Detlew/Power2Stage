@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Version 0.5.2 (easter egg)
 2019-04-21
    - Maintenance release with mainly bug fixes.
@@ -6,6 +7,16 @@ Version 0.5.2 (easter egg)
    - Bug fix in power.tsd.GS (regarding variable hw).
    - Bug in interim.tsd.in() w.r.t to power > target triggering
      futulity fixed (THX to mittyri).
+=======
+Version 0.5.1.9000
+XXXX-XX-XX
+   - Bug fix in calculation of median unbiased estimate within final.tsd.in().
+     Moreover, it is now ensured that this estimate is always conservative.
+   - Typos and minor wording and formatting corrections (man pages and x.tds.in())
+   - Bug fix in power.tsd.GS (regarding variable hw)
+   - Bug fix in interim.tsd.in() w.r.t to power > target triggering
+     futility (THX to mittyri).
+>>>>>>> 7dddd7fbe39ff4469af937af2532e52f0d696f67
 
 Version 0.5-1 (belated easter egg)
 2018-04-03
