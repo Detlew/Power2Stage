@@ -230,7 +230,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
   
   # From those NAs may still consider some of them as failure due to futility:
   # Futility check - here only regarding PE or CI (fCNmax comes later)
-  if (!("no" %in% fCrit) && sum(nms_match[1:2]) > 0) { 
+  if (sum(nms_match[1:2]) > 0) { 
     lfClower <- log(fClower)
     lfCupper <- log(fCupper)
     if (nms_match[1]) {
@@ -331,7 +331,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     # - if n2 is infinite, then we consider this as fail too
     BE2[is.infinite(n2)] <- FALSE
     # - Otherwise check if n1+n2 is greater than fCNmax (if so, set to fail)
-    if (!("no" %in% fCrit) && nms_match[3]) 
+    if (nms_match[3]) 
       BE2[n1 + n2 > fCNmax] <- FALSE
     s2[BE2 == FALSE] <- 1  # such a case is considered to be gone up to stage 1
     fut <- fut + if (all(is.na(BE2))) 0 else sum(BE2 == FALSE)

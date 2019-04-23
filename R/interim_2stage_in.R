@@ -148,7 +148,7 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
   fut[1] <- (BE == FALSE && pwr_s1 >= fCpower)
   
   # Futility check - here only regarding PE or CI (fCNmax comes later)
-  if (fCrit != "no" && sum(nms_match[1:2]) > 0) {
+  if (sum(nms_match[1:2]) > 0) {
     lfClower <- log(fClower)
     lfCupper <- log(fCupper)
     if (nms_match[1]) {
