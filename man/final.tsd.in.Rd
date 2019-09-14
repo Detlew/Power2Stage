@@ -92,7 +92,7 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
 \details{
   The observed values \code{GMR1}, \code{CV1}, \code{n1} must be obtained
   using data from stage 1 only, and \code{GMR2}, \code{CV2}, \code{n2} must
-  be obtained using data from stage 2 only. This may be done via the usual 
+  be obtained using data from stage 2 only. This may be done via the usual
   ANOVA approach.\cr\cr
   The optional arguments \code{df1}, \code{SEM1}, \code{df2} and \code{SEM2}
   require a somewhat advanced knowledge (provided in the raw output from for
@@ -117,7 +117,7 @@ final.tsd.in(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1, df1 = NULL,
   maximum combination test statistic in case of \code{max.comb.test = TRUE})}
   \item{RCI}{(Exact) repeated confidence interval for
   \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.}
-  \item{MEUE}{Median unbiased point estimate as estimate for the final 
+  \item{MEUE}{Median unbiased point estimate as estimate for the final
   geometric mean ratio after stage 2.}
   \item{stop_BE}{Logical, indicating whether \acronym{BE} can be concluded after
   \ifelse{html}{\out{stage&nbsp;2}}{stage 2} or not.}
@@ -136,7 +136,7 @@ Boca Raton: CRC Press; 2\ifelse{html}{\out{<sup>nd</sup>}}{\eqn{^{nd}}} edition 
 
 Maurer W, Jones B, Chen Y. \emph{Controlling the type 1 error rate in two-stage
 sequential designs when testing for average bioequivalence.}\cr
-Stat Med. 2018;1--21. \doi{10.1002/sim.7614}.
+Stat Med. 2018; 37(10): 1587--1607. \doi{10.1002/sim.7614}.
 
 Wassmer G, Brannath W. \emph{Group Sequential and Confirmatory Adaptive Designs
 in Clinical Trials.}\cr

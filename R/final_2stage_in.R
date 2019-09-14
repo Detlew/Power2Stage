@@ -1,10 +1,10 @@
 final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
                             df1 = NULL, SEM1 = NULL, GMR2, CV2, n2, df2 = NULL,
                             SEM2 = NULL, theta1, theta2) {
-  
+
   # Check if called with .2stage. version
   check2stage(fname=as.character(sys.call())[1])
-  
+
   ### Error handling and default value set-up ----------------------------------
   if (missing(GMR1) || missing(GMR2))
     stop("GMR1 and GMR2 must be given.")
@@ -14,8 +14,8 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
     stop("CV1 and CV2 must be > 0.")
   if (missing(n1) || missing(n2))
     stop("n1 and n2 must be given.")
-  if (n1 <= 0 || n2 <= 0) 
-    stop("n1 and n2 must be > 0.")
+  if (n1 < 3 || n2 < 3)
+    stop("n1 and n2 must be at least 3.")
   if (missing(alpha))
     alpha <- 0.05
   if (length(alpha) > 2)
@@ -106,19 +106,19 @@ final.2stage.in <- function(alpha, weight, max.comb.test = TRUE, GMR1, CV1, n1,
   # Calculate conservative estimate: For an equivalence setting this means
   # to calculate lower and upper bound, and then take the worst case
   meue <- vector("numeric", 2)
-  meue[[1]] <- median_unbiased_pe(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1, 
-                                  sem2 = sem2, df1 = df1, df2 = df2, 
-                                  a1 = cl$siglev[1], a0 = 1, 
+  meue[[1]] <- median_unbiased_pe(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1,
+                                  sem2 = sem2, df1 = df1, df2 = df2,
+                                  a1 = cl$siglev[1], a0 = 1,
                                   weight = weight, lower_bnd = TRUE)
-  
-  meue[[2]] <- median_unbiased_pe(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1, 
+
+  meue[[2]] <- median_unbiased_pe(diff1 = lGMR1, diff2 = lGMR2, sem1 = sem1,
                                   sem2 = sem2, df1 = df1, df2 = df2,
                                   a1 = cl$siglev[1], a0 = 1,
                                   weight = weight, lower_bnd = FALSE)
-  
+
   idx_max <- which.max(abs(meue))
   exp_meue <- exp(meue[[idx_max]])
-  
+
   ### Define final output ------------------------------------------------------
   res <- list(
     stage = 2L, alpha = cl$siglev, cval = cl$cval, weight = weight,

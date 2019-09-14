@@ -4,12 +4,21 @@ Type: Package
 Title: Power and Sample-Size Distribution of 2-Stage Bioequivalence Studies
 Version: 0.5.2.9000
 Date: yyyy-mm-dd
-Authors@R: c(person("Detlew", "Labes", role = c("aut","cre"), 
-                    email = "DetlewLabes@gmx.de"),
-             person("Benjamin", "Lang", role = c("aut", "ctb"), 
-                    email = "lang.be@icloud.com"),
-             person("Helmut", "Schütz", role = c("aut", "ctb"), email =
-                    "helmut.schuetz@bebac.at"))
+Authors@R: c(person("Detlew", "Labes",
+               role = c("aut","cre"),
+               email = "DetlewLabes@gmx.de",
+               comment = c(ORCID = "0000-0003-2169-426X")),
+             person("Benjamin", "Lang",
+                role = c("aut", "ctb"), 
+                email = "lang.be@icloud.com"),
+             person("Helmut", "Schütz",
+               role = c("aut", "ctb"),
+               email = "helmut.schuetz@bebac.at",
+               comment = c(ORCID = "0000-0002-1167-7880")))
+Author: Detlew Labes [aut, cre] (<https://orcid.org/0000-0003-2169-426X>),
+  Benjamin Lang [aut, ctb],
+  Helmut Schütz [aut, ctb] (<https://orcid.org/0000-0002-1167-7880>)
+Maintainer: Detlew Labes <DetlewLabes@gmx.de>
 Description: Contains functions to obtain the operational characteristics of 
     bioequivalence studies with 2-stage designs (TSD) via simulations.
 Imports: PowerTOST, stats, mvtnorm, cubature
