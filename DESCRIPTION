@@ -20,7 +20,7 @@ Author: Detlew Labes [aut, cre] (<https://orcid.org/0000-0003-2169-426X>),
   Helmut Schütz [aut, ctb] (<https://orcid.org/0000-0002-1167-7880>)
 Maintainer: Detlew Labes <DetlewLabes@gmx.de>
 Description: Contains functions to obtain the operational characteristics of 
-    bioequivalence studies with 2-stage designs (TSD) via simulations.
+    bioequivalence studies in 2-stage designs (TSD) via simulations.
 Imports: PowerTOST, stats, mvtnorm, cubature
 Suggests: graphics
 ByteCompile: yes

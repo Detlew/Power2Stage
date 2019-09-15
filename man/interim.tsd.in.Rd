@@ -264,6 +264,9 @@ Springer 2016. \doi{10.1007/978-3-319-32562-0}.
 \code{\link{power.tsd.in}, \link{final.tsd.in}}
 }
 \examples{
-# Example from Maurer et al
+# Example from Maurer et al.
 interim.tsd.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20, max.n = 4000)
+# Example 2 from Potvin et al.
+interim.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1 = 12,
+               fCrit = "No", ssr.conditional = "no")
 }

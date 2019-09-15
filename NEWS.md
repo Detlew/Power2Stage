@@ -1,9 +1,13 @@
 # Power2Stage 0.5.2.9000
-Published on GitHub 2019-09-14.
+Published on GitHub 2019-09-15.
+
+## Major changes
+
+  * README.md knitted from README.Rmd.
+  * NEWS.md instead of NEWS.
 
 ## Minor changes
 
-  * NEWS.md instead of NEWS.
   * Stop `interim.2stage.in()` if n1 <3 and final.tsd.in() if n1 | n2 <3 (avoids errors and wranings).
   * References in man-pages of `*.tsd.in()` corr.
 

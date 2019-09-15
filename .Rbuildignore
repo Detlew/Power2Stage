@@ -2,3 +2,4 @@
 stuff
 ^.*\.Rproj$
 ^\.Rproj\.user$
+README.Rmd

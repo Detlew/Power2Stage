@@ -12,7 +12,7 @@ Power calculation for non-adaptive group sequential (2-stage) BE studies
   }
 \usage{
 power.tsd.GS(alpha = c(0.0294, 0.0294), n, CV, theta0, theta1, theta2,
-             fCrit = c("CI", "PE"), fClower, fCupper, nsims, setseed = TRUE, 
+             fCrit = c("CI", "PE"), fClower, fCupper, nsims, setseed = TRUE,
              details = FALSE)
 }
 \arguments{
@@ -33,10 +33,10 @@ power.tsd.GS(alpha = c(0.0294, 0.0294), n, CV, theta0, theta1, theta2,
   }
   \item{theta0}{
     Assumed ratio of geometric means (T/R) for simulations. If missing,
-    defaults to \verb{GMR}.
+    defaults to 0.95.
   }
   \item{theta1}{
-    Lower bioequivalence limit. Defaults to 0.8.
+    Lower bioequivalence limit. Defaults to 0.80.
   }
   \item{theta2}{
     Upper bioequivalence limit. Defaults to 1.25.

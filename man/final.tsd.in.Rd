@@ -149,4 +149,7 @@ Springer 2016. \doi{10.1007/978-3-319-32562-0}.
 # Example from Maurer et al.
 final.tsd.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20,
              GMR2 = exp(-0.0134), CV2 = 0.3644, n2 = 36)
+# Example 2 from Potvin et al.
+final.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1 = 12,
+             GMR2 = 0.9141, CV2 = 0.25618, n2 = 8)
 }

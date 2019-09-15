@@ -14,7 +14,7 @@ futility criterion for the point estimate of T/R or its 90\% CI
   estimate (\acronym{PE}) and \acronym{MSE} of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
 \usage{
-power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294), 
+power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
              n1, CV, GMR, targetpower = 0.8, pmethod = c("nct", "exact", "shifted"),
              usePE = FALSE, powerstep = TRUE, min.n2=0, max.n=Inf,
              fCrit=c("CI", "PE"), fClower, fCupper, theta0, theta1, theta2,
@@ -53,7 +53,7 @@ power.tsd.fC(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294
     \verb{c(0.0249, 0.0357)}: Xu \emph{et al.} \sQuote{Method E} for CV 10--30\% \verb{(fCrit="CI", fClower=0.9374, max.n=42)}\cr
     \verb{c(0.0254, 0.0363)}: Xu \emph{et al.} \sQuote{Method E} for CV 30--55\% \verb{(fCrit="CI", fClower=0.9305, max.n=42)}\cr
     \verb{c(0.0248, 0.0364)}: Xu \emph{et al.} \sQuote{Method F} for CV 10--30\% \verb{(method="C", fCrit="CI", fClower=0.9492, max.n=180)}\cr
-    \verb{c(0.0259, 0.0349)}: Xu \emph{et al.} \sQuote{Method F} for CV 30--55\% \verb{(method="C", fCrit="CI", fClower=0.9305, max.n=180)}
+    \verb{c(0.0259, 0.0349)}: Xu \emph{et al.} \sQuote{Method F} for CV 30--55\% \verb{(method="C", fCrit="CI", fClower=0.9350, max.n=180)}
   }
   \item{n1}{
     Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. For Xu\enc{’}{'}s
