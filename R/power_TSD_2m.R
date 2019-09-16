@@ -5,9 +5,9 @@
 # Author D.L.
 # --------------------------------------------------------------------------
 
-power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR, 
-                         targetpower=0.8, pmethod=c("nct","exact", "shifted"), 
-                         powerstep=FALSE, theta0, theta1, theta2, 
+power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
+                         targetpower=0.8, pmethod=c("nct","exact", "shifted"),
+                         powerstep=FALSE, theta0, theta1, theta2,
                          npct=c(0.05, 0.5, 0.95), nsims, setseed=TRUE, details=FALSE)
 {
   if(missing(CV))  stop("CVs must be given.")
@@ -46,10 +46,17 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
     if(length(theta0)==1) theta0 <- rep(theta0, 2)
     if(length(theta0)!=2) stop("theta0 must have two elements.")
   }
-  
+
   #if(rho!=0) warning("rho != 0 is only experimental.", call. = FALSE)
   stopifnot(length(rho)==1, rho >= -1, rho <= 1)
-  
+
+  if (rho < -1 || rho > 1)
+    stop("Correlation must be within {-1, +1}.")
+
+  # prevent error in rWishart(n, df, Sigma)
+  if (rho == -1) rho <- -1 + .Machine $double.eps
+  if (rho == +1) rho <- +1 - .Machine $double.eps
+
   if(missing(nsims)){
     nsims <- 1E5
     if(any(theta0<=theta1) | any(theta0>=theta2)) nsims <- 1E6
@@ -102,7 +109,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
     s_mse  <- diag(mse)
     s_mse[1,2] <- s_mse[2,1] <- rho*sqrt(s_mse[1,1]*s_mse[2,2])
     #or do we have here df=n-1?
-    covm      <- rWish2(n=nsims, df=df, Sigma=s_mse)/df 
+    covm      <- rWish2(n=nsims, df=df, Sigma=s_mse)/df
     mses[, 1] <- covm[1, 1, ]
     mses[, 2] <- covm[2, 2, ]
     # take care of memory
@@ -126,16 +133,16 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   #browser()
   # set BE to NA if BE not decided yet
   BE[!BE] <- NA
-  
+
   if(powerstep) {
     # metric 1 power
     pwr_m1 <- .calc.power(alpha=alpha[2], ltheta1=ltheta1, ltheta2=ltheta2,
-                          diffm=lGMR[1], sem=sqrt(bk*mses[, 1]/n1), df=df, 
+                          diffm=lGMR[1], sem=sqrt(bk*mses[, 1]/n1), df=df,
                           method=pmethod)
     BE[BE_m2 & !BE_m1 & pwr_m1>=targetpower] <- FALSE
     # metric 2 power
     pwr_m2 <- .calc.power(alpha=alpha[2], ltheta1=ltheta1, ltheta2=ltheta2,
-                          diffm=lGMR[2], sem=sqrt(bk*mses[, 2]/n1), df=df, 
+                          diffm=lGMR[2], sem=sqrt(bk*mses[, 2]/n1), df=df,
                           method=pmethod)
     BE[BE_m1 & !BE_m2 & pwr_m2>=targetpower] <- FALSE
     # take care of memory
@@ -231,7 +238,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
       SS2[, 2]   <- ifelse(n2>2, (n2-2)*mse[2]*rchisq(n=nsim2, df=n2-2)/(n2-2), 0)
     }
     options(ow)
-    
+
     BE2 <- function(nu)
     {
       # this function sees pes[], mses[], pes2[], SS2[] and n2[]
@@ -268,7 +275,7 @@ power.tsd.2m <- function(alpha=c(0.0294,0.0294), CV, n1, rho=0, GMR,
   res <- list(design="2x2 crossover",
               method="B2m", alpha=alpha, CV=CV, n1=n1, GMR=GMR, rho=rho,
               targetpower=targetpower, pmethod=pmethod,
-              theta0=exp(mlog), theta1=theta1, theta2=theta2, usePE=FALSE, 
+              theta0=exp(mlog), theta1=theta1, theta2=theta2, usePE=FALSE,
               nsims=nsims,
               # results
               pBE=sum(BE)/nsims,
