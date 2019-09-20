@@ -246,6 +246,7 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
     'Power Stage 1' = pwr_s1, n2 = as.integer(n2),
     stop_s1 = (BE == TRUE) || any(fut > 0),
     stop_fut = any(fut > 0), stop_BE = (BE == TRUE), RCI = exp(rci),
+    MEUE = if (any(fut > 0) || (!any(fut > 0) && BE)) GMR1 else NA,
     alpha_ssr = if (!BE) as.numeric(alpha_ssr) else NULL,
     GMR_ssr = if (!BE) exp(lGMR_ssr) else NULL,
     targetpower_ssr = if (!BE) pwr_ssr else NULL

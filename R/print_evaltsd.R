@@ -35,7 +35,8 @@ print.evaltsd <- function(x, ...) {
     cat(sprintf("  z1 = %.5f, z2 = %.5f", x$z1, x$z2), ",\n", sep = "")
     cat("  Repeated CI = ",
         sprintf("(%.5f, %.5f)", x$RCI[[1]], x$RCI[[2]]), "\n", sep = "")
-
+    cat("  Median unbiased estimate = ", sprintf("%.4f", x$MEUE), "\n",
+        sep = "")
     if (x$stop_fut) {
       cat("- Futility criterion met:\n")
       if (x$futility[[1]] == 1) {

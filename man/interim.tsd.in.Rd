@@ -204,7 +204,9 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
   \item{p12}{Observed p-value for second hypothesis.}
   \item{z1}{z statistic value for first null hypothesis.}
   \item{z2}{z statistic value for second null hypothesis.}
-  \item{RCI}{(Exact) repeated confidence interval for \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
+  \item{RCI}{Repeated confidence interval for \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
+  \item{MEUE}{If the study stops, the median unbiased point estimate as estimate for the final adjusted
+  geometric mean ratio after stage 1 (note that the value is identical to \code{GMR1}.)}
   \item{futility}{Three dimensional vector with either 0 or 1. The first
   component represents futility due to Power of first stage > \code{fCpower},
   the second futility due to \verb{CI} (or \verb{PE}) outside of
