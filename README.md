@@ -35,7 +35,7 @@ The package contains functions to obtain the operational characteristics
 (power, type I error, percentage of studies proceeding to the second
 stage, average and quantiles of total sample sizes) of bioequivalence
 studies in adaptive sequential 2-Stage Designs (TSD) via simulations.  
-Built 2019-09-15 with R 3.6.1.
+Built 2019-09-21 with R 3.6.1.
 
 ## Supported Methods
 
@@ -136,13 +136,13 @@ Defaults employed if not specified in the function call:
 
 | function          | `theta0` | `target power` | `usePE` | `Nmax` | `max.n` | `fCrit` | `fClower` |
 | ----------------- | :------: | :------------: | :-----: | :----: | :-----: | :-----: | :-------: |
-| `power.tsd()`     |   0.95   |      0.80      | `FALSE` |  Inf   |    –    |    –    |     –     |
-| `power.tsd.fC()`  |   0.95   |      0.80      | `FALSE` |   –    |   Inf   | `"PE"`  |   0.80    |
-| `power.tsd.KM()`  |   0.95   |      0.80      |    –    |  150   |    –    |    –    |     –     |
-| `power.tsd.ssr()` |   0.95   |      0.80      | `FALSE` |   –    |   Inf   |    –    |     –     |
-| `power.tsd.GS()`  |   0.95   |       –        |    –    |   –    |    –    | `"PE"`  |   0.80    |
-| `power.tsd.in()`  |   0.95   |      0.80      | `FALSE` |   –    |   Inf   | `"CI"`  |   0.95    |
-| `power.tsd.p()`   |   0.95   |      0.80      | `FALSE` |  Inf   |    –    |    –    |     –     |
+| `power.tsd()`     |  `0.95`  |     `0.80`     | `FALSE` | `Inf`  |    –    |    –    |     –     |
+| `power.tsd.fC()`  |  `0.95`  |     `0.80`     | `FALSE` |   –    |  `Inf`  | `"PE"`  |  `0.80`   |
+| `power.tsd.KM()`  |  `0.95`  |     `0.80`     |    –    | `150`  |    –    |    –    |     –     |
+| `power.tsd.ssr()` |  `0.95`  |     `0.80`     | `FALSE` |   –    |  `Inf`  |    –    |     –     |
+| `power.tsd.GS()`  |  `0.95`  |       –        |    –    |   –    |    –    | `"PE"`  |  `0.80`   |
+| `power.tsd.in()`  |  `0.95`  |     `0.80`     | `FALSE` |   –    |  `Inf`  | `"CI"`  |  `0.95`   |
+| `power.tsd.p()`   |  `0.95`  |     `0.80`     | `FALSE` | `Inf`  |    –    |    –    |     –     |
 
 All functions are for a 2×2×2 crossover design except `power.tsd.p()`,
 which is for a two-group parallel design.  
@@ -307,6 +307,7 @@ interim.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1= 12)
 # - Derived key statistics:
 #   z1 = 3.10000, z2 = 1.70344,
 #   Repeated CI = (0.92491, 1.27891)
+#   Median unbiased estimate = NA
 # - No futility criterion met
 # - Test for BE not positive (not considering any futility rule)
 # - Calculated n2 = 6
@@ -337,9 +338,9 @@ final.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1 = 12,
 # - Decision: BE achieved
 ```
 
-The study passed with a 100(1 – 2×0.02635) = 94.73% CI of 87.69–117.36%.
-Although slightly more conservative, same conclusion like based on the
-94.12% CI of 88.45–116.38% reported by Potvin *et al.*
+The study passed with a (repeated) CI of 87.69–117.36%. Although
+slightly more conservative, same conclusion like based on the 94.12% CI
+of 88.45–116.38% reported by Potvin *et al.*
 
 <small>[TOC ↩](#readme)</small>
 
@@ -382,7 +383,7 @@ used to compare with the published method.
 ## Installation
 
 You can install the released version of Power2Stage from
-[CRAN](https://CRAN.R-project.org) with:
+[CRAN](https://CRAN.R-project.org) with …
 
 ``` r
 package <- "Power2Stage"
@@ -390,7 +391,7 @@ inst    <- package %in% installed.packages()
 if (length(package[!inst]) > 0) install.packages(package[!inst])
 ```
 
-And the development version from [GitHub](https://github.com/) with:
+… and the development version from [GitHub](https://github.com/) with …
 
     # install.packages("devtools")
     devtools::install_github("Detlew/Power2Stage")
