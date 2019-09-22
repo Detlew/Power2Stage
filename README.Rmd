@@ -59,14 +59,15 @@ It should be noted that the adjusted alphas do not necessarily have to be the sa
       *α*~1~ 0.0259, *α*~2~ 0.0349, futility rule on CI {0.9350, 1/0.9350}.
   - [Molins *et al.*](https://doi.org/10.1002/sim.7452) (2017) ‘Type 2 modified Potvin C’: *α* 0.0280 (*θ*~0~ 0.95, target power 0.80, min. *n~2~* = 1.5*n~1~*, *n~max~* 150).
 
-#### Sample Size Re-estimation in the Interim
+#### Blinded Sample Size Re-estimation in the Interim
 [Golkowski *et al.*](https://doi.org/10.1002/pst.1617) (2014).
 
 #### Group Sequential Design
 [Kieser and Rauch](https://doi.org/10.1002/sim.6487) (2015).
 
 ### Inverse-Normal Combination
-[König *et al.*](https://doi.org/10.13140/RG.2.1.5190.0967) (2014), [Wassmer and Brannath](https://doi.org/10.1007/978-3-319-32562-0) (2016), [Maurer *et al.*](https://doi.org/10.1002/sim.7614) (2018).
+[König *et al.*](https://doi.org/10.13140/RG.2.1.5190.0967) (2014), [Kieser and Rauch](https://doi.org/10.1002/sim.6487) (2015),
+[Wassmer and Brannath](https://doi.org/10.1007/978-3-319-32562-0) (2016), [Maurer *et al.*](https://doi.org/10.1002/sim.7614) (2018).
 
 <small>[TOC ↩](#readme)</small>
 
@@ -85,7 +86,6 @@ Defaults employed if not specified in the function call:
 |`power.tsd.in()`|`0.95`|`0.80`|`FALSE`|--|`Inf`|`"CI"`|`0.95`|
 |`power.tsd.p()`|`0.95`|`0.80`|`FALSE`|`Inf`|--|--|--|
 All functions are for a 2×2×2 crossover design except `power.tsd.p()`, which is for a two-group parallel design.\
-In all methods `alpha=c(0.0294, 0.0294)`. In ‘Type I’ designs only (`method="C"`) additionally `alpha0=0.05`.\
 If `usePE=TRUE` the point estimate in the interim is used in sample size estimation of the second stage.\
 If the estimated total sample size exceeds `max.n` the second stage will be forced to `max.n-n1` (*i.e.*, it is *not* a futility criterion).\
 The method used for interim power and sample size estimation is specified by the argument `pmethod`. It defaults to `"nct"` (approximation by the noncentral *t*-distribution) except in `power.tsd.GS()`, where the total sample size is already fixed.\

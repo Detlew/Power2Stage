@@ -1,25 +1,6 @@
 README
 ================
 
-  - [Power2Stage](#power2stage)
-      - [Supported Methods](#supported-methods)
-          - [Simulation-based](#simulation-based)
-              - [‘Type 1’](#type-1)
-              - [‘Type 2’](#type-2)
-              - [Sample Size Re-estimation in the
-                Interim](#sample-size-re-estimation-in-the-interim)
-              - [Group Sequential Design](#group-sequential-design)
-          - [Inverse-Normal Combination](#inverse-normal-combination)
-      - [Functions](#functions)
-          - [Main](#main)
-          - [Helpers](#helpers)
-      - [Examples](#examples)
-          - [Method B](#method-b)
-          - [Method C](#method-c)
-          - [Inverse-Normal Combination](#inverse-normal-combination-1)
-      - [Speed Comparisons](#speed-comparisons)
-      - [Installation](#installation)
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 [![cran
@@ -35,7 +16,7 @@ The package contains functions to obtain the operational characteristics
 (power, type I error, percentage of studies proceeding to the second
 stage, average and quantiles of total sample sizes) of bioequivalence
 studies in adaptive sequential 2-Stage Designs (TSD) via simulations.  
-Built 2019-09-21 with R 3.6.1.
+Built 2019-09-22 with R 3.6.0.
 
 ## Supported Methods
 
@@ -112,7 +93,7 @@ decision schemes of the published methods.
     0.80, min. *n<sub>2</sub>* = 1.5*n<sub>1</sub>*, *n<sub>max</sub>*
     150).
 
-#### Sample Size Re-estimation in the Interim
+#### Blinded Sample Size Re-estimation in the Interim
 
 [Golkowski *et al.*](https://doi.org/10.1002/pst.1617) (2014).
 
@@ -123,8 +104,9 @@ decision schemes of the published methods.
 ### Inverse-Normal Combination
 
 [König *et al.*](https://doi.org/10.13140/RG.2.1.5190.0967) (2014),
-[Wassmer and Brannath](https://doi.org/10.1007/978-3-319-32562-0)
-(2016), [Maurer *et al.*](https://doi.org/10.1002/sim.7614) (2018).
+[Kieser and Rauch](https://doi.org/10.1002/sim.6487) (2015), [Wassmer
+and Brannath](https://doi.org/10.1007/978-3-319-32562-0) (2016), [Maurer
+*et al.*](https://doi.org/10.1002/sim.7614) (2018).
 
 <small>[TOC ↩](#readme)</small>
 
@@ -132,7 +114,8 @@ decision schemes of the published methods.
 
 ### Main
 
-Defaults employed if not specified in the function call:
+Defaults employed if not specified in the function
+call:
 
 | function          | `theta0` | `target power` | `usePE` | `Nmax` | `max.n` | `fCrit` | `fClower` |
 | ----------------- | :------: | :------------: | :-----: | :----: | :-----: | :-----: | :-------: |
@@ -146,8 +129,6 @@ Defaults employed if not specified in the function call:
 
 All functions are for a 2×2×2 crossover design except `power.tsd.p()`,
 which is for a two-group parallel design.  
-In all methods `alpha=c(0.0294, 0.0294)`. In ‘Type I’ designs only
-(`method="C"`) additionally `alpha0=0.05`.  
 If `usePE=TRUE` the point estimate in the interim is used in sample size
 estimation of the second stage.  
 If the estimated total sample size exceeds `max.n` the second stage will
@@ -307,7 +288,6 @@ interim.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1= 12)
 # - Derived key statistics:
 #   z1 = 3.10000, z2 = 1.70344,
 #   Repeated CI = (0.92491, 1.27891)
-#   Median unbiased estimate = NA
 # - No futility criterion met
 # - Test for BE not positive (not considering any futility rule)
 # - Calculated n2 = 6
@@ -347,7 +327,7 @@ of 88.45–116.38% reported by Potvin *et al.*
 ## Speed Comparisons
 
 Performed on a double Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R
-3.6.1 64 bit on Windows 7.
+3.6.0 64 bit on Windows 7.
 
 ‘Method B’ (*CV* 0.20, *n*<sub>1</sub> 12).
 
