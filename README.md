@@ -1,7 +1,24 @@
 README
 ================
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+  - [Power2Stage](#power2stage)
+      - [Supported Methods](#supported-methods)
+          - [Simulation-based](#simulation-based)
+              - [‘Type 1’](#type-1)
+              - [‘Type 2’](#type-2)
+              - [Blinded Sample Size Re-estimation in the
+                Interim](#blinded-sample-size-re-estimation-in-the-interim)
+              - [Group Sequential Design](#group-sequential-design)
+          - [Inverse-Normal Combination](#inverse-normal-combination)
+      - [Functions](#functions)
+          - [Main](#main)
+          - [Helpers](#helpers)
+      - [Examples](#examples)
+          - [Method B](#method-b)
+          - [Method C](#method-c)
+          - [Inverse-Normal Combination](#inverse-normal-combination-1)
+      - [Speed Comparisons](#speed-comparisons)
+      - [Installation](#installation)
 
 [![cran
 checks](https://cranchecks.info/badges/summary/PowerTOST)](https://cran.r-project.org/web/checks/check_results_Power2Stage.html)
@@ -16,7 +33,7 @@ The package contains functions to obtain the operational characteristics
 (power, type I error, percentage of studies proceeding to the second
 stage, average and quantiles of total sample sizes) of bioequivalence
 studies in adaptive sequential 2-Stage Designs (TSD) via simulations.  
-Built 2019-09-22 with R 3.6.0.
+Built 2019-09-22 with R 3.6.1.
 
 ## Supported Methods
 
@@ -114,8 +131,7 @@ and Brannath](https://doi.org/10.1007/978-3-319-32562-0) (2016), [Maurer
 
 ### Main
 
-Defaults employed if not specified in the function
-call:
+Defaults employed if not specified in the function call:
 
 | function          | `theta0` | `target power` | `usePE` | `Nmax` | `max.n` | `fCrit` | `fClower` |
 | ----------------- | :------: | :------------: | :-----: | :----: | :-----: | :-----: | :-------: |
@@ -288,6 +304,7 @@ interim.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1= 12)
 # - Derived key statistics:
 #   z1 = 3.10000, z2 = 1.70344,
 #   Repeated CI = (0.92491, 1.27891)
+#   Median unbiased estimate = NA
 # - No futility criterion met
 # - Test for BE not positive (not considering any futility rule)
 # - Calculated n2 = 6
@@ -327,7 +344,7 @@ of 88.45–116.38% reported by Potvin *et al.*
 ## Speed Comparisons
 
 Performed on a double Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R
-3.6.0 64 bit on Windows 7.
+3.6.1 64 bit on Windows 7.
 
 ‘Method B’ (*CV* 0.20, *n*<sub>1</sub> 12).
 
