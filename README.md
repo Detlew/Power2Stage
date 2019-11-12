@@ -1,24 +1,25 @@
-README
+Power2Stage
 ================
 
-  - [Power2Stage](#power2stage)
-      - [Supported Methods](#supported-methods)
-          - [Simulation-based](#simulation-based)
-              - [‘Type 1’](#type-1)
-              - [‘Type 2’](#type-2)
-              - [Blinded Sample Size Re-estimation in the
-                Interim](#blinded-sample-size-re-estimation-in-the-interim)
-              - [Group Sequential Design](#group-sequential-design)
-          - [Inverse-Normal Combination](#inverse-normal-combination)
-      - [Functions](#functions)
-          - [Main](#main)
-          - [Helpers](#helpers)
-      - [Examples](#examples)
-          - [Method B](#method-b)
-          - [Method C](#method-c)
-          - [Inverse-Normal Combination](#inverse-normal-combination-1)
-      - [Speed Comparisons](#speed-comparisons)
-      - [Installation](#installation)
+  - [Supported Methods](#supported-methods)
+      - [Simulation-based](#simulation-based)
+          - [‘Type 1’](#type-1)
+          - [‘Type 2’](#type-2)
+          - [Blinded Sample Size Re-estimation in the
+            Interim](#blinded-sample-size-re-estimation-in-the-interim)
+          - [Group Sequential Design](#group-sequential-design)
+      - [Inverse-Normal Combination](#inverse-normal-combination)
+  - [Functions](#functions)
+      - [Main](#main)
+      - [Helpers](#helpers)
+  - [Examples](#examples)
+      - [Method B](#method-b)
+      - [Method C](#method-c)
+      - [Inverse-Normal Combination](#inverse-normal-combination-1)
+  - [Speed Comparisons](#speed-comparisons)
+  - [Installation](#installation)
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 [![cran
 checks](https://cranchecks.info/badges/summary/PowerTOST)](https://cran.r-project.org/web/checks/check_results_Power2Stage.html)
@@ -27,13 +28,12 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/Power2Stage?color=blue)
 [![CRAN RStudio mirror
 downloads](https://cranlogs.r-pkg.org/badges/last-month/Power2Stage?color=green)](https://r-pkg.org/pkg/Power2Stage)
 
-# Power2Stage
-
 The package contains functions to obtain the operational characteristics
 (power, type I error, percentage of studies proceeding to the second
 stage, average and quantiles of total sample sizes) of bioequivalence
-studies in adaptive sequential 2-Stage Designs (TSD) via simulations.  
-Built 2019-09-22 with R 3.6.1.
+studies in adaptive sequential Two-Stage Designs (TSD) via
+simulations.  
+Version 0.5.2.9000 built 2019-09-22 with R 3.6.1.
 
 ## Supported Methods
 
@@ -55,7 +55,7 @@ It should be noted that the adjusted alphas do not necessarily have to
 be the same in both stages. Below a summary of conditions used in the
 decision schemes of the published methods.
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 #### ‘Type 1’
 
@@ -125,7 +125,7 @@ decision schemes of the published methods.
 and Brannath](https://doi.org/10.1007/978-3-319-32562-0) (2016), [Maurer
 *et al.*](https://doi.org/10.1002/sim.7614) (2018).
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ## Functions
 
@@ -145,10 +145,10 @@ Defaults employed if not specified in the function call:
 
 All functions are for a 2×2×2 crossover design except `power.tsd.p()`,
 which is for a two-group parallel design.  
-If `usePE=TRUE` the point estimate in the interim is used in sample size
-estimation of the second stage.  
+If `usePE = TRUE` the point estimate in the interim is used in sample
+size estimation of the second stage.  
 If the estimated total sample size exceeds `max.n` the second stage will
-be forced to `max.n-n1` (*i.e.*, it is *not* a futility criterion).  
+be forced to `max.n - n1` (*i.e.*, it is *not* a futility criterion).  
 The method used for interim power and sample size estimation is
 specified by the argument `pmethod`. It defaults to `"nct"`
 (approximation by the noncentral *t*-distribution) except in
@@ -170,7 +170,7 @@ type I error (*i.e.*, `theta0` set to the value of `theta1` or
       - `"CI"`: `fClower` defaults to 0.925 (except in function
         `power.tsd.in()`, where it defaults to 0.95).
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ### Helpers
 
@@ -182,7 +182,7 @@ type I error (*i.e.*, `theta0` set to the value of `theta1` or
   - `final.tsd.in()`  
     Final analysis based on the Inverse-Normal Combination method.
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ## Examples
 
@@ -230,7 +230,7 @@ power.tsd(CV = 0.20, n1 = 12, pmethod = "shifted",
 # [1] 0.046352
 ```
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ### Method C
 
@@ -282,7 +282,7 @@ power.tsd(method = "C", alpha = rep(0.0280, 2), CV = 0.20,
 # [1] 0.049903
 ```
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ### Inverse-Normal Combination
 
@@ -312,8 +312,8 @@ interim.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1= 12)
 ```
 
 The second stage should be initiated with 6 subjects. Note that with
-`interim.tsd.in(..., fCrit="No", ssr.conditional="no")` 8 subjects would
-be required like in the Methods of Potvin *et al.*
+`interim.tsd.in(..., fCrit = "No", ssr.conditional = "no")` 8 subjects
+would be required like in the Methods of Potvin *et al.*
 
 The second stage is performed in 8 subjects, PE 0.9141, CV 0.25618.
 
@@ -339,7 +339,7 @@ The study passed with a (repeated) CI of 87.69–117.36%. Although
 slightly more conservative, same conclusion like based on the 94.12% CI
 of 88.45–116.38% reported by Potvin *et al.*
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ## Speed Comparisons
 
@@ -372,10 +372,10 @@ empiric type I error.
     #      nct 0.046319   18.24
     #    exact 0.046319  429.10
 
-The crude large sample approximation (`pmethod="ls"`) should only be
+The crude large sample approximation (`pmethod = "ls"`) should only be
 used to compare with the published method.
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ## Installation
 
@@ -393,4 +393,4 @@ if (length(package[!inst]) > 0) install.packages(package[!inst])
     # install.packages("devtools")
     devtools::install_github("Detlew/Power2Stage")
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>

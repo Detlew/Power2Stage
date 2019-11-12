@@ -1,5 +1,5 @@
 ---
-title: "README"
+title: "Power2Stage"
 output:
   github_document:
     toc: true
@@ -13,10 +13,8 @@ knitr::opts_chunk$set(
   comment = "#"
 )
 ```
-# Power2Stage
-
-The package contains functions to obtain the operational characteristics (power, type I error, percentage of studies proceeding to the second stage, average and quantiles of total sample sizes) of bioequivalence studies in adaptive sequential 2-Stage Designs (TSD) via simulations.  
-Built `r Sys.Date()` with R `r getRversion()`.
+The package contains functions to obtain the operational characteristics (power, type I error, percentage of studies proceeding to the second stage, average and quantiles of total sample sizes) of bioequivalence studies in adaptive sequential Two-Stage Designs (TSD) via simulations.  
+Version `r packageVersion("Power2Stage")` built `r packageDate("Power2Stage")` with R `r getRversion()`.
 
 ## Supported Methods
 ### Simulation-based
@@ -29,7 +27,7 @@ Since the many letters denoting the methods given by various authors might be co
 
 It should be noted that the adjusted alphas do not necessarily have to be the same in both stages. Below a summary of conditions used in the decision schemes of the published methods.
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 #### ‘Type 1’
   - [Potvin *et al.*](https://doi.org/10.1002/pst.294) (2008) ‘Method B’: *α* 0.0294 (*θ*~0~ 0.95, target power 0.80).
@@ -69,7 +67,7 @@ It should be noted that the adjusted alphas do not necessarily have to be the sa
 [König *et al.*](https://doi.org/10.13140/RG.2.1.5190.0967) (2014), [Kieser and Rauch](https://doi.org/10.1002/sim.6487) (2015),
 [Wassmer and Brannath](https://doi.org/10.1007/978-3-319-32562-0) (2016), [Maurer *et al.*](https://doi.org/10.1002/sim.7614) (2018).
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ## Functions
 ### Main
@@ -86,8 +84,8 @@ Defaults employed if not specified in the function call:
 |`power.tsd.in()`|`0.95`|`0.80`|`FALSE`|--|`Inf`|`"CI"`|`0.95`|
 |`power.tsd.p()`|`0.95`|`0.80`|`FALSE`|`Inf`|--|--|--|
 All functions are for a 2×2×2 crossover design except `power.tsd.p()`, which is for a two-group parallel design.\
-If `usePE=TRUE` the point estimate in the interim is used in sample size estimation of the second stage.\
-If the estimated total sample size exceeds `max.n` the second stage will be forced to `max.n-n1` (*i.e.*, it is *not* a futility criterion).\
+If `usePE = TRUE` the point estimate in the interim is used in sample size estimation of the second stage.\
+If the estimated total sample size exceeds `max.n` the second stage will be forced to `max.n - n1` (*i.e.*, it is *not* a futility criterion).\
 The method used for interim power and sample size estimation is specified by the argument `pmethod`. It defaults to `"nct"` (approximation by the noncentral *t*-distribution) except in `power.tsd.GS()`, where the total sample size is already fixed.\
 The BE limits are specified by the arguments `theta1` and `theta2` (default to 0.80 and 1.25).\
 The number of simulations is specified by the argument `nsims`. It defaults to 1e5 if simulating power and to 1e6 if simulating the empiric type I error (*i.e.*, `theta0` set to the value of `theta1` or `theta2`).
@@ -99,7 +97,7 @@ The number of simulations is specified by the argument `nsims`. It defaults to 1
     - `"PE"`: `fClower` defaults to 0.80.
     - `"CI"`: `fClower` defaults to 0.925 (except in function `power.tsd.in()`, where it defaults to 0.95).
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ### Helpers
 
@@ -110,7 +108,7 @@ The number of simulations is specified by the argument `nsims`. It defaults to 1
   - `final.tsd.in()`\
     Final analysis based on the Inverse-Normal Combination method.
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ## Examples
 Before running the examples attach the library.
@@ -131,7 +129,7 @@ power.tsd(CV = 0.20, n1 = 12, pmethod = "shifted",
           theta0 = 1.25)[["pBE"]]
 ```
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ### Method C
 Power estimation by the shifted central *t*-distribution.
@@ -150,14 +148,14 @@ Slight inflation of the type I error (although considered negligible by the aut
 power.tsd(method = "C", alpha = rep(0.0280, 2), CV = 0.20,
           n1 = 12, pmethod = "shifted", theta0 = 1.25)[["pBE"]]
 ```
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ### Inverse-Normal Combination
 Data given by Potvin *et al.* in Example 2: 12 subjects in stage 1, PE 1.0876, CV 0.18213, all defaults of the function used.
 ```{r}
 interim.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1= 12)
 ```
-The second stage should be initiated with 6 subjects. Note that with `interim.tsd.in(..., fCrit="No", ssr.conditional="no")` 8 subjects would be required like in the Methods of Potvin *et al.*
+The second stage should be initiated with 6 subjects. Note that with `interim.tsd.in(..., fCrit = "No", ssr.conditional = "no")` 8 subjects would be required like in the Methods of Potvin *et al.*
 
 The second stage is performed in 8 subjects, PE 0.9141, CV 0.25618.
 ```{r}
@@ -166,7 +164,7 @@ final.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1 = 12,
 ```
 The study passed with a (repeated) CI of 87.69--117.36%. Although slightly more conservative, same conclusion like based on the 94.12% CI of 88.45--116.38% reported by Potvin *et al.*
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ## Speed Comparisons
 Performed on a double Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R `r getRversion()` 64 bit on Windows 7.
@@ -188,9 +186,9 @@ Blinded sample size re-estimation (*α* 0.03505, *CV* 0.239, *n*~1~ 10, target p
 #      nct 0.046319   18.24
 #    exact 0.046319  429.10
 ```
-The crude large sample approximation (`pmethod="ls"`) should only be used to compare with the published method.
+The crude large sample approximation (`pmethod = "ls"`) should only be used to compare with the published method.
 
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
 
 ## Installation
 You can install the released version of Power2Stage from [CRAN](https://CRAN.R-project.org) with …
@@ -204,4 +202,4 @@ if (length(package[!inst]) > 0) install.packages(package[!inst])
 # install.packages("devtools")
 devtools::install_github("Detlew/Power2Stage")
 ```
-<small>[TOC ↩](#readme)</small>
+<small>[TOC ↩](#power2stage)</small>
