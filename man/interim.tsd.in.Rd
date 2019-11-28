@@ -81,8 +81,9 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
     point estimate (\acronym{PE}) of the treatment difference in
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     Defaults to \verb{FALSE}.\cr
-    Note: The futility inspection via the power of stage 1 is always done with
-    the planning value \code{GMR}.
+    Note: The power of stage 1 used for the futility inspection and calculation
+    of the estimated conditional target power is always calculated with the
+    planning value \code{GMR}.
   }
   \item{min.n2}{
     Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Defaults to 4.\cr

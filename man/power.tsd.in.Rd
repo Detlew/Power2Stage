@@ -76,7 +76,8 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
     point estimate (\acronym{PE}) of the treatment difference in
     \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
     Defaults to \verb{FALSE}.\cr
-    Note: The futility inspection via the power of stage 1 is always done with
+    Note: The power of stage 1 used for the futility inspection and calculation
+    of the estimated conditional target power is always calculated with the
     the planning value \code{GMR}.
   }
   \item{min.n2}{
