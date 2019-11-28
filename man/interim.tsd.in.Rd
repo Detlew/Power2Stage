@@ -268,8 +268,9 @@ Springer 2016. \doi{10.1007/978-3-319-32562-0}.
 }
 \examples{
 # Example from Maurer et al.
-interim.tsd.in(GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20, max.n = 4000)
+interim.tsd.in(GMR = 0.95, max.n = 4000,
+               GMR1 = exp(0.0424), CV1 = 0.3682, n1 = 20)
 # Example 2 from Potvin et al.
-interim.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1 = 12,
+interim.tsd.in(GMR = 0.95, GMR1 = 1.0876, CV1 = 0.18213, n1 = 12,
                fCrit = "No", ssr.conditional = "no")
 }
