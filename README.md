@@ -22,7 +22,7 @@ Power2Stage
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 [![cran
-checks](https://cranchecks.info/badges/summary/PowerTOST)](https://cran.r-project.org/web/checks/check_results_Power2Stage.html)
+checks](https://cranchecks.info/badges/summary/Power2Stage)](https://cran.r-project.org/web/checks/check_results_Power2Stage.html)
 [![CRAN RStudio mirror
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/Power2Stage?color=blue)](https://r-pkg.org/pkg/Power2Stage)
 [![CRAN RStudio mirror
@@ -33,7 +33,7 @@ The package contains functions to obtain the operational characteristics
 stage, average and quantiles of total sample sizes) of bioequivalence
 studies in adaptive sequential Two-Stage Designs (TSD) via
 simulations.  
-Version 0.5.2.9000 built 2019-09-22 with R 3.6.1.
+Version 0.5.2 built 2019-04-21 with R 3.6.2.
 
 ## Supported Methods
 
@@ -304,7 +304,6 @@ interim.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1= 12)
 # - Derived key statistics:
 #   z1 = 3.10000, z2 = 1.70344,
 #   Repeated CI = (0.92491, 1.27891)
-#   Median unbiased estimate = NA
 # - No futility criterion met
 # - Test for BE not positive (not considering any futility rule)
 # - Calculated n2 = 6
@@ -344,7 +343,7 @@ of 88.45–116.38% reported by Potvin *et al.*
 ## Speed Comparisons
 
 Performed on a double Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R
-3.6.1 64 bit on Windows 7.
+3.6.2 64 bit on Windows 7.
 
 ‘Method B’ (*CV* 0.20, *n*<sub>1</sub> 12).
 

@@ -6,7 +6,7 @@ output:
     toc_depth: 4
 ---
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![cran checks](https://cranchecks.info/badges/summary/PowerTOST)](https://cran.r-project.org/web/checks/check_results_Power2Stage.html) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/Power2Stage?color=blue)](https://r-pkg.org/pkg/Power2Stage) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/last-month/Power2Stage?color=green)](https://r-pkg.org/pkg/Power2Stage)
+[![cran checks](https://cranchecks.info/badges/summary/Power2Stage)](https://cran.r-project.org/web/checks/check_results_Power2Stage.html) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/Power2Stage?color=blue)](https://r-pkg.org/pkg/Power2Stage) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/last-month/Power2Stage?color=green)](https://r-pkg.org/pkg/Power2Stage)
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
