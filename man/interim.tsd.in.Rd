@@ -74,7 +74,7 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
   \item{GMR}{
     Assumed ratio of geometric means (T/R) to be used in power calculation
     for \ifelse{html}{\out{stage&nbsp;1}}{stage 1} and sample size re-estimation
-    for \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. If missing, defaults to 0.95.
+    for \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.
   }
   \item{usePE}{
     If \verb{TRUE} the sample size re-estimation is done with the observed

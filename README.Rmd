@@ -153,7 +153,7 @@ power.tsd(method = "C", alpha = rep(0.0280, 2), CV = 0.20,
 ### Inverse-Normal Combination
 Data given by Potvin *et al.* in Example 2: 12 subjects in stage 1, PE 1.0876, CV 0.18213, all defaults of the function used.
 ```{r}
-interim.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1= 12)
+interim.tsd.in(GMR = 0.95, GMR1 = 1.0876, CV1 = 0.18213, n1 = 12)
 ```
 The second stage should be initiated with 6 subjects. Note that with `interim.tsd.in(..., fCrit = "No", ssr.conditional = "no")` 8 subjects would be required like in the Methods of Potvin *et al.*
 

@@ -12,7 +12,7 @@ Published on GitHub 2019-09-15.
 
 ## Minor changes
 
-  * Stop `interim.2stage.in()` if n1 <3 and final.tsd.in() if n1 | n2 <3 (avoids errors and wranings).
+  * Stop `interim.2stage.in()` if n1 <3 and final.tsd.in() if n1 | n2 <3 (avoids errors and warnings).
   * References in man-pages of `*.tsd.in()` corr.
 
 # Power2Stage 0.5.2 (easter egg)
