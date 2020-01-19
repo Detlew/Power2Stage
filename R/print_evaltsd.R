@@ -18,7 +18,7 @@ print.evaltsd <- function(x, ...) {
     cat(" - Observed point estimate from stage 1 is ", not_pe, "used for SSR\n",
         sep = "")
     if (x$ssr.conditional == "no") {
-      cat(" - Without conditional error rates and conditional (estimated target) power\n")
+      cat(" - Without conditional error rates and conditional estimated target power\n")
     } else {
       cat(" - With ")
       if (x$ssr.conditional == "error") {

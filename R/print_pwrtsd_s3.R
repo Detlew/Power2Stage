@@ -65,7 +65,7 @@ print.pwrtsd <- function(x, ...)
     cat(" - critical value (s1/s2) =", round(x$cval[1], 5), round(x$cval[2], 5),
         "\n")
     if (x$ssr.conditional == "no") {
-      cat(" - without conditional error rates and conditional power\n")
+      cat(" - without conditional error rates and conditional estimated target power\n")
     } else {
       cat(" - with ")
       if (x$ssr.conditional == "error") {
@@ -74,7 +74,7 @@ print.pwrtsd <- function(x, ...)
         if (x$fCpower > x$targetpower)
           cat("conditional error rates\n")
         else
-          cat("conditional error rates and conditional power\n")
+          cat("conditional error rates and conditional estimated target power\n")
       }
     }
     cat("Overall target power = ", x$targetpower, sep="")
