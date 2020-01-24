@@ -59,14 +59,14 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
     max.n <- 2 * floor(max.n / 2) + 2
     message("max.n rounded up to next even integer", max.n)
   }
+  if (missing(theta1) && missing(theta2))  theta1 <- 0.8
+  if (!missing(theta1) && missing(theta2)) theta2 <- 1/theta1
+  if (missing(theta1) && !missing(theta2)) theta1 <- 1/theta2
   if (missing(GMR)) 
     stop("Please specify initially planned/assumed ratio of geometric means.")
   if (GMR <= theta1 || GMR >= theta2) 
     stop("GMR must be within acceptance range!")
-  if (missing(theta1) && missing(theta2))  theta1 <- 0.8
-  if (!missing(theta1) && missing(theta2)) theta2 <- 1/theta1
-  if (missing(theta1) && !missing(theta2)) theta1 <- 1/theta2
-
+  
   # Check futility criterion
   stopifnot(is.character(fCrit))
   fCrit <- tolower(fCrit)
