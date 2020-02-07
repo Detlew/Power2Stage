@@ -201,11 +201,11 @@ power.tsd.in(alpha, weight, max.comb.test = TRUE, n1, CV, targetpower = 0.8,
   define the two pairs of weights (w, 1-w) and (w*, 1-w*).\cr\cr
   If \verb{ssr.conditional = "error_power"}, the design scheme generally
   calculates the estimated conditional target power of the second stage and
-  uses this value as desired target power in the sample size re-estimation process.
-  If \code{fCpower} > \code{targetpower}, then the conditional target power
-  may actually be negative. This does not seem sensible. Therefore, for such
+  uses this value as desired target power in the sample size re-estimation process:\cr
+  If \code{fCpower} > \code{targetpower}, then the conditional estimated
+  target power may be negative. This does not seem sensible. Therefore, for such
   cases the desired target power for the sample size re-calculation will be set
-  to \code{targetpower}.
+  to \code{targetpower}, i.e. \code{ssr.conditional} will be set to \code{"error"}.
 }
 \value{
   Returns an object of class \verb{"pwrtsd"} with all the input arguments and results

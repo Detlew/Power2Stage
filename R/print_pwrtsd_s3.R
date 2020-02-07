@@ -120,6 +120,8 @@ print.pwrtsd <- function(x, ...)
     cat("; GMR = ", x$GMR, "\n", sep="")
 
     .print_results(x)
+    if ((x$ssr.conditional == "error_power") && (x$fCpower > x$targetpower))
+      message("Note: ssr.conditional has been set to \"error\", see ?power.tsd.in for details.")
     return(invisible(x))
   }
 
