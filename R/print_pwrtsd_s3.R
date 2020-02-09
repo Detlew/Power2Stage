@@ -121,7 +121,7 @@ print.pwrtsd <- function(x, ...)
 
     .print_results(x)
     if ((x$ssr.conditional == "error_power") && (x$fCpower > x$targetpower))
-      message("Note: ssr.conditional has been set to \"error\", see ?power.tsd.in for details.")
+      message("Note: ssr.conditional has been set to \"error\".")
     return(invisible(x))
   }
 
