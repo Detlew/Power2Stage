@@ -91,7 +91,7 @@ power.tsd(method = c("B", "C", "B0"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   }
   \item{min.n2}{
     Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. Defaults to zero.\cr
-    If the sample size estimation step gives \verb{N < n1} the sample size for
+    If the sample size estimation step gives \verb{N < n1+min.n2} the sample size for
     \ifelse{html}{\out{stage&nbsp;2}}{stage 2} will be forced to \verb{min.n2},
     \emph{i.e.}, the total sample size to \code{n1+min.n2}.
   }
