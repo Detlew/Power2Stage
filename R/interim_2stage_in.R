@@ -176,41 +176,40 @@ interim.2stage.in <- function(alpha, weight, max.comb.test = TRUE,
       pwr_ssr <- targetpower
       lGMR_ssr <- if (usePE) lGMR1 else lGMR
     } else {
-      # If pwr_s1 > fCpower then we have futility and should stop with FAIL
-      # (it would also not be possible to proceed because conditional estimated
-      # target power would be negative)
-      if (fut[1] && ssr.conditional == "error_power") {
-        alpha_ssr <- NA
-        lGMR_ssr <- NA
-        pwr_ssr <- NA
-        n2 <- NA
-      } else {
-        # Derive conditional error rates
-        alpha_ssr <- 1 - pnorm(pmin(
-          (cl$cval[2] - sqrt(weight[1])*cbind(Z11, Z12)) / sqrt(1 - weight[1]),
-          (cl$cval[2] - sqrt(weight[lw])*cbind(Z11, Z12)) / sqrt(1 - weight[lw])
-        ))
+      # Derive conditional error rates
+      alpha_ssr <- 1 - pnorm(pmin(
+        (cl$cval[2] - sqrt(weight[1])*cbind(Z11, Z12)) / sqrt(1 - weight[1]),
+        (cl$cval[2] - sqrt(weight[lw])*cbind(Z11, Z12)) / sqrt(1 - weight[lw])
+      ))
 
-        # Define target power for ssr
+      # Define target power for ssr
+      pwr_ssr <- targetpower
+      if ((ssr.conditional == "error_power") && (fCpower <= targetpower)) {
+        # Use conditional power
+        pwr_ssr <- 1 - (1 - targetpower) / (1 - pwr_s1)
+      }
+      if ((ssr.conditional == "error_power") && (pwr_s1 >= fCpower)) {
+        # Futility criterion (pwr_s1 > fCpower) met and it is recommended to
+        # stop. The conditional estimated target power is not defined
+        # in this setting and would be negative. In order to acknowledge
+        # the fact that this futility rule is nonbinding we still want to
+        # calculate n2; this is however only possible if we set
+        # ssr.conditional = "error" (hence pwr_ssr = targetpower)
         pwr_ssr <- targetpower
-        if ((ssr.conditional == "error_power") && (fCpower <= targetpower)) {
-          # Use conditional power
-          pwr_ssr <- 1 - (1 - targetpower) / (1 - pwr_s1)
-        }
+      }
 
-        if (usePE) {
-          lGMR_ssr <- lGMR1
-          if (GMR1 <= theta1 || GMR1 >= theta2) {
-            message(paste0("SSR using observed GMR being outside of ",
-                           "theta1 ... theta2 not possible, use planned GMR."))
-            lGMR_ssr <- lGMR
-          }
-        } else {
-          # Set sign of lGMR to the sign of estimated point estimate
-          # (Maurer et al call this 'adaptive planning step')
-          sgn_pe <- if (lGMR1 >= 0) 1 else -1
-          lGMR_ssr <- abs(lGMR) * sgn_pe
+      if (usePE) {
+        lGMR_ssr <- lGMR1
+        if (GMR1 <= theta1 || GMR1 >= theta2) {
+          message(paste0("SSR using observed GMR being outside of ",
+                         "theta1 ... theta2 not possible, use planned GMR."))
+          lGMR_ssr <- lGMR
         }
+      } else {
+        # Set sign of lGMR to the sign of estimated point estimate
+        # (Maurer et al call this 'adaptive planning step')
+        sgn_pe <- if (lGMR1 >= 0) 1 else -1
+        lGMR_ssr <- abs(lGMR) * sgn_pe
       }
     }
 

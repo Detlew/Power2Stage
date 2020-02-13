@@ -26,6 +26,8 @@ print.evaltsd <- function(x, ...) {
       } else {
         if (x$fCpower > x$targetpower)
           cat("conditional error rates\n")
+        else if ((!x$stop_BE) && (x$'Power Stage 1' >= x$fCpower))
+          cat("conditional error rates\n")
         else
           cat("conditional error rates and conditional estimated target power\n")
       }
@@ -80,6 +82,10 @@ print.evaltsd <- function(x, ...) {
             sep = "")
       }
     }
+    if ((x$ssr.conditional == "error_power") && (x$fCpower > x$targetpower))
+      message("\nNote: ssr.conditional has been set to \"error\".")
+    if ((!x$stop_BE) && (x$'Power Stage 1' >= x$fCpower) && (x$ssr.conditional == "error_power"))
+      message("\nNote: n2 was calculated by setting ssr.conditional to \"error\".")
   } else {
     cat("\nFinal analysis after second stage\n")
     cat("- Derived key statistics:\n")

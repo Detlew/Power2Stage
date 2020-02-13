@@ -187,11 +187,16 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
   define the two pairs of weights (w, 1-w) and (w*, 1-w*).\cr\cr
   If \verb{ssr.conditional = "error_power"}, the design scheme generally
   calculates the estimated conditional target power of the second stage and
-  uses this value as desired target power in the sample size re-estimation process.
-  If \code{fCpower} > \code{targetpower}, then the conditional target power
-  may actually be negative. This does not seem sensible. Therefore, for such
+  uses this value as desired target power in the sample size re-estimation process:\cr
+  If \code{fCpower} > \code{targetpower}, then the conditional estimated
+  target power may be negative. This does not seem sensible. Therefore, for such
   cases the desired target power for the sample size re-calculation will be set
-  to \code{targetpower}.
+  to \code{targetpower}, i.e. \code{ssr.conditional} will be set to \code{"error"}.\cr
+  Also, if the futility criterion based on the power of stage 1 is met,
+  then the conditional estimated target power will be negative. Thus, no further
+  sample size calculation can be made. To acknowledge that this rule is nonbinding,
+  for the purpose of calculating n2 the argument \code{ssr.conditional} is set
+  to \code{"error"}.
 }
 \value{
   Returns an object of class \verb{"evaltsd"} with all the input arguments and results
@@ -205,7 +210,7 @@ interim.tsd.in(alpha, weight, max.comb.test = TRUE, targetpower = 0.8,
   \item{p12}{Observed p-value for second hypothesis.}
   \item{z1}{z statistic value for first null hypothesis.}
   \item{z2}{z statistic value for second null hypothesis.}
-  \item{RCI}{Repeated confidence interval for \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.}
+  \item{RCI}{Repeated confidence interval for \ifelse{html}{\out{stage&nbsp;1}}{stage 1}. Corresponds to the usual CI with level alpha1.}
   \item{MEUE}{If the study stops, the median unbiased point estimate as estimate for the final adjusted
   geometric mean ratio after stage 1 (note that the value is identical to \code{GMR1}.)}
   \item{futility}{Three dimensional vector with either 0 or 1. The first
