@@ -12,10 +12,10 @@ Published on GitHub 2020-02-13.
 
 ## Minor changes
 
-  * Argment min.n2 in man-pages of `power.tsd()` and `power.tsd.fC()` more correct explained.
-  * Stop `interim.2stage.in()` if n1 <3 and final.tsd.in() if n1 | n2 <3 (avoids errors and warnings).
+  * Argment `min.n2` in man-pages of `power.tsd()` and `power.tsd.fC()` more correct explained.
+  * Stop `interim.2stage.in()` if n1 <3 and `final.tsd.in()` if n1 | n2 <3 (avoids errors and warnings).
   * References in man-pages of `*.tsd.in()` corr.
-  * Refined printing of results for interim.tsd.in() and power.tsd.in()
+  * Refined printing of results for `interim.tsd.in()` and `power.tsd.in()`.
 
 # Power2Stage 0.5.2 (easter egg)
 On CRAN 2019-04-21.
