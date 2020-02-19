@@ -9,7 +9,8 @@
 power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294),
                            n1, GMR, CV, targetpower=0.8,
                            pmethod=c("nct", "exact", "shifted"),
-                           usePE=FALSE, Nmax=Inf, test=c("welch", "t-test", "anova"),
+                           usePE=FALSE, Nmax=Inf, min.n2=0,
+                           test=c("welch", "t-test", "anova"),
                            theta0, theta1, theta2, npct=c(0.05, 0.5, 0.95),
                            nsims, setseed=TRUE, details=FALSE)
 {
@@ -309,11 +310,19 @@ power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294
       }
     }
 
-    # The next is Jiri's strategy I think
+    # The next is Jiri's strategy for imbalanced n1 I think
     # nts are even, nts/2 for T and R (balanced at the end)
     n2T <- ifelse(nts/2>n1T, nts/2 - n1T, 0)
     n2R <- ifelse(nts/2>n1R, nts/2 - n1R, 0)
-    n2 <- n2T + n2R
+    
+    # assure that n2 (= n2T+n2R) is >= min.n2
+    # check what happens if n1 groups are imbalanced
+    # should we have min.n2 different for treatment groups?
+    #browser()
+    n2T <- ifelse((n2T < min.n2/2), min.n2/2, n2T)
+    n2R <- ifelse((n2R < min.n2/2), min.n2/2, n2R)
+    
+    n2  <- n2T + n2R
 
     if(details){
       cat("Time consumed (secs):\n")
@@ -441,7 +450,7 @@ power.2stage.p <- function(method=c("B","C"), alpha0=0.05, alpha=c(0.0294,0.0294
               n1=c(n1T, n1R), GMR=GMR, test=test, targetpower=targetpower,
               pmethod=pmethod,
               theta0=exp(mlog), theta1=theta1, theta2=theta2,
-              usePE=usePE, Nmax=Nmax, nsims=nsims,
+              usePE=usePE, Nmax=Nmax, min.n2=min.n2, nsims=nsims,
               # results
               pBE=sum(BE)/nsims, pBE_s1=sum(BE[stage==1])/nsims,
               # Dec 2014: meaning of pct_s2 changed

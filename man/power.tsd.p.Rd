@@ -9,28 +9,27 @@ Power calculation of adaptive 2-stage BE studies in 2-group parallel designs
 }
 \description{
   This functions calculate the \sQuote{empirical} power of 2-stage BE studies
-  with 2 parallel groups according to Fuglsang via simulations. The Potvin decision
-  schemes are modified to include a futility criterion Nmax and to allow the
-  sample size estimation step to be done with point estimate and variabilities
-  from \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (fully adaptive).\cr\cr
+  with 2 parallel groups according to Fuglsang 2014 via simulations. The Potvin decision
+  schemes are modified to include a futility criterion Nmax, a minimum number of
+  subjects to be included in stage 2 and to allow the sample size estimation 
+  step to be done with point estimate and variabilities from 
+  \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (fully adaptive).\cr\cr
   Function \verb{power.tsd.pAF()} performes exactly as described in
   Fuglsang\enc{’}{'}s paper, namely the power monitoring steps and the sample
-  size estimation are based always on the pooled \emph{t}-test.\cr
+  size estimation are based always on the pooled \emph{t}-test.\cr\cr
   Function \code{power.tsd.p()} with argument \verb{test="welch"} on the
   other hand uses the genuine power of Welch\enc{’}{'}s test. Moreover it
-  accepts unequal \ifelse{html}{\out{stage&nbsp;1}}{stage 1} treatment groups.
+  accepts unequal treatment groups in \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.
   }
 \usage{
 power.tsd.p(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
-            n1, GMR, CV, targetpower = 0.8,
-            pmethod = c("nct", "exact", "shifted"),
-            usePE = FALSE, Nmax = Inf, test = c("welch", "t-test", "anova"),
+            n1, GMR, CV, targetpower = 0.8, pmethod = c("nct", "exact", "shifted"),
+            usePE = FALSE, Nmax = Inf, min.n2=0, test = c("welch", "t-test", "anova"),
             theta0, theta1, theta2, npct = c(0.05, 0.5, 0.95), nsims,
             setseed = TRUE, details = FALSE)
 
 power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
-              n1, GMR, CV, targetpower = 0.8,
-              pmethod = c("shifted", "nct", "exact"),
+              n1, GMR, CV, targetpower = 0.8, pmethod = c("shifted", "nct", "exact"),
               usePE = FALSE, Nmax = Inf, test = c("welch", "t-test", "anova"),
               theta0, theta1, theta2, npct = c(0.05, 0.5, 0.95), nsims,
               setseed = TRUE, details = FALSE)
@@ -52,7 +51,9 @@ power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   }
   \item{n1}{
     Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
-    Function \verb{power.tsd.p()} accepts also a vector of \ifelse{html}{\out{stage&nbsp;1}}{stage 1} sample sizes with two elements, where the number of subjects in the in treatment group \emph{T} should be
+    Function \verb{power.tsd.p()} accepts also a vector of 
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} sample sizes with two elements, 
+    where the number of subjects in the in treatment group \emph{T} should be
     given in the first element and the number of subjects in the threatment
     group \emph{R} in the second.\cr
     If given with one element, the total \verb{n1} should be even.
@@ -100,6 +101,14 @@ power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
     sample size \verb{>Nmax} is obtained will be regarded as BE=FAIL.\cr
     Set this argument to \verb{Inf}, the default, to work without that futility
     criterion.
+  }
+  \item{min.n2}{
+    Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. \cr
+    If the sample size estimation step gives \verb{N < n1+min.n2} the sample size for
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} will be forced to \verb{min.n2},
+    \emph{i.e.} the total sample size to \code{n1+min.n2}.\cr
+    Defaults to zero, i.e. no minimum sample size for 
+    \ifelse{html}{\out{stage&nbsp;2}}{stage 2} is applied.\cr
   }
   \item{test}{
     Test on which the CI calculations are based on.\cr

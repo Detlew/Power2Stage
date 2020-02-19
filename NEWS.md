@@ -1,12 +1,13 @@
 # Power2Stage 0.5.2.9000
-Published on GitHub 2020-02-13.
+Published on GitHub 2020-02-19.
 
 ## Bug fixes
 
   * Subtract/add `.Machine $double.eps` if `rho` ±1 in `power.tsd.2m()` to prevent error in `rWishart()`.
 
 ## Major changes
-
+ 
+  * Argument min.n2 introduced in `power.tsd.p()`.
   * README.md knitted from README.Rmd.
   * NEWS.md instead of NEWS.
 
