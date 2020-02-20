@@ -11,8 +11,8 @@ Power calculation of adaptive 2-stage BE studies in 2-group parallel designs
   This functions calculate the \sQuote{empirical} power of 2-stage BE studies
   with 2 parallel groups according to Fuglsang 2014 via simulations. The Potvin decision
   schemes are modified to include a futility criterion Nmax, a minimum number of
-  subjects to be included in stage 2 and to allow the sample size estimation 
-  step to be done with point estimate and variabilities from 
+  subjects to be included in stage 2 and to allow the sample size estimation
+  step to be done with point estimate and variabilities from
   \ifelse{html}{\out{stage&nbsp;1}}{stage 1} (fully adaptive).\cr\cr
   Function \verb{power.tsd.pAF()} performes exactly as described in
   Fuglsang\enc{’}{'}s paper, namely the power monitoring steps and the sample
@@ -51,10 +51,10 @@ power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   }
   \item{n1}{
     Sample size of \ifelse{html}{\out{stage&nbsp;1}}{stage 1}.\cr
-    Function \verb{power.tsd.p()} accepts also a vector of 
-    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} sample sizes with two elements, 
+    Function \verb{power.tsd.p()} accepts also a vector of
+    \ifelse{html}{\out{stage&nbsp;1}}{stage 1} sample sizes with two elements,
     where the number of subjects in the in treatment group \emph{T} should be
-    given in the first element and the number of subjects in the threatment
+    given in the first element and the number of subjects in the treatment
     group \emph{R} in the second.\cr
     If given with one element, the total \verb{n1} should be even.
   }
@@ -66,8 +66,8 @@ power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
   \item{CV}{
     Coefficient of variation of the total variability
     (use \emph{e.g.}, 0.3 for 30\%)\cr
-    Can be a vector with two elements. In that case \verb{CV[1]} is for
-    Test and \verb{CV[2]} for the Reference treatment.
+    Can be a vector with two elements. In that case \verb{CV[1]} is for the group
+    under the Test treatment and \verb{CV[2]} for the group under the Reference.
   }
   \item{targetpower}{
     Power threshold in the power monitoring steps and power to achieve
@@ -103,11 +103,11 @@ power.tsd.pAF(method = c("B", "C"), alpha0 = 0.05, alpha = c(0.0294, 0.0294),
     criterion.
   }
   \item{min.n2}{
-    Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage 2}. \cr
+    Minimum sample size of \ifelse{html}{\out{stage&nbsp;2}}{stage 2}.\cr
     If the sample size estimation step gives \verb{N < n1+min.n2} the sample size for
     \ifelse{html}{\out{stage&nbsp;2}}{stage 2} will be forced to \verb{min.n2},
     \emph{i.e.} the total sample size to \code{n1+min.n2}.\cr
-    Defaults to zero, i.e. no minimum sample size for 
+    Defaults to zero, \emph{i.e.}, no minimum sample size for
     \ifelse{html}{\out{stage&nbsp;2}}{stage 2} is applied.\cr
   }
   \item{test}{

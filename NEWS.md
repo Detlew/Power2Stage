@@ -7,13 +7,13 @@ Published on GitHub 2020-02-19.
 
 ## Major changes
  
-  * Argument min.n2 introduced in `power.tsd.p()`.
+  * Argument `min.n2` introduced in `power.tsd.p()`.
   * README.md knitted from README.Rmd.
   * NEWS.md instead of NEWS.
 
 ## Minor changes
 
-  * Argment `min.n2` in man-pages of `power.tsd()` and `power.tsd.fC()` more correct explained.
+  * Argment `min.n2` in man-pages of `power.tsd()` and `power.tsd.fC()` more correctly explained.
   * Stop `interim.2stage.in()` if n1 <3 and `final.tsd.in()` if n1 | n2 <3 (avoids errors and warnings).
   * References in man-pages of `*.tsd.in()` corr.
   * Refined printing of results for `interim.tsd.in()` and `power.tsd.in()`.
