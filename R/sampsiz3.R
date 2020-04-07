@@ -21,21 +21,29 @@
   if (length(ltheta0)==1) ltheta0 <- rep(ltheta0, times=length(mse))
   if (length(targetpower)==1) targetpower <- rep(targetpower, times=length(mse))
   
-  # Allow alpha to be scalar or a matrix. If matrix, the interpretation is
+  # Allow alpha to be scalar or a matrix.
+  # If matrix, the interpretation is
   # - Require 2 columns
   # - Column 1 = alpha value for left hypothesis
   # - Column 2 = alpha value for right hypothesis
-  # - Convention: If multiple rows require diffm & sem to be of the same length 
-  #   and evaluate power element-wise for each combination (alpha, diffm, sem)
-  if (is.atomic(alpha) && !is.matrix(alpha)) {
-    # We enforce matrix structure -> recycling will not work, so do it manually
-    if (length(alpha) != max(length(ltheta0), length(mse))) {
-      alpha <- rep.int(alpha, max(length(ltheta0), length(mse)))
+  # - Convention: If multiple rows, require same length as 
+  #   max(length(diffm), length(sem)) and evaluate power element-wise 
+  #   for each combination (alpha, diffm, sem)
+  # If scalar, create a 1x2 matrix for consistency
+  if (!is.matrix(alpha)) {
+    if (length(alpha) == 1L) {
+      alpha <- matrix(alpha, ncol = 2) # same alpha for both hypotheses
+    } else {
+      stop("alpha must be scalar (length 1) or matrix with 2 columns.")
     }
-    alpha <- matrix(alpha, ncol = 1)
-  } else { 
-    if (nrow(alpha) != length(ltheta0) || length(ltheta0) != length(mse))
-      stop("Number of rows of alpha must match length of diffm and sem.")
+  }
+  len <- max(length(ltheta0), length(mse))
+  if (nrow(alpha) == 1) {
+    # recycle
+    alpha <- matrix(alpha, ncol = 2, nrow = len)
+  } else {
+    if (nrow(alpha) != len)
+      stop("nrow(alpha) must be the same as length of delta1.")
   }
   dl <- ncol(alpha)
   if (dl > 2)

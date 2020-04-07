@@ -28,32 +28,34 @@
 # so call it with sem= se*sqrt(bk/n) if balanced or se*sqrt(bkni*sum(1/n)) 
 .power.TOST <- function(alpha=0.05, ltheta1, ltheta2, diffm, sem, df)
 {
-  # Allow alpha to be scalar or a matrix. If matrix, the interpretation is
+  # Allow alpha to be scalar or a matrix.
+  # If matrix, the interpretation is
   # - Require 2 columns
   # - Column 1 = alpha value for left hypothesis
   # - Column 2 = alpha value for right hypothesis
-  # - Convention: If multiple rows, require diffm & sem to be of the same length 
-  #   and evaluate power element-wise for each combination (alpha, diffm, sem)
-  if (is.atomic(alpha) && !is.matrix(alpha)) {
-    # We enforce matrix structure -> recycling will not work, so do it manually
-    if (length(alpha) != max(length(diffm), length(sem))) {
-      alpha <- rep.int(alpha, max(length(diffm), length(sem)))
+  # - Convention: If multiple rows, require same length as 
+  #   max(length(diffm), length(sem)) and evaluate power element-wise 
+  #   for each combination (alpha, diffm, sem)
+  # If scalar, create a 1x2 matrix for consistency
+  if (!is.matrix(alpha)) {
+    if (length(alpha) == 1L) {
+      alpha <- matrix(alpha, ncol = 2) # same alpha for both hypotheses
+    } else {
+      stop("alpha must be scalar (length 1) or matrix with 2 columns.")
     }
-    alpha <- matrix(alpha, ncol = 1)
-  } else { 
-    if (nrow(alpha) != length(diffm) || length(diffm) != length(sem))
-      stop("Number of rows of alpha must match length of diffm and sem.")
   }
   dl <- ncol(alpha)
   if (dl > 2)
-    stop("Number of columns of alpha should be 1 or 2.")
-  if (length(df) == 1) {
-    df <- rep.int(df, max(length(diffm), length(sem)))
-  } else {
-    if (length(df) != max(length(diffm), length(sem)))
-      stop("df must be of the same length as diffm and sem.")
-  }
+    stop("Number of columns of alpha must be 2.")
   tval   <- qt(1 - alpha, df, lower.tail = TRUE)
+  len <- max(length(diffm), length(sem))
+  if (nrow(alpha) == 1) {
+    # recycle
+    tval <- matrix(tval, ncol = 2, nrow = len)
+  } else {
+    if (nrow(tval) != len)
+      stop("nrow(alpha) must be the same as length of delta1.")
+  }
   # 0/0 -> NaN in case diffm=ltheta1 or diffm=ltheta2 and sem=0!
   delta1 <- (diffm-ltheta1)/sem
   delta2 <- (diffm-ltheta2)/sem
@@ -112,8 +114,8 @@
     # p2 for right hypothesis (left-tailed) 
     # -> critical value is first column if alpha has 1 column, 
     #    second column if alpha has 2 columns
-    p1[i] <- OwensQ(df[i], tval[i, 1], delta1[i], 0, R[i])
-    p2[i] <- OwensQ(df[i], -tval[i, dl], delta2[i], 0, R[i])
+    p1[i] <- OwensQ(df[1], tval[i, 1], delta1[i], 0, R[i])
+    p2[i] <- OwensQ(df[1], -tval[i, dl], delta2[i], 0, R[i])
   }
   pwr <- p2-p1
   # due to numeric inaccuracies power < 0
@@ -128,29 +130,28 @@
 # does'nt vectorize in any respect!
 .power.1TOST <- function(alpha, ltheta1, ltheta2, diffm, sem, df, setseed = TRUE)
 {
-  if (is.atomic(alpha) && !is.matrix(alpha)) {
-    # We enforce matrix structure -> recycling will not work, so do it manually
-    if (length(alpha) != max(length(diffm), length(sem))) {
-      alpha <- rep.int(alpha, max(length(diffm), length(sem)))
+  if (!is.matrix(alpha)) {
+    if (length(alpha) == 1L) {
+      alpha <- matrix(alpha, ncol = 2) # same alpha for both hypotheses
+    } else {
+      stop("alpha must be scalar (length 1) or matrix with 2 columns.")
     }
-    alpha <- matrix(alpha, ncol = 1)
-  } else { 
-    if (nrow(alpha) != length(diffm) || length(diffm) != length(sem))
-      stop("Number of rows of alpha must match length of diffm and sem.")
   }
   dl <- ncol(alpha)
   if (dl > 2)
     stop("Number of columns of alpha should be 1 or 2.")
-  if (length(df) == 1) {
-    df <- rep.int(df, max(length(diffm), length(sem)))
-  } else {
-    if (length(df) != max(length(diffm), length(sem)))
-      stop("df must be of the same length as diffm and sem.")
-  }
   if (setseed) set.seed(123456)
   
   corr  <- matrix(1, ncol = 2, nrow = 2)
   tval  <- qt(1 - alpha, df)
+  len <- max(length(diffm), length(sem))
+  if (nrow(alpha) == 1) {
+    # recycle
+    tval <- matrix(tval, ncol = 2, nrow = len)
+  } else {
+    if (nrow(tval) != len)
+      stop("nrow(alpha) must be the same as length of delta1.")
+  }
   delta1 <- (diffm - ltheta1) / sem
   delta2 <- (diffm - ltheta2) / sem
   pow <- rep(0, times=length(delta1))
@@ -159,7 +160,7 @@
     lower <- c(tval[i, 1], -Inf)
     upper <- c(Inf, -tval[i, dl])
     delta <- c(delta1[i], delta2[i])
-    prob  <- pmvt(lower = lower, upper = upper, delta = delta, df = df[i], 
+    prob  <- pmvt(lower = lower, upper = upper, delta = delta, df = df[1], 
                   corr = corr, 
                   algorithm = GenzBretz(maxpts=100000, abseps = 1e-05))#[1]
     # abseps=1e-6 gives often "Completion with error > abseps"
@@ -177,20 +178,25 @@
 # this vectorizes ok
 .approx.power.TOST <- function(alpha=0.05, ltheta1, ltheta2, diffm, sem, df)
 {
-  if (is.atomic(alpha) && !is.matrix(alpha)) {
-    # We enforce matrix structure -> recycling will not work, so do it manually
-    if (length(alpha) != max(length(diffm), length(sem))) {
-      alpha <- rep.int(alpha, max(length(diffm), length(sem)))
+  if (!is.matrix(alpha)) {
+    if (length(alpha) == 1L) {
+      alpha <- matrix(alpha, ncol = 2) # same alpha for both hypotheses
+    } else {
+      stop("alpha must be scalar (length 1) or matrix with 2 columns.")
     }
-    alpha <- matrix(alpha, ncol = 1)
-  } else { 
-    if (nrow(alpha) != length(diffm) || length(diffm) != length(sem))
-      stop("Number of rows of alpha must match length of diffm and sem.")
   }
   dl <- ncol(alpha)
   if (dl > 2)
     stop("Number of columns of alpha should be 1 or 2.")
   tval <- qt(1 - alpha, df, lower.tail = TRUE, log.p = FALSE)
+  len <- max(length(diffm), length(sem))
+  if (nrow(alpha) == 1) {
+    # recycle
+    tval <- matrix(tval, ncol = 2, nrow = len)
+  } else {
+    if (nrow(tval) != len)
+      stop("nrow(alpha) must be the same as length of delta1.")
+  }
   
   # 0/0 -> NaN in case diffm=ltheta1 or diffm=ltheta2
   # and sem=0!
@@ -215,20 +221,25 @@
 # where does this all come from?
 .approx2.power.TOST <- function(alpha=0.05, ltheta1, ltheta2, diffm, sem, df)
 {
-  if (is.atomic(alpha) && !is.matrix(alpha)) {
-    # We enforce matrix structure -> recycling will not work, so do it manually
-    if (length(alpha) != max(length(diffm), length(sem))) {
-      alpha <- rep.int(alpha, max(length(diffm), length(sem)))
+  if (!is.matrix(alpha)) {
+    if (length(alpha) == 1L) {
+      alpha <- matrix(alpha, ncol = 2) # same alpha for both hypotheses
+    } else {
+      stop("alpha must be scalar (length 1) or matrix with 2 columns.")
     }
-    alpha <- matrix(alpha, ncol = 1)
-  } else { 
-    if (nrow(alpha) != length(diffm) || length(diffm) != length(sem))
-      stop("number of rows of alpha must match length of diffm and sem.")
   }
   dl <- ncol(alpha)
   if (dl > 2)
     stop("Number of columns of alpha should be 1 or 2.")
   tval   <- qt(1 - alpha, df, lower.tail = TRUE)
+  len <- max(length(diffm), length(sem))
+  if (nrow(alpha) == 1) {
+    # recycle
+    tval <- matrix(tval, ncol = 2, nrow = len)
+  } else {
+    if (nrow(tval) != len)
+      stop("nrow(alpha) must be the same as length of delta1.")
+  }
   
   # 0/0 -> NaN in case diffm=ltheta1 or diffm=ltheta2
   # and se=0!
