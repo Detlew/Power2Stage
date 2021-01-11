@@ -34,7 +34,7 @@ print.evaltsd <- function(x, ...) {
     }
     cat("\nInterim analysis after first stage\n")
     cat("- Derived key statistics:\n")
-    cat(sprintf("  z1 = %.5f, z2 = %.5f", x$z1, x$z2), ",\n", sep = "")
+    cat(sprintf("  z1 = %.5f, z2 = %.5f", x$z1, x$z2), "\n", sep = "")
     cat("  Repeated CI = ",
         sprintf("(%.5f, %.5f)", x$RCI[[1]], x$RCI[[2]]), "\n", sep = "")
     cat("  Median unbiased estimate = ", sprintf("%.4f", x$MEUE), "\n",
@@ -78,7 +78,7 @@ print.evaltsd <- function(x, ...) {
         cat("- Decision: Stop due to BE\n")
       } else {
         cat("- Calculated n2 = ", x$n2, "\n", sep = "")
-        cat("- Decision: Continue to stage 2 with ", x$n2, " subjects\n", 
+        cat("- Decision: Continue to stage 2 with ", x$n2, " subjects\n",
             sep = "")
       }
     }

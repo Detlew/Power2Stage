@@ -6,7 +6,7 @@ output:
     toc_depth: 4
 ---
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![cran checks](https://cranchecks.info/badges/summary/Power2Stage)](https://cran.r-project.org/web/checks/check_results_Power2Stage.html) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/Power2Stage?color=blue)](https://r-pkg.org/pkg/Power2Stage) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/last-month/Power2Stage?color=green)](https://r-pkg.org/pkg/Power2Stage)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) ![active](https://www.repostatus.org/badges/latest/active.svg)  ![repo size](https://img.shields.io/github/repo-size/Detlew/Power2Stage?color=yellow) ![code size](https://img.shields.io/github/languages/code-size/Detlew/PowerTOST?color=green) ![first](https://img.shields.io/badge/CRAN%20since-Jan%202014-brightgreen) ![on CRAN](https://www.r-pkg.org/badges/version-ago/Power2Stage) [![cran checks](https://cranchecks.info/badges/worst/Power2Stage)](https://cran.r-project.org/web/checks/check_results_Power2Stage.html) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/Power2Stage?color=blue)](https://r-pkg.org/pkg/Power2Stage) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/last-month/Power2Stage?color=green)](https://r-pkg.org/pkg/Power2Stage)
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -14,7 +14,19 @@ knitr::opts_chunk$set(
 )
 ```
 The package contains functions to obtain the operational characteristics (power, type I error, percentage of studies proceeding to the second stage, average and quantiles of total sample sizes) of bioequivalence studies in adaptive sequential Two-Stage Designs (TSD) via simulations.  
-Version `r packageVersion("Power2Stage")` built `r packageDate("Power2Stage")` with R `r getRversion()`.
+```{r, echo = FALSE, results = "asis"}
+pub <- packageDate("Power2Stage", date.fields = "Date/Publication")
+txt <- paste0("Version ", packageVersion("Power2Stage"), " built ",
+         packageDate("Power2Stage", date.fields = "Built"),
+         " with R ", substr(packageDescription("Power2Stage", fields = "Built"), 3, 7))
+if (is.na(pub)) {
+  txt <- paste(txt, "\n(development version not on CRAN).")
+} else {
+  txt <- paste0(txt, "\n(stable release on CRAN ", pub, ").")
+}
+cat(txt)
+```
+
 
 ## Supported Methods
 ### Simulation-based
@@ -35,7 +47,7 @@ It should be noted that the adjusted alphas do not necessarily have to be the sa
   - [Karalis](https://doi.org/10.1016/j.ijpharm.2013.08.013) (2013) ‘TSD-2’: *α* 0.0294 (*θ*~0~ = PE, target power 0.80).
   - [Fuglsang](https://doi.org/10.1208/s12248-014-9571-1) (2014) ‘Method B’ (parallel design): *α* 0.0294 (*θ*~0~ 0.95, target power 0.80).
   - [Zheng *et al.*](https://doi.org/10.1002/pst.1672) (2015) ‘MSDBE’: *α*~1~ 0.01, *α*~2~ 0.04.
-  - [Xu *et al.*](https://doi.org/10.1002/pst.1721) (2016) ‘Method E’: (*θ*~0~ 0.95, target power 0.80, *n~max~* 42).\
+  - [Xu *et al.*](https://doi.org/10.1002/pst.1721) (2016) ‘Method E’: (*θ*~0~ 0.95, target power 0.80, *n*~max~ 42).\
     - For *CV* 10--30%\
       *α*~1~ 0.0294, *α*~2~ 0.0357, futility rule on CI {0.9374, 1/0.9374}.
     - For *CV* 30--55%\
@@ -112,19 +124,19 @@ The number of simulations is specified by the argument `nsims`. It defaults to 1
 
 ## Examples
 Before running the examples attach the library.
-```{r}
+```{r attach_library}
 library(Power2Stage)
 ```
 If not noted otherwise, defaults are employed.
 
 ### Method B
 Power estimation by the shifted central *t*-distribution.
-```{r}
+```{r methodB_exp1}
 power.tsd(CV = 0.20, n1 = 12, pmethod = "shifted")
 ```
 
 Explore the empiric type I error at the upper BE-limit.
-```{r}
+```{r methodB_exp2}
 power.tsd(CV = 0.20, n1 = 12, pmethod = "shifted",
           theta0 = 1.25)[["pBE"]]
 ```
@@ -133,18 +145,18 @@ power.tsd(CV = 0.20, n1 = 12, pmethod = "shifted",
 
 ### Method C
 Power estimation by the shifted central *t*-distribution.
-```{r}
+```{r methodC_exp1}
 power.tsd(method = "C", CV = 0.20, n1 = 12, pmethod = "shifted")
 ```
 Slightly better than ‘Method B’ in terms of power in both stages and fewer studies are expected to proceed to the second stage.
 
 Explore the empiric type I error at the upper BE-limit (1 milion simulations).
-```{r}
+```{r methodC_exp2}
 power.tsd(method = "C", CV = 0.20, n1 = 12, pmethod = "shifted",
           theta0 = 1.25)[["pBE"]]
 ```
 Slight inflation of the type I error (although considered negligible by the authors). However, more adjustment (adjusted *α* 0.0280) controls the type I error.
-```{r}
+```{r methodC_exp3}
 power.tsd(method = "C", alpha = rep(0.0280, 2), CV = 0.20,
           n1 = 12, pmethod = "shifted", theta0 = 1.25)[["pBE"]]
 ```
@@ -152,13 +164,13 @@ power.tsd(method = "C", alpha = rep(0.0280, 2), CV = 0.20,
 
 ### Inverse-Normal Combination
 Data given by Potvin *et al.* in Example 2: 12 subjects in stage 1, PE 1.0876, CV 0.18213, all defaults of the function used.
-```{r}
+```{r inc_interim}
 interim.tsd.in(GMR = 0.95, GMR1 = 1.0876, CV1 = 0.18213, n1 = 12)
 ```
 The second stage should be initiated with 6 subjects. Note that with `interim.tsd.in(..., fCrit = "No", ssr.conditional = "no")` 8 subjects would be required like in the Methods of Potvin *et al.*
 
 The second stage is performed in 8 subjects, PE 0.9141, CV 0.25618.
-```{r}
+```{r inc_final}
 final.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1 = 12,
              GMR2 = 0.9141, CV2 = 0.25618, n2 = 8)
 ```
@@ -167,7 +179,7 @@ The study passed with a (repeated) CI of 87.69--117.36%. Although slightly more 
 <small>[TOC ↩](#power2stage)</small>
 
 ## Speed Comparisons
-Performed on a double Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R `r getRversion()` 64 bit on Windows 7.
+Performed on a Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R `r getRversion()` 64 bit on Windows 7.
 
 ‘Method B’ (*CV* 0.20, *n*~1~ 12).
 ```
@@ -192,14 +204,27 @@ The crude large sample approximation (`pmethod = "ls"`) should only be used to c
 
 ## Installation
 You can install the released version of Power2Stage from [CRAN](https://CRAN.R-project.org) with …
-```{r}
+```{r inst}
 package <- "Power2Stage"
 inst    <- package %in% installed.packages()
 if (length(package[!inst]) > 0) install.packages(package[!inst])
 ```
-… and the development version from [GitHub](https://github.com/) with …
+… and the development version from [GitHub](https://github.com/) with
 ```
 # install.packages("devtools")
 devtools::install_github("Detlew/Power2Stage")
 ```
+Skips installation from a github remote if the [SHA-1](https://en.wikipedia.org/wiki/SHA-1) has not changed since last install. Use `force = TRUE` to force installation.
+
+<small>[TOC ↩](#power2stage)</small>
+
+## Session Information
+Inspect this information for reproducibility. Of particular importance are the versions of R and the packages used to create this workflow. It is considered good practice to record this information with every analysis.\
+Version `r packageVersion("Power2Stage")` built `r packageDate("Power2Stage", date.fields = "Built")` with R `r substr(packageDescription("Power2Stage", fields = "Built"), 3, 7)`.
+
+```{r, sessioninfo}
+options(width = 80)
+devtools::session_info()
+```
+
 <small>[TOC ↩](#power2stage)</small>

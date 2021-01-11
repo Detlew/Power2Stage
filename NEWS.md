@@ -1,5 +1,5 @@
 # Power2Stage 0.5.2.9000
-Published on GitHub 2020-02-19.
+Published on GitHub 2021-01-11.
 
 ## Bug fixes
 
@@ -13,7 +13,8 @@ Published on GitHub 2020-02-19.
 
 ## Minor changes
 
-  * Argment `min.n2` in man-pages of `power.tsd()` and `power.tsd.fC()` more correctly explained.
+  * Badges in READMEs like in PowerTOST; + Sessioninfo.
+  * Argument `min.n2` in man-pages of `power.tsd()` and `power.tsd.fC()` more correctly explained.
   * Stop `interim.2stage.in()` if n1 <3 and `final.tsd.in()` if n1 | n2 <3 (avoids errors and warnings).
   * References in man-pages of `*.tsd.in()` corr.
   * Refined printing of results for `interim.tsd.in()` and `power.tsd.in()`.
