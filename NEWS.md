@@ -13,7 +13,7 @@ Published on GitHub 2021-01-11.
 
 ## Minor changes
 
-  * Badges in READMEs like in PowerTOST; + Sessioninfo.
+  * Badges in READMEs like in PowerTOST, `session_info()` added.
   * Argument `min.n2` in man-pages of `power.tsd()` and `power.tsd.fC()` more correctly explained.
   * Stop `interim.2stage.in()` if n1 <3 and `final.tsd.in()` if n1 | n2 <3 (avoids errors and warnings).
   * References in man-pages of `*.tsd.in()` corr.
@@ -29,7 +29,7 @@ Maintenance release with mainly bug fixes.
 
   * Calculation of median unbiased estimate in `final.tsd.in()`.
   * `power.tsd.GS()` regarding variable `hw`.
-  * `interim.tsd.in()` w.r.t to power > target triggering futulity fixed (THX to mittyri).
+  * `interim.tsd.in()` w.r.t to power > target triggering futility fixed (THX to mittyri).
 
 ## Minor changes
 
@@ -40,11 +40,11 @@ On CRAN 2018-04-03.
 
 ## Major changes
 
-  * New functions `interim.2stage.in()` and `final.2stage.in()` to perform interim and final analysis of 2 stage designs based on the Standard Combination or Maximum Combination Test (also includes a print class).
+  * New functions `interim.2stage.in()` and `final.2stage.in()` to perform interim and final analyses of 2 stage designs based on the Standard Combination or Maximum Combination Test (also includes a print class).
 
 ## Minor changes
 
-  * All functions `xyz.2stage.ab()` now have an alias `xyz.tsd.ab()`, e.g. insteadof `power.2stage.fC()` one may use `power.tsd.fC()`. The versions with `.2stage.` in their names will be removed in later versions.
+  * All functions `xyz.2stage.ab()` now have an alias `xyz.tsd.ab()`, e.g. instead of `power.2stage.fC()` one may use `power.tsd.fC()`. The versions with `.2stage.` in their names will be removed in later versions.
   * The futility rule for a CI in `power.2stage.GS()` is now based on the 90% CI to be in line with the other functions using such a futility rule.
   * Default of argument `fCrit` in `power.2stage.GS()` changed to `"CI"`.
   * Updated defaults of `power.2stage.in()` in order to be consistent with paper of Maurer et al (2018).
