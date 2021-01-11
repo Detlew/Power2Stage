@@ -89,7 +89,7 @@ print.evaltsd <- function(x, ...) {
   } else {
     cat("\nFinal analysis after second stage\n")
     cat("- Derived key statistics:\n")
-    cat(sprintf("  z1 = %.5f, z2 = %.5f", x$z1, x$z2), ",\n", sep = "")
+    cat(sprintf("  z1 = %.5f, z2 = %.5f", x$z1, x$z2), "\n", sep = "")
     cat("  Repeated CI = ",
         sprintf("(%.5f, %.5f)", x$RCI[[1]], x$RCI[[2]]), "\n", sep = "")
     cat("  Median unbiased estimate = ", sprintf("%.4f", x$MEUE), "\n",
