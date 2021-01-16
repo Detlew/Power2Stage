@@ -1,5 +1,6 @@
-# Power2Stage 0.5.2.9000
-Published on GitHub 2021-01-11.
+# Power2Stage 0.5-3
+On CRAN 2021-01-16.
+Maintenance release
 
 ## Bug fixes
 
@@ -22,7 +23,6 @@ Published on GitHub 2021-01-11.
 
 # Power2Stage 0.5.2 (easter egg)
 On CRAN 2019-04-21.
-
 Maintenance release with mainly bug fixes.
 
 ## Bug fixes
