@@ -18,7 +18,7 @@ Power2Stage
     -   [Inverse-Normal Combination](#inverse-normal-combination-1)
 -   [Speed Comparisons](#speed-comparisons)
 -   [Installation](#installation)
--   [Session Information](#session-information)
+-   [Session Information](#session-information) 
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
