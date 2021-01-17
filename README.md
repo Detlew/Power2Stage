@@ -43,8 +43,8 @@ The package contains functions to obtain the operational characteristics
 stage, average and quantiles of total sample sizes) of bioequivalence
 studies in adaptive sequential Two-Stage Designs (TSD) via
 simulations.  
-Version 0.5.2 built 2020-04-26 with R 4.0.0 (stable release on CRAN
-2019-04-20).
+Version 0.5.3 built 2021-01-17 with R 4.0.3 (development version not on
+CRAN).
 
 ## Supported Methods
 
@@ -313,8 +313,9 @@ interim.tsd.in(GMR = 0.95, GMR1 = 1.0876, CV1 = 0.18213, n1 = 12)
 # 
 # Interim analysis after first stage
 # - Derived key statistics:
-#   z1 = 3.10000, z2 = 1.70344,
+#   z1 = 3.10000, z2 = 1.70344
 #   Repeated CI = (0.92491, 1.27891)
+#   Median unbiased estimate = NA
 # - No futility criterion met
 # - Test for BE not positive (not considering any futility rule)
 # - Calculated n2 = 6
@@ -339,7 +340,7 @@ final.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1 = 12,
 # 
 # Final analysis after second stage
 # - Derived key statistics:
-#   z1 = 2.87952, z2 = 2.60501,
+#   z1 = 2.87952, z2 = 2.60501
 #   Repeated CI = (0.87690, 1.17356)
 #   Median unbiased estimate = 1.0135
 # - Decision: BE achieved
@@ -415,7 +416,7 @@ Inspect this information for reproducibility. Of particular importance
 are the versions of R and the packages used to create this workflow. It
 is considered good practice to record this information with every
 analysis.  
-Version 0.5.2 built 2020-04-26 with R 4.0.0.
+Version 0.5.3 built 2021-01-17 with R 4.0.3.
 
 ``` r
 options(width = 80)
@@ -455,7 +456,7 @@ devtools::session_info()
 #  mvtnorm         1.1-1   2020-06-09 [1] CRAN (R 4.0.0)
 #  pkgbuild        1.2.0   2020-12-15 [1] CRAN (R 4.0.3)
 #  pkgload         1.1.0   2020-05-29 [1] CRAN (R 4.0.0)
-#  Power2Stage   * 0.5.2   2019-04-20 [1] CRAN (R 4.0.0)
+#  Power2Stage   * 0.5-3   2021-01-17 [1] local         
 #  PowerTOST       1.5-2   2020-10-27 [1] CRAN (R 4.0.3)
 #  prettyunits     1.1.1   2020-01-24 [1] CRAN (R 4.0.0)
 #  processx        3.4.5   2020-11-30 [1] CRAN (R 4.0.3)
