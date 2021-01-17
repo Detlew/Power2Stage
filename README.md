@@ -430,7 +430,7 @@ devtools::session_info()
 #  collate  German_Germany.1252         
 #  ctype    German_Germany.1252         
 #  tz       Europe/Berlin               
-#  date     2021-01-16                  
+#  date     2021-01-17                  
 # 
 # - Packages -------------------------------------------------------------------
 #  package       * version date       lib source        
