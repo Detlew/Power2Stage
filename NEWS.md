@@ -1,9 +1,6 @@
 # Power2Stage 0.5.3
 On CRAN 2021-01-16.
 
-# Power2Stage 0.5.2.9000
-Published on GitHub 2021-01-11.
-
 ## Bug fixes
 
   * Subtract/add `.Machine $double.eps` if `rho` ±1 in `power.tsd.2m()` to prevent error in `rWishart()`.

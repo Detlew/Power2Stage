@@ -15,9 +15,6 @@ Authors@R: c(person("Detlew", "Labes",
                role = c("aut", "ctb"),
                email = "helmut.schuetz@bebac.at",
                comment = c(ORCID = "0000-0002-1167-7880")))
-Author: Detlew Labes [aut, cre] (<https://orcid.org/0000-0003-2169-426X>),
-  Benjamin Lang [aut, ctb],
-  Helmut Schütz [aut, ctb] (<https://orcid.org/0000-0002-1167-7880>)
 Maintainer: Detlew Labes <DetlewLabes@gmx.de>
 Description: Contains functions to obtain the operational characteristics of 
     bioequivalence studies in Two-Stage Designs (TSD) via simulations.
