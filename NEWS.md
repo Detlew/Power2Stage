@@ -1,3 +1,10 @@
+# Power2Stage 0.5.3.9000
+On GitHub since 2021-05-05
+
+  * New development version
+  * LazyData: yes entry from DESCRIPTION removed since no data folder was available.
+    Caused a NOTE during R CMD check instead of Ok.
+
 # Power2Stage 0.5.3
 On CRAN 2021-01-16.
 
