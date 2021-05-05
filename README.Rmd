@@ -11,18 +11,18 @@ output:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#"
-)
+) 
 ```
 The package contains functions to obtain the operational characteristics (power, type I error, percentage of studies proceeding to the second stage, average and quantiles of total sample sizes) of bioequivalence studies in adaptive sequential Two-Stage Designs (TSD) via simulations.  
 ```{r, echo = FALSE, results = "asis"}
-pub <- packageDate("Power2Stage", date.fields = "Date/Publication")
 txt <- paste0("Version ", packageVersion("Power2Stage"), " built ",
          packageDate("Power2Stage", date.fields = "Built"),
          " with R ", substr(packageDescription("Power2Stage", fields = "Built"), 3, 7))
-if (is.na(pub)) {
+if (grepl("900",  as.character(packageVersion("Power2Stage")))) {
   txt <- paste(txt, "\n(development version not on CRAN).")
 } else {
-  txt <- paste0(txt, "\n(stable release on CRAN ", pub, ").")
+  txt <- paste0(txt, "\n(stable release on CRAN ",
+           packageDate("Power2Stage", date.fields = "Date/Publication"), ").")
 }
 cat(txt)
 ```

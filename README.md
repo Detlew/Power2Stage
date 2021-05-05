@@ -18,7 +18,7 @@ Power2Stage
     -   [Inverse-Normal Combination](#inverse-normal-combination-1)
 -   [Speed Comparisons](#speed-comparisons)
 -   [Installation](#installation)
--   [Session Information](#session-information) 
+-   [Session Information](#session-information)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -43,8 +43,8 @@ The package contains functions to obtain the operational characteristics
 stage, average and quantiles of total sample sizes) of bioequivalence
 studies in adaptive sequential Two-Stage Designs (TSD) via
 simulations.  
-Version 0.5.3 built 2021-01-16 with R 4.0.3 (stable release on CRAN
-2021-01-16).
+Version 0.5.3.9000 built 2021-05-05 with R 4.0.5 (development version
+not on CRAN).
 
 ## Supported Methods
 
@@ -339,7 +339,7 @@ of 88.45–116.38% reported by Potvin *et al.*
 
 ## Speed Comparisons
 
-Performed on a Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R 4.0.3
+Performed on a Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R 4.0.5
 64 bit on Windows 7.
 
 ‘Method B’ (*CV* 0.20, *n*<sub>1</sub> 12).
@@ -399,13 +399,13 @@ Inspect this information for reproducibility. Of particular importance
 are the versions of R and the packages used to create this workflow. It
 is considered good practice to record this information with every
 analysis.  
-Version 0.5.3 built 2021-01-16 with R 4.0.3.
+Version 0.5.3.9000 built 2021-05-05 with R 4.0.5.
 
     options(width = 80)
     devtools::session_info()
     # - Session info ---------------------------------------------------------------
     #  setting  value                       
-    #  version  R version 4.0.3 (2020-10-10)
+    #  version  R version 4.0.5 (2021-03-31)
     #  os       Windows 7 x64 SP 1          
     #  system   x86_64, mingw32             
     #  ui       RTerm                       
@@ -413,53 +413,53 @@ Version 0.5.3 built 2021-01-16 with R 4.0.3.
     #  collate  German_Germany.1252         
     #  ctype    German_Germany.1252         
     #  tz       Europe/Vienna               
-    #  date     2021-01-17                  
+    #  date     2021-05-05                  
     # 
     # - Packages -------------------------------------------------------------------
     #  package       * version    date       lib source        
-    #  assertthat      0.2.1      2019-03-21 [1] CRAN (R 4.0.0)
-    #  callr           3.5.1      2020-10-13 [1] CRAN (R 4.0.3)
-    #  cli             2.2.0      2020-11-20 [1] CRAN (R 4.0.3)
-    #  crayon          1.3.4      2017-09-16 [1] CRAN (R 4.0.0)
+    #  cachem          1.0.4      2021-02-13 [1] CRAN (R 4.0.4)
+    #  callr           3.7.0      2021-04-20 [1] CRAN (R 4.0.5)
+    #  cli             2.5.0      2021-04-26 [1] CRAN (R 4.0.5)
+    #  crayon          1.4.1      2021-02-08 [1] CRAN (R 4.0.3)
     #  cubature        2.0.4.1    2020-07-06 [1] CRAN (R 4.0.2)
-    #  desc            1.2.0      2018-05-01 [1] CRAN (R 4.0.0)
-    #  devtools        2.3.2      2020-09-18 [1] CRAN (R 4.0.2)
+    #  desc            1.3.0      2021-03-05 [1] CRAN (R 4.0.4)
+    #  devtools        2.4.0      2021-04-07 [1] CRAN (R 4.0.5)
     #  digest          0.6.27     2020-10-24 [1] CRAN (R 4.0.3)
-    #  ellipsis        0.3.1      2020-05-15 [1] CRAN (R 4.0.0)
+    #  ellipsis        0.3.2      2021-04-29 [1] CRAN (R 4.0.5)
     #  evaluate        0.14       2019-05-28 [1] CRAN (R 4.0.0)
-    #  fansi           0.4.1      2020-01-08 [1] CRAN (R 4.0.0)
+    #  fastmap         1.1.0      2021-01-25 [1] CRAN (R 4.0.3)
     #  fs              1.5.0      2020-07-31 [1] CRAN (R 4.0.2)
     #  glue            1.4.2      2020-08-27 [1] CRAN (R 4.0.2)
-    #  htmltools       0.5.0      2020-06-16 [1] CRAN (R 4.0.0)
-    #  knitr           1.30       2020-09-22 [1] CRAN (R 4.0.2)
-    #  lifecycle       0.2.0      2020-03-06 [1] CRAN (R 4.0.0)
+    #  htmltools       0.5.1.1    2021-01-22 [1] CRAN (R 4.0.3)
+    #  knitr           1.33       2021-04-24 [1] CRAN (R 4.0.5)
+    #  lifecycle       1.0.0      2021-02-15 [1] CRAN (R 4.0.4)
     #  magrittr        2.0.1      2020-11-17 [1] CRAN (R 4.0.3)
-    #  memoise         1.1.0      2017-04-21 [1] CRAN (R 4.0.0)
+    #  memoise         2.0.0      2021-01-26 [1] CRAN (R 4.0.3)
     #  mvtnorm         1.1-1      2020-06-09 [1] CRAN (R 4.0.0)
     #  pkgbuild        1.2.0      2020-12-15 [1] CRAN (R 4.0.3)
-    #  pkgload         1.1.0      2020-05-29 [1] CRAN (R 4.0.0)
-    #  Power2Stage   * 0.5-3      2021-01-16 [1] CRAN (R 4.0.3)
-    #  PowerTOST       1.5.2.9000 2021-01-13 [1] local         
+    #  pkgload         1.2.1      2021-04-06 [1] CRAN (R 4.0.5)
+    #  Power2Stage   * 0.5.3.9000 2021-05-05 [1] local         
+    #  PowerTOST       1.5.3.9000 2021-03-09 [1] local         
     #  prettyunits     1.1.1      2020-01-24 [1] CRAN (R 4.0.0)
-    #  processx        3.4.5      2020-11-30 [1] CRAN (R 4.0.3)
-    #  ps              1.5.0      2020-12-05 [1] CRAN (R 4.0.3)
+    #  processx        3.5.2      2021-04-30 [1] CRAN (R 4.0.5)
+    #  ps              1.6.0      2021-02-28 [1] CRAN (R 4.0.4)
     #  purrr           0.3.4      2020-04-17 [1] CRAN (R 4.0.0)
     #  R6              2.5.0      2020-10-28 [1] CRAN (R 4.0.3)
-    #  Rcpp            1.0.5      2020-07-06 [1] CRAN (R 4.0.2)
-    #  remotes         2.2.0      2020-07-21 [1] CRAN (R 4.0.2)
-    #  rlang           0.4.10     2020-12-30 [1] CRAN (R 4.0.3)
-    #  rmarkdown       2.6        2020-12-14 [1] CRAN (R 4.0.3)
+    #  Rcpp            1.0.6      2021-01-15 [1] CRAN (R 4.0.3)
+    #  remotes         2.3.0      2021-04-01 [1] CRAN (R 4.0.5)
+    #  rlang           0.4.11     2021-04-30 [1] CRAN (R 4.0.5)
+    #  rmarkdown       2.7        2021-02-19 [1] CRAN (R 4.0.4)
     #  rprojroot       2.0.2      2020-11-15 [1] CRAN (R 4.0.3)
     #  sessioninfo     1.1.1      2018-11-05 [1] CRAN (R 4.0.0)
     #  stringi         1.5.3      2020-09-09 [1] CRAN (R 4.0.2)
     #  stringr         1.4.0      2019-02-10 [1] CRAN (R 4.0.0)
     #  TeachingDemos   2.12       2020-04-07 [1] CRAN (R 4.0.0)
-    #  testthat        3.0.1      2020-12-17 [1] CRAN (R 4.0.3)
-    #  usethis         2.0.0      2020-12-10 [1] CRAN (R 4.0.3)
-    #  withr           2.4.0      2021-01-16 [1] CRAN (R 4.0.3)
-    #  xfun            0.20       2021-01-06 [1] CRAN (R 4.0.3)
+    #  testthat        3.0.2      2021-02-14 [1] CRAN (R 4.0.4)
+    #  usethis         2.0.1      2021-02-10 [1] CRAN (R 4.0.3)
+    #  withr           2.4.2      2021-04-18 [1] CRAN (R 4.0.5)
+    #  xfun            0.22       2021-03-11 [1] CRAN (R 4.0.4)
     #  yaml            2.2.1      2020-02-01 [1] CRAN (R 4.0.0)
     # 
-    # [1] D:/Program Files/R/R-4.0.3/library
+    # [1] D:/Program Files/R/R-4.0.5/library
 
 <small>[TOC ↩](#power2stage)</small>
