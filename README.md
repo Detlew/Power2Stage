@@ -41,9 +41,9 @@ downloads](https://cranlogs.r-pkg.org/badges/last-month/Power2Stage?color=green)
 The package contains functions to obtain the operational characteristics
 (power, type I error, percentage of studies proceeding to the second
 stage, average and quantiles of total sample sizes) of bioequivalence
-studies in adaptive sequential Two-Stage Designs (TSD) via
-simulations.  
-Version 0.5.3.9000 built 2021-05-05 with R 4.0.5 (development version
+studies in adaptive sequential Two-Stage Designs (TSD) via simulations.
+
+Version 0.5.3.9000 built 2021-11-19 with R 4.1.2 (development version
 not on CRAN).
 
 ## Supported Methods
@@ -200,7 +200,9 @@ type I error (*i.e.*, `theta0` set to the value of `theta1` or
 
 Before running the examples attach the library.
 
-    library(Power2Stage)
+``` r
+library(Power2Stage)
+```
 
 If not noted otherwise, defaults are employed.
 
@@ -208,33 +210,37 @@ If not noted otherwise, defaults are employed.
 
 Power estimation by the shifted central *t*-distribution.
 
-    power.tsd(CV = 0.20, n1 = 12, pmethod = "shifted")
-    # TSD with 2x2 crossover 
-    # Method B: alpha (s1/s2) = 0.0294 0.0294 
-    # Target power in power monitoring and sample size est. = 0.8
-    # Power calculation via shifted central t approx. 
-    # CV1 and GMR = 0.95 in sample size est. used
-    # No futility criterion
-    # BE acceptance range = 0.8 ... 1.25
-    # 
-    # CV = 0.2; n(stage 1) = 12; GMR = 0.95
-    # 
-    # 1e+05 sims at theta0 = 0.95 (p(BE) = 'power').
-    # p(BE)    = 0.84454
-    # p(BE) s1 = 0.41333
-    # Studies in stage 2 = 56.45%
-    # 
-    # Distribution of n(total)
-    # - mean (range) = 20.7 (12 ... 82)
-    # - percentiles
-    #  5% 50% 95% 
-    #  12  18  40
+``` r
+power.tsd(CV = 0.20, n1 = 12, pmethod = "shifted")
+# TSD with 2x2 crossover 
+# Method B: alpha (s1/s2) = 0.0294 0.0294 
+# Target power in power monitoring and sample size est. = 0.8
+# Power calculation via shifted central t approx. 
+# CV1 and GMR = 0.95 in sample size est. used
+# No futility criterion
+# BE acceptance range = 0.8 ... 1.25
+# 
+# CV = 0.2; n(stage 1) = 12; GMR = 0.95
+# 
+# 1e+05 sims at theta0 = 0.95 (p(BE) = 'power').
+# p(BE)    = 0.84454
+# p(BE) s1 = 0.41333
+# Studies in stage 2 = 56.45%
+# 
+# Distribution of n(total)
+# - mean (range) = 20.7 (12 ... 82)
+# - percentiles
+#  5% 50% 95% 
+#  12  18  40
+```
 
 Explore the empiric type I error at the upper BE-limit.
 
-    power.tsd(CV = 0.20, n1 = 12, pmethod = "shifted",
-              theta0 = 1.25)[["pBE"]]
-    # [1] 0.046352
+``` r
+power.tsd(CV = 0.20, n1 = 12, pmethod = "shifted",
+          theta0 = 1.25)[["pBE"]]
+# [1] 0.046352
+```
 
 <small>[TOC ↩](#power2stage)</small>
 
@@ -242,27 +248,29 @@ Explore the empiric type I error at the upper BE-limit.
 
 Power estimation by the shifted central *t*-distribution.
 
-    power.tsd(method = "C", CV = 0.20, n1 = 12, pmethod = "shifted")
-    # TSD with 2x2 crossover 
-    # Method C: alpha0 = 0.05, alpha (s1/s2) = 0.0294 0.0294 
-    # Target power in power monitoring and sample size est. = 0.8
-    # Power calculation via shifted central t approx. 
-    # CV1 and GMR = 0.95 in sample size est. used
-    # No futility criterion
-    # BE acceptance range = 0.8 ... 1.25
-    # 
-    # CV = 0.2; n(stage 1) = 12; GMR = 0.95
-    # 
-    # 1e+05 sims at theta0 = 0.95 (p(BE) = 'power').
-    # p(BE)    = 0.8496
-    # p(BE) s1 = 0.42656
-    # Studies in stage 2 = 53.7%
-    # 
-    # Distribution of n(total)
-    # - mean (range) = 20.6 (12 ... 82)
-    # - percentiles
-    #  5% 50% 95% 
-    #  12  18  40
+``` r
+power.tsd(method = "C", CV = 0.20, n1 = 12, pmethod = "shifted")
+# TSD with 2x2 crossover 
+# Method C: alpha0 = 0.05, alpha (s1/s2) = 0.0294 0.0294 
+# Target power in power monitoring and sample size est. = 0.8
+# Power calculation via shifted central t approx. 
+# CV1 and GMR = 0.95 in sample size est. used
+# No futility criterion
+# BE acceptance range = 0.8 ... 1.25
+# 
+# CV = 0.2; n(stage 1) = 12; GMR = 0.95
+# 
+# 1e+05 sims at theta0 = 0.95 (p(BE) = 'power').
+# p(BE)    = 0.8496
+# p(BE) s1 = 0.42656
+# Studies in stage 2 = 53.7%
+# 
+# Distribution of n(total)
+# - mean (range) = 20.6 (12 ... 82)
+# - percentiles
+#  5% 50% 95% 
+#  12  18  40
+```
 
 Slightly better than ‘Method B’ in terms of power in both stages and
 fewer studies are expected to proceed to the second stage.
@@ -270,17 +278,21 @@ fewer studies are expected to proceed to the second stage.
 Explore the empiric type I error at the upper BE-limit (1 milion
 simulations).
 
-    power.tsd(method = "C", CV = 0.20, n1 = 12, pmethod = "shifted",
-              theta0 = 1.25)[["pBE"]]
-    # [1] 0.051238
+``` r
+power.tsd(method = "C", CV = 0.20, n1 = 12, pmethod = "shifted",
+          theta0 = 1.25)[["pBE"]]
+# [1] 0.051238
+```
 
 Slight inflation of the type I error (although considered negligible by
 the authors). However, more adjustment (adjusted *α* 0.0280) controls
 the type I error.
 
-    power.tsd(method = "C", alpha = rep(0.0280, 2), CV = 0.20,
-              n1 = 12, pmethod = "shifted", theta0 = 1.25)[["pBE"]]
-    # [1] 0.049903
+``` r
+power.tsd(method = "C", alpha = rep(0.0280, 2), CV = 0.20,
+          n1 = 12, pmethod = "shifted", theta0 = 1.25)[["pBE"]]
+# [1] 0.049903
+```
 
 <small>[TOC ↩](#power2stage)</small>
 
@@ -289,25 +301,27 @@ the type I error.
 Data given by Potvin *et al.* in Example 2: 12 subjects in stage 1, PE
 1.0876, CV 0.18213, all defaults of the function used.
 
-    interim.tsd.in(GMR = 0.95, GMR1 = 1.0876, CV1 = 0.18213, n1 = 12)
-    # TSD with 2x2 crossover
-    # Inverse Normal approach
-    #  - Maximum combination test with weights for stage 1 = 0.5 0.25 
-    #  - Significance levels (s1/s2) = 0.02635 0.02635 
-    #  - Critical values (s1/s2) = 1.93741 1.93741 
-    #  - BE acceptance range = 0.8 ... 1.25
-    #  - Observed point estimate from stage 1 is not used for SSR
-    #  - With conditional error rates and conditional estimated target power
-    # 
-    # Interim analysis after first stage
-    # - Derived key statistics:
-    #   z1 = 3.10000, z2 = 1.70344
-    #   Repeated CI = (0.92491, 1.27891)
-    #   Median unbiased estimate = NA
-    # - No futility criterion met
-    # - Test for BE not positive (not considering any futility rule)
-    # - Calculated n2 = 6
-    # - Decision: Continue to stage 2 with 6 subjects
+``` r
+interim.tsd.in(GMR = 0.95, GMR1 = 1.0876, CV1 = 0.18213, n1 = 12)
+# TSD with 2x2 crossover
+# Inverse Normal approach
+#  - Maximum combination test with weights for stage 1 = 0.5 0.25 
+#  - Significance levels (s1/s2) = 0.02635 0.02635 
+#  - Critical values (s1/s2) = 1.93741 1.93741 
+#  - BE acceptance range = 0.8 ... 1.25
+#  - Observed point estimate from stage 1 is not used for SSR
+#  - With conditional error rates and conditional estimated target power
+# 
+# Interim analysis after first stage
+# - Derived key statistics:
+#   z1 = 3.10000, z2 = 1.70344
+#   Repeated CI = (0.92491, 1.27891)
+#   Median unbiased estimate = NA
+# - No futility criterion met
+# - Test for BE not positive (not considering any futility rule)
+# - Calculated n2 = 6
+# - Decision: Continue to stage 2 with 6 subjects
+```
 
 The second stage should be initiated with 6 subjects. Note that with
 `interim.tsd.in(..., fCrit = "No", ssr.conditional = "no")` 8 subjects
@@ -315,21 +329,23 @@ would be required like in the Methods of Potvin *et al.*
 
 The second stage is performed in 8 subjects, PE 0.9141, CV 0.25618.
 
-    final.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1 = 12,
-                 GMR2 = 0.9141, CV2 = 0.25618, n2 = 8)
-    # TSD with 2x2 crossover
-    # Inverse Normal approach
-    #  - Maximum combination test with weights for stage 1 = 0.5 0.25 
-    #  - Significance levels (s1/s2) = 0.02635 0.02635 
-    #  - Critical values (s1/s2) = 1.93741 1.93741 
-    #  - BE acceptance range = 0.8 ... 1.25
-    # 
-    # Final analysis after second stage
-    # - Derived key statistics:
-    #   z1 = 2.87952, z2 = 2.60501
-    #   Repeated CI = (0.87690, 1.17356)
-    #   Median unbiased estimate = 1.0135
-    # - Decision: BE achieved
+``` r
+final.tsd.in(GMR1 = 1.0876, CV1 = 0.18213, n1 = 12,
+             GMR2 = 0.9141, CV2 = 0.25618, n2 = 8)
+# TSD with 2x2 crossover
+# Inverse Normal approach
+#  - Maximum combination test with weights for stage 1 = 0.5 0.25 
+#  - Significance levels (s1/s2) = 0.02635 0.02635 
+#  - Critical values (s1/s2) = 1.93741 1.93741 
+#  - BE acceptance range = 0.8 ... 1.25
+# 
+# Final analysis after second stage
+# - Derived key statistics:
+#   z1 = 2.87952, z2 = 2.60501
+#   Repeated CI = (0.87690, 1.17356)
+#   Median unbiased estimate = 1.0135
+# - Decision: BE achieved
+```
 
 The study passed with a (repeated) CI of 87.69–117.36%. Although
 slightly more conservative, same conclusion like based on the 94.12% CI
@@ -339,7 +355,7 @@ of 88.45–116.38% reported by Potvin *et al.*
 
 ## Speed Comparisons
 
-Performed on a Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R 4.0.5
+Performed on a Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R 4.1.2
 64 bit on Windows 7.
 
 ‘Method B’ (*CV* 0.20, *n*<sub>1</sub> 12).
@@ -378,9 +394,11 @@ used to compare with the published method.
 You can install the released version of Power2Stage from
 [CRAN](https://CRAN.R-project.org) with …
 
-    package <- "Power2Stage"
-    inst    <- package %in% installed.packages()
-    if (length(package[!inst]) > 0) install.packages(package[!inst])
+``` r
+package <- "Power2Stage"
+inst    <- package %in% installed.packages()
+if (length(package[!inst]) > 0) install.packages(package[!inst])
+```
 
 … and the development version from [GitHub](https://github.com/) with
 
@@ -399,67 +417,76 @@ Inspect this information for reproducibility. Of particular importance
 are the versions of R and the packages used to create this workflow. It
 is considered good practice to record this information with every
 analysis.  
-Version 0.5.3.9000 built 2021-05-05 with R 4.0.5.
+Version 0.5.3.9000 built 2021-11-19 with R 4.1.2.
 
-    options(width = 80)
-    devtools::session_info()
-    # - Session info ---------------------------------------------------------------
-    #  setting  value                       
-    #  version  R version 4.0.5 (2021-03-31)
-    #  os       Windows 7 x64 SP 1          
-    #  system   x86_64, mingw32             
-    #  ui       RTerm                       
-    #  language EN                          
-    #  collate  German_Germany.1252         
-    #  ctype    German_Germany.1252         
-    #  tz       Europe/Vienna               
-    #  date     2021-05-05                  
-    # 
-    # - Packages -------------------------------------------------------------------
-    #  package       * version    date       lib source        
-    #  cachem          1.0.4      2021-02-13 [1] CRAN (R 4.0.4)
-    #  callr           3.7.0      2021-04-20 [1] CRAN (R 4.0.5)
-    #  cli             2.5.0      2021-04-26 [1] CRAN (R 4.0.5)
-    #  crayon          1.4.1      2021-02-08 [1] CRAN (R 4.0.3)
-    #  cubature        2.0.4.1    2020-07-06 [1] CRAN (R 4.0.2)
-    #  desc            1.3.0      2021-03-05 [1] CRAN (R 4.0.4)
-    #  devtools        2.4.0      2021-04-07 [1] CRAN (R 4.0.5)
-    #  digest          0.6.27     2020-10-24 [1] CRAN (R 4.0.3)
-    #  ellipsis        0.3.2      2021-04-29 [1] CRAN (R 4.0.5)
-    #  evaluate        0.14       2019-05-28 [1] CRAN (R 4.0.0)
-    #  fastmap         1.1.0      2021-01-25 [1] CRAN (R 4.0.3)
-    #  fs              1.5.0      2020-07-31 [1] CRAN (R 4.0.2)
-    #  glue            1.4.2      2020-08-27 [1] CRAN (R 4.0.2)
-    #  htmltools       0.5.1.1    2021-01-22 [1] CRAN (R 4.0.3)
-    #  knitr           1.33       2021-04-24 [1] CRAN (R 4.0.5)
-    #  lifecycle       1.0.0      2021-02-15 [1] CRAN (R 4.0.4)
-    #  magrittr        2.0.1      2020-11-17 [1] CRAN (R 4.0.3)
-    #  memoise         2.0.0      2021-01-26 [1] CRAN (R 4.0.3)
-    #  mvtnorm         1.1-1      2020-06-09 [1] CRAN (R 4.0.0)
-    #  pkgbuild        1.2.0      2020-12-15 [1] CRAN (R 4.0.3)
-    #  pkgload         1.2.1      2021-04-06 [1] CRAN (R 4.0.5)
-    #  Power2Stage   * 0.5.3.9000 2021-05-05 [1] local         
-    #  PowerTOST       1.5.3.9000 2021-03-09 [1] local         
-    #  prettyunits     1.1.1      2020-01-24 [1] CRAN (R 4.0.0)
-    #  processx        3.5.2      2021-04-30 [1] CRAN (R 4.0.5)
-    #  ps              1.6.0      2021-02-28 [1] CRAN (R 4.0.4)
-    #  purrr           0.3.4      2020-04-17 [1] CRAN (R 4.0.0)
-    #  R6              2.5.0      2020-10-28 [1] CRAN (R 4.0.3)
-    #  Rcpp            1.0.6      2021-01-15 [1] CRAN (R 4.0.3)
-    #  remotes         2.3.0      2021-04-01 [1] CRAN (R 4.0.5)
-    #  rlang           0.4.11     2021-04-30 [1] CRAN (R 4.0.5)
-    #  rmarkdown       2.7        2021-02-19 [1] CRAN (R 4.0.4)
-    #  rprojroot       2.0.2      2020-11-15 [1] CRAN (R 4.0.3)
-    #  sessioninfo     1.1.1      2018-11-05 [1] CRAN (R 4.0.0)
-    #  stringi         1.5.3      2020-09-09 [1] CRAN (R 4.0.2)
-    #  stringr         1.4.0      2019-02-10 [1] CRAN (R 4.0.0)
-    #  TeachingDemos   2.12       2020-04-07 [1] CRAN (R 4.0.0)
-    #  testthat        3.0.2      2021-02-14 [1] CRAN (R 4.0.4)
-    #  usethis         2.0.1      2021-02-10 [1] CRAN (R 4.0.3)
-    #  withr           2.4.2      2021-04-18 [1] CRAN (R 4.0.5)
-    #  xfun            0.22       2021-03-11 [1] CRAN (R 4.0.4)
-    #  yaml            2.2.1      2020-02-01 [1] CRAN (R 4.0.0)
-    # 
-    # [1] D:/Program Files/R/R-4.0.5/library
+``` r
+options(width = 80)
+devtools::session_info()
+# - Session info  --------------------------------------------------------------
+#  hash: person in steamy room: medium-light skin tone, classical building, bug
+# 
+#  setting  value
+#  version  R version 4.1.2 (2021-11-01)
+#  os       Windows 10 x64 (build 19043)
+#  system   x86_64, mingw32
+#  ui       RTerm
+#  language en
+#  collate  German_Germany.1252
+#  ctype    German_Germany.1252
+#  tz       Europe/Berlin
+#  date     2021-11-19
+#  pandoc   2.14.0.3 @ C:/Program Files/RStudio/bin/pandoc/ (via rmarkdown)
+# 
+# - Packages -------------------------------------------------------------------
+#  package       * version    date (UTC) lib source
+#  cachem          1.0.6      2021-08-19 [1] CRAN (R 4.1.1)
+#  callr           3.7.0      2021-04-20 [1] CRAN (R 4.1.1)
+#  cli             3.1.0      2021-10-27 [1] CRAN (R 4.1.1)
+#  crayon          1.4.2      2021-10-29 [1] CRAN (R 4.1.1)
+#  cubature        2.0.4.2    2021-05-13 [1] CRAN (R 4.1.0)
+#  desc            1.4.0      2021-09-28 [1] CRAN (R 4.1.1)
+#  devtools        2.4.2      2021-06-07 [1] CRAN (R 4.1.0)
+#  digest          0.6.28     2021-09-23 [1] CRAN (R 4.1.1)
+#  ellipsis        0.3.2      2021-04-29 [1] CRAN (R 4.1.1)
+#  evaluate        0.14       2019-05-28 [1] CRAN (R 4.1.1)
+#  fastmap         1.1.0      2021-01-25 [1] CRAN (R 4.1.1)
+#  fs              1.5.0      2020-07-31 [1] CRAN (R 4.1.1)
+#  glue            1.4.2      2020-08-27 [1] CRAN (R 4.1.1)
+#  htmltools       0.5.2      2021-08-25 [1] CRAN (R 4.1.1)
+#  knitr           1.36       2021-09-29 [1] CRAN (R 4.1.1)
+#  lifecycle       1.0.1      2021-09-24 [1] CRAN (R 4.1.1)
+#  magrittr        2.0.1      2020-11-17 [1] CRAN (R 4.1.1)
+#  memoise         2.0.0      2021-01-26 [1] CRAN (R 4.1.1)
+#  mvtnorm         1.1-3      2021-10-08 [1] CRAN (R 4.1.1)
+#  pkgbuild        1.2.0      2020-12-15 [1] CRAN (R 4.1.1)
+#  pkgload         1.2.3      2021-10-13 [1] CRAN (R 4.1.1)
+#  Power2Stage   * 0.5.3.9000 2021-11-19 [1] local
+#  PowerTOST       1.5-3      2021-01-18 [1] CRAN (R 4.1.1)
+#  prettyunits     1.1.1      2020-01-24 [1] CRAN (R 4.1.1)
+#  processx        3.5.2      2021-04-30 [1] CRAN (R 4.1.1)
+#  ps              1.6.0      2021-02-28 [1] CRAN (R 4.1.1)
+#  purrr           0.3.4      2020-04-17 [1] CRAN (R 4.1.1)
+#  R6              2.5.1      2021-08-19 [1] CRAN (R 4.1.1)
+#  Rcpp            1.0.7      2021-07-07 [1] CRAN (R 4.1.1)
+#  remotes         2.4.1      2021-09-29 [1] CRAN (R 4.1.1)
+#  rlang           0.4.12     2021-10-18 [1] CRAN (R 4.1.1)
+#  rmarkdown       2.11       2021-09-14 [1] CRAN (R 4.1.1)
+#  rprojroot       2.0.2      2020-11-15 [1] CRAN (R 4.1.1)
+#  rstudioapi      0.13       2020-11-12 [1] CRAN (R 4.1.1)
+#  sessioninfo     1.2.1      2021-11-02 [1] CRAN (R 4.1.2)
+#  stringi         1.7.5      2021-10-04 [1] CRAN (R 4.1.1)
+#  stringr         1.4.0      2019-02-10 [1] CRAN (R 4.1.1)
+#  TeachingDemos   2.12       2020-04-07 [1] CRAN (R 4.1.1)
+#  testthat        3.1.0      2021-10-04 [1] CRAN (R 4.1.1)
+#  usethis         2.1.3      2021-10-27 [1] CRAN (R 4.1.1)
+#  withr           2.4.2      2021-04-18 [1] CRAN (R 4.1.1)
+#  xfun            0.27       2021-10-18 [1] CRAN (R 4.1.1)
+#  yaml            2.2.1      2020-02-01 [1] CRAN (R 4.1.1)
+# 
+#  [1] C:/Program Files/R/library
+#  [2] C:/Program Files/R/R-4.1.2/library
+# 
+# ------------------------------------------------------------------------------
+```
 
 <small>[TOC ↩](#power2stage)</small>

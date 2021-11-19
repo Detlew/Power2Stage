@@ -53,7 +53,7 @@ sampleN2.TOST <- function(alpha=0.0294, CV, n1, theta0=0.95,
   ifelse (n - n1 > 0, n2 <- n - n1, n2 <- 0)
   if (n2 > 0) {
     pow <- .calc.power(alpha, ltheta1, ltheta2, diffm, sem=se*sqrt(bk/(n1+n2)),
-                       df=eval(n1+n2), method)
+                       df=n1+n2-3, method)
   } else {
     # usual df if study stops in stage 1
     pow <- power.TOST(alpha=alpha, theta1=theta1, theta2=theta2,

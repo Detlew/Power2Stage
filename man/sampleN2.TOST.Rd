@@ -2,7 +2,8 @@
 \name{sampleN2.TOST}
 \alias{sampleN2.TOST}
 \title{
-Sample size re-estimation of adaptive 2-stage BE studies in 2x2 crossover and parallel designs based on power of TOST
+Sample size re-estimation of adaptive 2-stage BE studies in 2x2 crossover and 
+parallel designs based on power of TOST
 }
 \description{
   This function estimates the necessary sample size of
@@ -71,7 +72,8 @@ sampleN2.TOST(alpha = 0.0294, CV, n1, theta0 = 0.95,
   unlikely.
 }
 \references{
-Potvin D, DiLiberti CE, Hauck WW, Parr AF, Schuirmann DJ, Smith RA. \emph{Sequential design approaches for bioequivalence studies with crossover designs.}\cr
+Potvin D, DiLiberti CE, Hauck WW, Parr AF, Schuirmann DJ, Smith RA. \cr
+\emph{Sequential design approaches for bioequivalence studies with crossover designs.}\cr
 Pharm Stat. 2008; 7(4):245--62. \doi{10.1002/pst.294}
 
 Zhang P. \emph{A Simple Formula for Sample Size Calculation in Equivalence Studies.}\cr
@@ -83,9 +85,9 @@ H. \enc{Schütz}{Schuetz}, D. Labes
 \examples{
 # using all the defaults, CV of 25\% and 12 subjects in stage 1
 print(sampleN2.TOST(CV=0.25, n1=12), row.names=FALSE)
-# should give a stage 2 sample of 22 and achieved power ~0.814
+# should give a stage 2 sample size of 22 and achieved power ~0.812
 # CV 10\% and 12 subjects in stage 1
 print(sampleN2.TOST(CV=0.1, n1=12), row.names=FALSE)
 # should give a sample size of 0 (second stage not reasonable
-# since power ~0.973 already achieved in stage 1
+# since power ~0.973 was already achieved in stage 1)
 }

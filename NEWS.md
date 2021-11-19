@@ -2,6 +2,13 @@
 On GitHub since 2021-05-05
 
   * New development version
+  
+## Bug fixes
+
+  * False `df` for `n2>0` in `sampleN2.TOST()` fixed.
+  
+## Minor changes
+
   * LazyData: yes entry from DESCRIPTION removed since no data folder was available.
     Caused a NOTE during R CMD check instead of Ok.
 

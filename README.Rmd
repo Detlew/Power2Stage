@@ -13,7 +13,8 @@ knitr::opts_chunk$set(
   comment = "#"
 ) 
 ```
-The package contains functions to obtain the operational characteristics (power, type I error, percentage of studies proceeding to the second stage, average and quantiles of total sample sizes) of bioequivalence studies in adaptive sequential Two-Stage Designs (TSD) via simulations.  
+The package contains functions to obtain the operational characteristics (power, type I error, percentage of studies proceeding to the second stage, average and quantiles of total sample sizes) of bioequivalence studies in adaptive sequential Two-Stage Designs (TSD) via simulations.
+
 ```{r, echo = FALSE, results = "asis"}
 txt <- paste0("Version ", packageVersion("Power2Stage"), " built ",
          packageDate("Power2Stage", date.fields = "Built"),
