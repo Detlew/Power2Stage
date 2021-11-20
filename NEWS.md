@@ -1,5 +1,5 @@
-# Power2Stage 0.5.3.9000
-On GitHub since 2021-05-05
+# Power2Stage 0.5.4
+On CRAN 2021-11-20
 
   * New development version
   

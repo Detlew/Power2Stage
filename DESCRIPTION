@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: Power2Stage
 Type: Package
 Title: Power and Sample-Size Distribution of 2-Stage Bioequivalence Studies
-Version: 0.5.3.9000
-Date: 2021-11-19
+Version: 0.5-4
+Date: 2021-11-20
 Authors@R: c(person("Detlew", "Labes",
                role = c("aut","cre"),
                email = "DetlewLabes@gmx.de",
