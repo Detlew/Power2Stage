@@ -43,7 +43,8 @@ The package contains functions to obtain the operational characteristics
 stage, average and quantiles of total sample sizes) of bioequivalence
 studies in adaptive sequential Two-Stage Designs (TSD) via simulations.
 
-Version 0.5.4 built 2021-11-20 with R 4.1.2 (stable release on CRAN NA).
+Version 0.5.4 built 2021-11-23 with R 4.1.2 (stable release on CRAN
+2021-11-20).
 
 ## Supported Methods
 
@@ -416,13 +417,13 @@ Inspect this information for reproducibility. Of particular importance
 are the versions of R and the packages used to create this workflow. It
 is considered good practice to record this information with every
 analysis.  
-Version 0.5.4 built 2021-11-20 with R 4.1.2.
+Version 0.5.4 built 2021-11-23 with R 4.1.2.
 
 ``` r
 options(width = 80)
 devtools::session_info()
 # - Session info  --------------------------------------------------------------
-#  hash: bow and arrow, play or pause button, registered
+#  hash: shower, keycap: 8, railway car
 # 
 #  setting  value
 #  version  R version 4.1.2 (2021-11-01)
@@ -433,7 +434,7 @@ devtools::session_info()
 #  collate  German_Germany.1252
 #  ctype    German_Germany.1252
 #  tz       Europe/Berlin
-#  date     2021-11-20
+#  date     2021-11-26
 #  pandoc   2.14.0.3 @ C:/Program Files/RStudio/bin/pandoc/ (via rmarkdown)
 # 
 # - Packages -------------------------------------------------------------------
@@ -459,7 +460,7 @@ devtools::session_info()
 #  mvtnorm         1.1-3   2021-10-08 [1] CRAN (R 4.1.1)
 #  pkgbuild        1.2.0   2020-12-15 [1] CRAN (R 4.1.1)
 #  pkgload         1.2.3   2021-10-13 [1] CRAN (R 4.1.1)
-#  Power2Stage   * 0.5-4   2021-11-20 [1] local
+#  Power2Stage   * 0.5-4   2021-11-20 [1] CRAN (R 4.1.2)
 #  PowerTOST       1.5-3   2021-01-18 [1] CRAN (R 4.1.1)
 #  prettyunits     1.1.1   2020-01-24 [1] CRAN (R 4.1.1)
 #  processx        3.5.2   2021-04-30 [1] CRAN (R 4.1.1)
