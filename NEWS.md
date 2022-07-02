@@ -1,8 +1,17 @@
+# Power2Stage 0.5.4.9000
+* Development version on GitHub 2022-07-02.
+
+## Bug fixes
+
+  * Bug in `interim.tsd.in` fixed. THX to Martin Wolfsegger to detecting it.
+
+## Minor changes
+
+  * Sessioninfo in README without requiring `devtools`.
+
 # Power2Stage 0.5.4
 On CRAN 2021-11-20
 
-  * New development version
-  
 ## Bug fixes
 
   * False `df` for `n2>0` in `sampleN2.TOST()` fixed.

@@ -1,24 +1,32 @@
 Power2Stage
 ================
 
--   [Supported Methods](#supported-methods)
-    -   [Simulation-based](#simulation-based)
-        -   [‘Type 1’](#type-1)
-        -   [‘Type 2’](#type-2)
-        -   [Blinded Sample Size Re-estimation in the
-            Interim](#blinded-sample-size-re-estimation-in-the-interim)
-        -   [Group Sequential Design](#group-sequential-design)
-    -   [Inverse-Normal Combination](#inverse-normal-combination)
--   [Functions](#functions)
-    -   [Main](#main)
-    -   [Helpers](#helpers)
--   [Examples](#examples)
-    -   [Method B](#method-b)
-    -   [Method C](#method-c)
-    -   [Inverse-Normal Combination](#inverse-normal-combination-1)
--   [Speed Comparisons](#speed-comparisons)
--   [Installation](#installation)
--   [Session Information](#session-information)
+-   <a href="#supported-methods" id="toc-supported-methods">Supported
+    Methods</a>
+    -   <a href="#simulation-based"
+        id="toc-simulation-based">Simulation-based</a>
+        -   <a href="#type-1" id="toc-type-1">‘Type 1’</a>
+        -   <a href="#type-2" id="toc-type-2">‘Type 2’</a>
+        -   <a href="#blinded-sample-size-re-estimation-in-the-interim"
+            id="toc-blinded-sample-size-re-estimation-in-the-interim">Blinded Sample
+            Size Re-estimation in the Interim</a>
+        -   <a href="#group-sequential-design"
+            id="toc-group-sequential-design">Group Sequential Design</a>
+    -   <a href="#inverse-normal-combination"
+        id="toc-inverse-normal-combination">Inverse-Normal Combination</a>
+-   <a href="#functions" id="toc-functions">Functions</a>
+    -   <a href="#main" id="toc-main">Main</a>
+    -   <a href="#helpers" id="toc-helpers">Helpers</a>
+-   <a href="#examples" id="toc-examples">Examples</a>
+    -   <a href="#method-b" id="toc-method-b">Method B</a>
+    -   <a href="#method-c" id="toc-method-c">Method C</a>
+    -   <a href="#inverse-normal-combination-1"
+        id="toc-inverse-normal-combination-1">Inverse-Normal Combination</a>
+-   <a href="#speed-comparisons" id="toc-speed-comparisons">Speed
+    Comparisons</a>
+-   <a href="#installation" id="toc-installation">Installation</a>
+-   <a href="#session-information" id="toc-session-information">Session
+    Information</a>
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -33,6 +41,7 @@ size](https://img.shields.io/github/languages/code-size/Detlew/PowerTOST?color=g
 ![first](https://img.shields.io/badge/CRAN%20since-Jan%202014-brightgreen)
 ![on CRAN](https://www.r-pkg.org/badges/version-ago/Power2Stage) [![cran
 checks](https://cranchecks.info/badges/worst/Power2Stage)](https://cran.r-project.org/web/checks/check_results_Power2Stage.html)
+![commits](https://img.shields.io/github/commits-since/Detlew/Power2Stage/latest)
 [![CRAN RStudio mirror
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/Power2Stage?color=blue)](https://r-pkg.org/pkg/Power2Stage)
 [![CRAN RStudio mirror
@@ -43,8 +52,8 @@ The package contains functions to obtain the operational characteristics
 stage, average and quantiles of total sample sizes) of bioequivalence
 studies in adaptive sequential Two-Stage Designs (TSD) via simulations.
 
-Version 0.5.4 built 2021-11-23 with R 4.1.2 (stable release on CRAN
-2021-11-20).
+Version 0.5.4.9000 built 2022-07-02 with R 4.2.1 (development version
+not on CRAN).
 
 ## Supported Methods
 
@@ -355,7 +364,7 @@ of 88.45–116.38% reported by Potvin *et al.*
 
 ## Speed Comparisons
 
-Performed on a Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R 4.1.2
+Performed on a Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R 4.2.1
 64 bit on Windows 7.
 
 ‘Method B’ (*CV* 0.20, *n*<sub>1</sub> 12).
@@ -417,76 +426,39 @@ Inspect this information for reproducibility. Of particular importance
 are the versions of R and the packages used to create this workflow. It
 is considered good practice to record this information with every
 analysis.  
-Version 0.5.4 built 2021-11-23 with R 4.1.2.
+Version 0.5.4.9000 built 2022-07-02 with R 4.2.1.
 
 ``` r
-options(width = 80)
-devtools::session_info()
-# - Session info  --------------------------------------------------------------
-#  hash: shower, keycap: 8, railway car
+options(width = 66)
+sessionInfo()
+# R version 4.2.1 (2022-06-23 ucrt)
+# Platform: x86_64-w64-mingw32/x64 (64-bit)
+# Running under: Windows 10 x64 (build 22000)
 # 
-#  setting  value
-#  version  R version 4.1.2 (2021-11-01)
-#  os       Windows 10 x64 (build 19043)
-#  system   x86_64, mingw32
-#  ui       RTerm
-#  language en
-#  collate  German_Germany.1252
-#  ctype    German_Germany.1252
-#  tz       Europe/Berlin
-#  date     2021-11-26
-#  pandoc   2.14.0.3 @ C:/Program Files/RStudio/bin/pandoc/ (via rmarkdown)
+# Matrix products: default
 # 
-# - Packages -------------------------------------------------------------------
-#  package       * version date (UTC) lib source
-#  cachem          1.0.6   2021-08-19 [1] CRAN (R 4.1.1)
-#  callr           3.7.0   2021-04-20 [1] CRAN (R 4.1.1)
-#  cli             3.1.0   2021-10-27 [1] CRAN (R 4.1.1)
-#  crayon          1.4.2   2021-10-29 [1] CRAN (R 4.1.1)
-#  cubature        2.0.4.2 2021-05-13 [1] CRAN (R 4.1.0)
-#  desc            1.4.0   2021-09-28 [1] CRAN (R 4.1.1)
-#  devtools        2.4.2   2021-06-07 [1] CRAN (R 4.1.0)
-#  digest          0.6.28  2021-09-23 [1] CRAN (R 4.1.1)
-#  ellipsis        0.3.2   2021-04-29 [1] CRAN (R 4.1.1)
-#  evaluate        0.14    2019-05-28 [1] CRAN (R 4.1.1)
-#  fastmap         1.1.0   2021-01-25 [1] CRAN (R 4.1.1)
-#  fs              1.5.0   2020-07-31 [1] CRAN (R 4.1.1)
-#  glue            1.4.2   2020-08-27 [1] CRAN (R 4.1.1)
-#  htmltools       0.5.2   2021-08-25 [1] CRAN (R 4.1.1)
-#  knitr           1.36    2021-09-29 [1] CRAN (R 4.1.1)
-#  lifecycle       1.0.1   2021-09-24 [1] CRAN (R 4.1.1)
-#  magrittr        2.0.1   2020-11-17 [1] CRAN (R 4.1.1)
-#  memoise         2.0.0   2021-01-26 [1] CRAN (R 4.1.1)
-#  mvtnorm         1.1-3   2021-10-08 [1] CRAN (R 4.1.1)
-#  pkgbuild        1.2.0   2020-12-15 [1] CRAN (R 4.1.1)
-#  pkgload         1.2.3   2021-10-13 [1] CRAN (R 4.1.1)
-#  Power2Stage   * 0.5-4   2021-11-20 [1] CRAN (R 4.1.2)
-#  PowerTOST       1.5-3   2021-01-18 [1] CRAN (R 4.1.1)
-#  prettyunits     1.1.1   2020-01-24 [1] CRAN (R 4.1.1)
-#  processx        3.5.2   2021-04-30 [1] CRAN (R 4.1.1)
-#  ps              1.6.0   2021-02-28 [1] CRAN (R 4.1.1)
-#  purrr           0.3.4   2020-04-17 [1] CRAN (R 4.1.1)
-#  R6              2.5.1   2021-08-19 [1] CRAN (R 4.1.1)
-#  Rcpp            1.0.7   2021-07-07 [1] CRAN (R 4.1.1)
-#  remotes         2.4.1   2021-09-29 [1] CRAN (R 4.1.1)
-#  rlang           0.4.12  2021-10-18 [1] CRAN (R 4.1.1)
-#  rmarkdown       2.11    2021-09-14 [1] CRAN (R 4.1.1)
-#  rprojroot       2.0.2   2020-11-15 [1] CRAN (R 4.1.1)
-#  rstudioapi      0.13    2020-11-12 [1] CRAN (R 4.1.1)
-#  sessioninfo     1.2.1   2021-11-02 [1] CRAN (R 4.1.2)
-#  stringi         1.7.5   2021-10-04 [1] CRAN (R 4.1.1)
-#  stringr         1.4.0   2019-02-10 [1] CRAN (R 4.1.1)
-#  TeachingDemos   2.12    2020-04-07 [1] CRAN (R 4.1.1)
-#  testthat        3.1.0   2021-10-04 [1] CRAN (R 4.1.1)
-#  usethis         2.1.3   2021-10-27 [1] CRAN (R 4.1.1)
-#  withr           2.4.2   2021-04-18 [1] CRAN (R 4.1.1)
-#  xfun            0.27    2021-10-18 [1] CRAN (R 4.1.1)
-#  yaml            2.2.1   2020-02-01 [1] CRAN (R 4.1.1)
+# locale:
+# [1] LC_COLLATE=German_Austria.utf8 
+# [2] LC_CTYPE=German_Austria.utf8   
+# [3] LC_MONETARY=German_Austria.utf8
+# [4] LC_NUMERIC=C                   
+# [5] LC_TIME=German_Austria.utf8    
 # 
-#  [1] C:/Program Files/R/library
-#  [2] C:/Program Files/R/R-4.1.2/library
+# attached base packages:
+# [1] stats     graphics  grDevices utils     datasets  methods  
+# [7] base     
 # 
-# ------------------------------------------------------------------------------
+# other attached packages:
+# [1] Power2Stage_0.5-4.9000
+# 
+# loaded via a namespace (and not attached):
+#  [1] Rcpp_1.0.8.3       mvtnorm_1.1-3      digest_0.6.29     
+#  [4] PowerTOST_1.5-4    magrittr_2.0.3     evaluate_0.15     
+#  [7] TeachingDemos_2.12 rlang_1.0.3        stringi_1.7.6     
+# [10] cli_3.3.0          cubature_2.0.4.4   rstudioapi_0.13   
+# [13] rmarkdown_2.14     tools_4.2.1        stringr_1.4.0     
+# [16] xfun_0.31          yaml_2.3.5         fastmap_1.1.0     
+# [19] compiler_4.2.1     htmltools_0.5.2    knitr_1.39
 ```
 
 <small>[TOC ↩](#power2stage)</small>

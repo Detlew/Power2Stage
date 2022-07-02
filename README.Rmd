@@ -6,7 +6,7 @@ output:
     toc_depth: 4
 ---
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) ![active](https://www.repostatus.org/badges/latest/active.svg)  ![repo size](https://img.shields.io/github/repo-size/Detlew/Power2Stage?color=yellow) ![code size](https://img.shields.io/github/languages/code-size/Detlew/PowerTOST?color=green) ![first](https://img.shields.io/badge/CRAN%20since-Jan%202014-brightgreen) ![on CRAN](https://www.r-pkg.org/badges/version-ago/Power2Stage) [![cran checks](https://cranchecks.info/badges/worst/Power2Stage)](https://cran.r-project.org/web/checks/check_results_Power2Stage.html) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/Power2Stage?color=blue)](https://r-pkg.org/pkg/Power2Stage) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/last-month/Power2Stage?color=green)](https://r-pkg.org/pkg/Power2Stage)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) ![active](https://www.repostatus.org/badges/latest/active.svg)  ![repo size](https://img.shields.io/github/repo-size/Detlew/Power2Stage?color=yellow) ![code size](https://img.shields.io/github/languages/code-size/Detlew/PowerTOST?color=green) ![first](https://img.shields.io/badge/CRAN%20since-Jan%202014-brightgreen) ![on CRAN](https://www.r-pkg.org/badges/version-ago/Power2Stage) [![cran checks](https://cranchecks.info/badges/worst/Power2Stage)](https://cran.r-project.org/web/checks/check_results_Power2Stage.html)  ![commits](https://img.shields.io/github/commits-since/Detlew/Power2Stage/latest) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/Power2Stage?color=blue)](https://r-pkg.org/pkg/Power2Stage) [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/last-month/Power2Stage?color=green)](https://r-pkg.org/pkg/Power2Stage)
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -224,8 +224,8 @@ Inspect this information for reproducibility. Of particular importance are the v
 Version `r packageVersion("Power2Stage")` built `r packageDate("Power2Stage", date.fields = "Built")` with R `r substr(packageDescription("Power2Stage", fields = "Built"), 3, 7)`.
 
 ```{r, sessioninfo}
-options(width = 80)
-devtools::session_info()
+options(width = 66)
+sessionInfo()
 ```
 
 <small>[TOC ↩](#power2stage)</small>
