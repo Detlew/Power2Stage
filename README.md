@@ -364,8 +364,8 @@ of 88.45–116.38% reported by Potvin *et al.*
 
 ## Speed Comparisons
 
-Performed on a Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R 4.2.1
-64 bit on Windows 7.
+Performed on a Xeon E3-1245v3 3.4 GHz, 8 MB cache, 16 GB RAM, R 4.2.1 on
+Windows 7.
 
 ‘Method B’ (*CV* 0.20, *n*<sub>1</sub> 12).
 
