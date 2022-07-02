@@ -334,7 +334,7 @@ power.2stage.in <- function(alpha, weight, max.comb.test = TRUE, n1, CV,
     if (nms_match[3]) 
       BE2[n1 + n2 > fCNmax] <- FALSE
     s2[BE2 == FALSE] <- 1  # such a case is considered to be gone up to stage 1
-    fut <- fut + if (all(is.na(BE2))) 0 else sum(BE2 == FALSE)
+    fut <- fut + sum(BE2 == FALSE, na.rm = TRUE)
     
     # Carry over results from BE2 and s2 to BE, stage and ntot
     stage[is.na(BE)] <- s2
