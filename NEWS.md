@@ -3,7 +3,7 @@
 
 ## Bug fixes
 
-  * Bug in `interim.tsd.in` fixed. THX to Martin Wolfsegger to detecting it.
+  * Bug in `power.tsd.in` fixed. THX to Martin Wolfsegger to detecting it.
 
 ## Minor changes
 
