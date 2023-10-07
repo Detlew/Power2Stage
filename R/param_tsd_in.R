@@ -1,4 +1,4 @@
-param.tsd.in <- function(method = c("SCT", "MCT"), alpha = 0.05, 
+param.tsd.in <- function(method = c("MCT", "SCT"), alpha = 0.05, 
                          targetpower = 0.8, CV, theta0 = 0.95, theta1, theta2,
                          GMR = theta0, usePE = FALSE, min.n2 = 4, 
                          max.n = list(value = 4000),
@@ -27,7 +27,7 @@ param.tsd.in <- function(method = c("SCT", "MCT"), alpha = 0.05,
   lw <- switch(method, "SCT" = 1, "MCT" = 2) # length of weights
   # lower bound constraint
   # TO DO: Should we not introduce the limit 24 for CV > 0.3?
-  lb <- c(-1 + if (CV <= 0.3) 12 else 24, rep(0.01, lw))
+  lb <- c(11, rep(0.01, lw))
   n_fixed <- .sampleN2(alpha = alpha, targetpower = targetpower, 
                        ltheta0 = log(theta0), mse = PowerTOST::CV2mse(CV), 
                        method = "nct", bk = 2, dfc = "n-2")
