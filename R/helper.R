@@ -1,3 +1,55 @@
+up2even <- function(n) {
+  if (n %% 2 != 0) return(2 * ceiling(n/2))
+  n
+}
+
+# Check futility criterion for inverse normal methods --------------------------
+futility_checks_in <- function(fCrit = "CI", fClower, fCupper, fCNmax, 
+                               theta1, n1, min.n2 = 4) {
+  stopifnot(is.character(fCrit))
+  fCrit <- tolower(fCrit)
+  fcrit_nms <- c("ci", "pe", "nmax", "no")  # correct possibilities
+  nms_match <- fcrit_nms %in% fCrit  # check which fCrits are given
+  if (sum(nms_match) == 0)
+    stop("fCrit not correctly specified.")
+  if (nms_match[4]) { # No futility criterion
+    if (sum(nms_match[1:3]) > 0) {
+      message("No futility will be applied.")
+    }
+    fClower <- 0
+    fCupper <- Inf
+    fCNmax <- Inf
+  } else {
+    if (nms_match[1]) {  # CI
+      if (nms_match[2]) {
+        message("Both PE and CI specified for futility, PE will be ignored.")
+        nms_match[1] <- FALSE
+      }
+      if (missing(fClower) && missing(fCupper))  fClower <- 0.95
+      if (missing(fClower) && !missing(fCupper)) fClower <- 1/fCupper
+      if (!missing(fClower) && missing(fCupper)) fCupper <- 1/fClower
+    }
+    if (nms_match[2]) {  # PE
+      if (missing(fClower) && missing(fCupper))  fClower <- theta1
+      if (missing(fClower) && !missing(fCupper)) fClower <- 1/fCupper
+      if (!missing(fClower) && missing(fCupper)) fCupper <- 1/fClower
+    }
+    if (nms_match[3]) {  # Nmax
+      if (missing(fCNmax)) fCNmax <- 4*n1
+      if (!missing(fCNmax) && (fCNmax < n1 + min.n2))
+        stop("fCNmax must be greater than n1 + min.n2.")
+      if (sum(nms_match[1:2]) == 0) {
+        fClower <- 0
+        fCupper <- Inf
+      }
+    } else {
+      fCNmax <- Inf
+    }
+  } 
+  list(fClower = fClower, fCupper = fCupper, fCNmax = fCNmax, 
+       nms_match = nms_match)
+}
+
 # -----------------------------------------------------------------------------
 # calculates the critical values for TSD evaluated via p-value combination
 # Pocock method

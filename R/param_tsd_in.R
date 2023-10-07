@@ -1,11 +1,7 @@
-up2even <- function(n) {
-  if (n %% 2 != 0) return(2 * ceiling(n/2))
-  n
-}
-
 param.tsd.in <- function(method = c("SCT", "MCT"), alpha = 0.05, 
                          targetpower = 0.8, CV, theta0 = 0.95, theta1, theta2,
-                         GMR = theta0, usePE = FALSE, min.n2 = 4, max.n = 4000,
+                         GMR = theta0, usePE = FALSE, min.n2 = 4, 
+                         max.n = list(value = 4000),
                          fCpower = targetpower, fCrit = "CI", fClower, fCupper,
                          fCNmax, ssr.conditional = c("error_power", "error", "no"),
                          nsims = 1E5, setseed = TRUE) {
@@ -17,66 +13,31 @@ param.tsd.in <- function(method = c("SCT", "MCT"), alpha = 0.05,
   if (!missing(theta1) && missing(theta2)) theta2 <- 1/theta1
   if (missing(theta1) && !missing(theta2)) theta1 <- 1/theta2
   
-  # TO DO: Without the following checks on futility criterion the function
-  #        call later won't work -> check if this can be avoided somehow as it
-  #        is lengthy and already part of power.tsd.in()
-  stopifnot(is.character(fCrit))
-  fCrit <- tolower(fCrit)
-  fcrit_nms <- c("ci", "pe", "nmax", "no")  # correct possibilities
-  nms_match <- fcrit_nms %in% fCrit  # check which fCrits are given
-  if (sum(nms_match) == 0)
-    stop("fCrit not correctly specified.")
-  if (nms_match[4]) { # No futility criterion
-    if (sum(nms_match[1:3]) > 0) {
-      message("No futility will be applied.")
-    }
-    fClower <- 0
-    fCupper <- Inf
-    fCNmax <- Inf
-  } else {
-    if (nms_match[1]) {  # CI
-      if (nms_match[2]) {
-        message("Both PE and CI specified for futility, PE will be ignored.")
-        nms_match[1] <- FALSE
-      }
-      if (missing(fClower) && missing(fCupper))  fClower <- 0.95
-      if (missing(fClower) && !missing(fCupper)) fClower <- 1/fCupper
-      if (!missing(fClower) && missing(fCupper)) fCupper <- 1/fClower
-    }
-    if (nms_match[2]) {  # PE
-      if (missing(fClower) && missing(fCupper))  fClower <- theta1
-      if (missing(fClower) && !missing(fCupper)) fClower <- 1/fCupper
-      if (!missing(fClower) && missing(fCupper)) fCupper <- 1/fClower
-    }
-    if (nms_match[3]) {  # Nmax
-      if (missing(fCNmax)) fCNmax <- 4*n1
-      if (!missing(fCNmax) && (fCNmax < n1 + min.n2))
-        stop("fCNmax must be greater than n1 + min.n2.")
-      if (sum(nms_match[1:2]) == 0) {
-        fClower <- 0
-        fCupper <- Inf
-      }
-    } else {
-      fCNmax <- Inf
-    }
-  }
+  # Check futility criterion
+  fc <- futility_checks_in(fCrit, fClower, fCupper, fCNmax, theta1,
+                           n1, min.n2)
+  fClower <- fc$fClower
+  fCupper <- fc$fCupper
+  fCNmax <- fc$fCNmax
   
-  # Search for (n1, w) that minimize average sample size, given that the
+  # Search for (n1, w) that minimizes the average sample size, given that the
   # overall target power is at least targetpower
   
-  # Want constraints for n1 and weights, lb and ub respectively
-  # define them for use in nloptr()
+  # Want to put constraints on n1 and weights. Define them for use in nloptr()
   lw <- switch(method, "SCT" = 1, "MCT" = 2) # length of weights
+  # lower bound constraint
   # TO DO: Should we not introduce the limit 24 for CV > 0.3?
   lb <- c(-1 + if (CV <= 0.3) 12 else 24, rep(0.01, lw))
   n_fixed <- .sampleN2(alpha = alpha, targetpower = targetpower, 
                        ltheta0 = log(theta0), mse = PowerTOST::CV2mse(CV), 
                        method = "nct", bk = 2, dfc = "n-2")
+  # upper bound constraint
   ub <- c(max(n_fixed, lb[1] + 2), rep(0.99, lw))
-  # Now define starting values
+  
+  # Now define starting values for optimization algorithm
   x0 <- c((lb[1] + ub[1]) / 2, rep(0.5, lw))
   # We will first perform a global optimization, followed by a local
-  # optimization procedure usingn the starting values from the result of the
+  # optimization procedure using the starting values from the result of the
   # global algorithm
   alg_g <- "NLOPT_GN_CRS2_LM" # Controlled random search with local mutation
   alg_l <- "NLOPT_LN_NELDERMEAD" # Nelder-Mead Simplex
@@ -84,29 +45,24 @@ param.tsd.in <- function(method = c("SCT", "MCT"), alpha = 0.05,
   # Define objective function that needs to be minimized
   # Caveat: For this optimization process we need an allowed maximum sample
   #         size that is finite.
-  
   # We will use max.n = 4000 as upper limit (as used by Maurer et al).
   # Moreover, we will allow the maximum sample size to be a multiple of n1 ("k*n1")
   # or a multiple of the sample size from a fixed study design ("k*nfixed").
-  # TO DO: Can this be made more elegant (than is.numeric and is.character)?
-  if (is.numeric(max.n)) {
-    if (is.infinite(max.n)) max.n <- 4000
+  maxn_n1 <- FALSE # is max.n a multiple of n1?
+  if (is.null(max.n$type)) {
+    stopifnot(is.numeric(max.n$value))
+    maxn <- if (is.infinite(max.n$value)) 4000 else max.n$value
     # for later use as return value if power constraint is not met
-    max.n.lim <- max.n + 1
-  }
-  maxn_n1 <- FALSE  # should max n be a multiple of n1?
-  if (is.character(max.n)) {
-    # Only "k*n1" or "k*nfixed" allowed
-    k <- as.numeric(substr(max.n, 1, 1))
-    maxn_txt <- substr(max.n, 3, nchar(max.n))
-    if (maxn_txt == "nfixed") {
-      max.n <- k * n_fixed
-      max.n.lim <- max.n + 1
-    } else if (maxn_txt == "n1") {
+    max.n.lim <- max.n$value + 1
+  } else {
+    if (max.n$type == "n1") {
       maxn_n1 <- TRUE
-      max.n.lim <- k * ub[1] + 1
+      max.n.lim <- max.n$value * ub[1] + 1
+    } else if (max.n$type == "nfixed") {
+      maxn <- max.n$value * n_fixed
+      max.n.lim <- max.n + 1
     } else {
-      stop("Unknown max.n phrase.")
+      stop("Unknown max.n type.")
     }
   }
   
@@ -114,13 +70,13 @@ param.tsd.in <- function(method = c("SCT", "MCT"), alpha = 0.05,
   f <- function(x, pm = "nct") {
     # function in x = (n1, w)
     n1 <- up2even(x[1])
-    if (maxn_n1) max.n <- k * n1
+    if (maxn_n1) maxn <- max.n$value * n1
     w <- x[2:(lw + 1)]
     res <- power.tsd.in(alpha = alpha, weight = w, n1 = n1,
                         max.comb.test = if (lw == 1) FALSE else TRUE,
                         CV = CV, targetpower = targetpower, theta0 = theta0,
                         theta1 = theta1, theta2 = theta2, GMR = GMR,
-                        usePE = usePE, min.n2 = min.n2, max.n = max.n,
+                        usePE = usePE, min.n2 = min.n2, max.n = maxn,
                         fCpower = fCpower, fCrit = fCrit, fClower = fClower,
                         fCupper = fCupper, fCNmax = fCNmax,
                         ssr.conditional = ssr.conditional, nsims = nsims,
